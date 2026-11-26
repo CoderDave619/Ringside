@@ -1,0 +1,24 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();for(const vw of [[1280,900],[390,800]]){const p=await b.newPage({viewport:{width:vw[0],height:vw[1]}});const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+await p.click('[data-nver="4"]');await p.waitForTimeout(150);await p.click('input[name=nco] >> nth=0');await p.click('#nstartbtn');await p.waitForTimeout(400);
+await p.evaluate(()=>{location.hash='business'});await p.waitForTimeout(300);
+await p.click('[data-pcb=spot]');await p.waitForTimeout(100);await p.click('[data-pcb=party]');await p.waitForTimeout(100);await p.click('[data-pcu=party]');await p.waitForTimeout(100);
+console.log(vw[0],'cards',await p.evaluate(()=>JSON.stringify(__ro.G().cos[__ro.G().me].pcards)));
+await p.evaluate(()=>{location.hash='book'});await p.waitForTimeout(300);await p.click('#auto');await p.waitForTimeout(200);
+await p.click('[data-pcs]');await p.waitForTimeout(100);await p.selectOption('#bprv','big');await p.selectOption('#bprp','big');await p.waitForTimeout(100);
+console.log('prod',await p.evaluate(()=>JSON.stringify(__ro.G().prod)),'spot on',await p.evaluate(()=>__ro.G().card.filter(x=>x.pc).length),'lv tags',await p.$$eval('.bm .sub',x=>x.filter(e=>/Lv/.test(e.textContent)).length));
+await p.screenshot({path:`/tmp/gm_book_${vw[0]}.png`});
+// face + promise
+const id=await p.evaluate(()=>__ro.run('roster(G.me)[0].id'));await p.evaluate(i=>__ro.run(`goW('${i}')`),id);await p.waitForTimeout(300);
+await p.click('[data-pa=face]');await p.waitForTimeout(100);await p.click('[data-pa=prom]');await p.waitForTimeout(100);await p.click('[data-pmk=main]');await p.waitForTimeout(100);await p.click('[data-pa=cls]');await p.waitForTimeout(100);
+console.log('face',await p.evaluate(()=>JSON.stringify(__ro.G().cos[__ro.G().me].faces)),'prom',await p.evaluate(i=>JSON.stringify(__ro.G().ws[i].prom)+' '+__ro.G().ws[i].cls,id));
+await p.screenshot({path:`/tmp/gm_prof_${vw[0]}.png`});
+await p.evaluate(()=>{location.hash='book'});await p.waitForTimeout(300);await p.click('#run');await p.waitForTimeout(400);
+console.log('spot left',await p.evaluate(()=>__ro.G().cos[__ro.G().me].pcards.spot));await p.screenshot({path:`/tmp/gm_res_${vw[0]}.png`});
+await p.click('#cont');await p.waitForTimeout(300);
+await p.evaluate(()=>{location.hash='war'});await p.waitForTimeout(300);console.log('season box',await p.evaluate(()=>/Season \d{4}/.test(document.body.innerText)));
+await p.evaluate(()=>{location.hash='settings'});await p.waitForTimeout(300);await p.click('[data-feat=prod]');await p.waitForTimeout(100);await p.selectOption('#sflv','3');console.log('off',await p.evaluate(()=>JSON.stringify(__ro.G().opts.off)+' flv '+__ro.G().opts.flv));
+await p.screenshot({path:`/tmp/gm_set_${vw[0]}.png`,fullPage:true});
+for(let k=0;k<60;k++)await p.evaluate(()=>__ro.week());console.log('seasons',await p.evaluate(()=>(__ro.G().seasons||[]).length));
+console.log('scrollX',await p.evaluate(()=>document.documentElement.scrollWidth),'ERRS',errs);await p.close()}await b.close()})();
