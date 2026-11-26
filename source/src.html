@@ -332,6 +332,41 @@ tr.secrow td{background:light-dark(#f6e4e6,#33191e);color:var(--red2);font-weigh
 .nwsite .hint{color:#777}.nwsite .k.me{font-size:11px}
 @media (max-width:760px){.nwgrid{grid-template-columns:minmax(0,1fr)}.nwside{border-left:0;padding-left:0;border-top:1px solid #d8d2c6;padding-top:10px}.nwmast b{font-size:32px}.nwa.lead h3{font-size:24px}}
 a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-weight:700;text-decoration:none}a.btn.go{background:var(--red);color:#fff;border-color:var(--red)}a.btn.sm{min-height:36px;padding:4px 11px;font-size:14px}
+.hofcer{background:linear-gradient(160deg,#2a1d0a,#120c05);color:#fff4d6;border-radius:12px;padding:14px;border:2px solid #d9a520}
+.hch{text-align:center;padding:6px 0 12px;border-bottom:1px solid #6b4e10}.hch small{display:block;color:#d9a520;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.hch b{display:block;font:32px Anton,sans-serif;color:#ffd56b;letter-spacing:.02em}.hch span{font-size:13px;color:#cdb98a}
+.hcl{display:grid;gap:8px;margin-top:12px}.hci{display:flex;gap:10px;align-items:center;background:rgba(255,213,107,.08);border:1px solid #6b4e10;border-radius:10px;padding:8px 10px}.hci b{display:block;font-size:18px;color:#fff}.hci span{display:block;font-size:13px;color:#e8d9b0}
+.scard{background:var(--panel)}.shead{background:linear-gradient(135deg,#1a0f14,#5c0b1c 60%,#c8102e);color:#fff;padding:18px 20px 14px;text-align:center;position:relative}
+.sco{font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;opacity:.9;display:flex;gap:8px;align-items:center;justify-content:center}.sribbon{background:#ffd56b;color:#3b2a00;border-radius:99px;padding:1px 9px;font-size:11px}
+.sname{display:block;font:40px/1.05 Anton,sans-serif;letter-spacing:.01em;margin:6px 0 2px}.smeta{font-size:13px;opacity:.85}.sbig{font-size:30px;color:#ffd56b;margin-top:4px;letter-spacing:2px}
+.srows{padding:6px 16px}.srow{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
+.srow.main{background:linear-gradient(90deg,var(--goldbg),transparent);border-radius:10px;padding:10px 8px;margin:4px -8px}.srow.five5{outline:2px solid #ffd56b;border-radius:10px}
+.sno{font:20px Anton,sans-serif;color:var(--mute);text-align:right}.srow.main .sno{color:var(--red2)}
+.stype{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}.sgold{color:var(--gold)}
+.sline{font-size:19px;margin:2px 0 4px;line-height:1.3}.sline i{font-style:normal;color:var(--mute);font-size:14px;margin:0 3px}.swin{color:var(--face)}
+.sfin{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}.sftag{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--bluebg);color:var(--blue)}.sftag.gold{background:var(--goldbg);color:var(--gold)}
+.schg{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px}.sp{display:inline-flex;gap:4px;align-items:center}.sp b{font-weight:600}
+.dchip{font-size:11px;font-weight:800;padding:1px 6px;border-radius:99px}.dchip.up{background:var(--greenbg);color:var(--face)}.dchip.dn{background:light-dark(#f6e4e6,#3b1c23);color:var(--red2)}.dchip.st{background:var(--bluebg);color:var(--blue)}
+.srow details{margin-top:4px;font-size:13px;color:var(--mute)}.srow details summary{cursor:pointer;font-weight:700}.srow details p{margin:4px 0}
+.sst{font-size:17px;color:var(--gold);white-space:nowrap}.srow.ad{opacity:.7}.smo{color:var(--face)}
+.smoney{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:10px 16px 0}.smoney>div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}.smoney small{display:block;color:var(--mute);font-size:12px}.smoney b{font-size:17px}.smoney .tot{border-color:var(--face)}
+@media (max-width:760px){.sname{font-size:30px}.sline{font-size:17px}.srow{grid-template-columns:22px minmax(0,1fr)}.sst{grid-column:2}}
+/* Booking notebook (owner, 26 Nov): the card looks like a page in a booker's notebook; names stay in a clear typeface. */
+.bkcard{--paper:#fdf9ec;--rule:#c9dcef;--ink2:#1d2433;background:var(--paper) repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--rule) 31px,var(--rule) 32px);color:var(--ink2);color-scheme:light;border-color:#e2d9bd;padding:14px 16px 14px 54px;position:relative;box-shadow:0 2px 0 #e9e0c4,0 4px 0 #f3ecd6,0 8px 18px rgba(0,0,0,.12)}
+.bkcard::before{content:"";position:absolute;left:40px;top:0;bottom:0;width:2px;background:#e8a1a8}
+.bkcard::after{content:"";position:absolute;left:12px;top:24px;bottom:24px;width:12px;background:radial-gradient(circle,#d9cfb3 4px,transparent 5px) 0 0/12px 46px repeat-y}
+.nbtitle{font:700 26px/1.2 "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;color:#1f3a7a;margin:0 0 6px}.nbtitle small{font-size:15px;color:#6a6f80;margin-left:6px}
+.bkcard .bm{border-top:1px dashed #b8c4d6;border-radius:6px;background:transparent}.bkcard .bm.cur{background:rgba(255,236,120,.55);outline:2px solid #e3b92a}.bkcard .bm.inc:not(.cur){background:rgba(255,255,255,.35)}
+.bkcard .no{font:700 22px "Segoe Print","Bradley Hand","Comic Sans MS",cursive;color:#c8102e;min-width:22px}
+.bkcard .kind{font:700 14px "Segoe Print","Bradley Hand","Comic Sans MS",cursive;background:none;color:#1f3a7a;padding:0 4px;border-bottom:2px solid currentColor;border-radius:0}.bkcard .kind.m{color:#c8102e;background:none}
+.bkcard .bmh select{background:transparent;border:0;border-bottom:1px solid #8a93a8;border-radius:0;color:var(--ink2);font-weight:700}
+.bkcard .vs{gap:6px 10px;font-size:17px;margin:2px 0}.bkcard .vs>i{font:700 18px "Segoe Print","Bradley Hand","Comic Sans MS",cursive;color:#c8102e}
+.bkcard .bchip .w{font-size:17px;font-weight:800;color:#141a29}.bkcard .bchip .w small{color:#5d6478;font-weight:600}.bkcard .bchip .x{color:#8a93a8}
+.bkcard .side.win{background:rgba(31,122,61,.12);border-color:#1f7a3d}.bkcard .side.win .w{color:#14532d}.bkcard .side.win::after{color:#1f7a3d}
+.bkcard .bslot{border-color:#8a93a8;color:#3d4660;background:rgba(255,255,255,.5)}.bkcard .bslot.on{border-color:#1546d1;color:#1546d1;background:#fff}
+.bkcard .tag{background:rgba(21,70,209,.1)}.bkcard .tag.sim{color:#5d6478}.bkcard .tag.ns{background:#f8dde1;color:#9e0b23}
+.bkcard .sm{background:rgba(255,255,255,.7);color:var(--ink2);border-color:#c5c9d4}.bkcard .sm.go{background:#1f7a3d;color:#fff;border-color:#1f7a3d}
+.bkcard .empty{color:#5d6478;font:600 18px "Segoe Print","Bradley Hand","Comic Sans MS",cursive}.bkcard .seg{color:#3d4660}.bkcard .sub{color:#5d6478}
+@media (max-width:760px){.bkcard{padding:10px 10px 10px 34px}.bkcard::before{left:26px}.bkcard::after{left:6px;width:10px}.bkcard .vs{flex-direction:column;align-items:flex-start;gap:2px}.bkcard .vs>i{margin-left:8px}.bkcard .bchip .w{font-size:16px}.nbtitle{font-size:21px}}
 </style>
 </head>
 <body>
@@ -618,7 +653,7 @@ function newGame(scen,start,choice,opts){
   const BIG_ROSTER=16;Object.keys(G.cos).forEach(cid=>{const R=Object.values(G.ws).filter(w=>w.co===cid);if(R.length>BIG_ROSTER){const k=Math.sqrt(BIG_ROSTER/R.length);R.forEach(w=>{if(w._sw)w.wage=Math.max(50,r10(w.wage*k))})}});
   Object.values(G.ws).forEach(w=>delete w._sw);
   if(opts.gen){const F=['Duke','Rex','Tony','Buck','Chuck','Vic','Hank','Jimmy','Rocco','Sal','Max','Lars','Kenji','Diego','Ray','Billy','Ace','Mack','Otis','Gus','Nico','Bobby','Dutch','Moose','Rico','Lenny','Clint','Jet','Brick','Hiro','Pablo','Seamus'],Fw=['Dolly','Rita','Vera','Gail','Trixie','Mae','Lola','Kitty','Sunny','Babs'],L=['Malone','Riker','Vance','Dalton','Cruz','Brennan','Hayes','Stone','Mercer','Valdez','Kowal','Rourke','Sato','Mendez','Ford','Blaze','Kincaid','Holt','Graves','Sloan','Drake','Thorne','Bishop','Navarro','Doyle','Farrell','Okada','Lund','Petrov','Quinn'],seen=new Set(Object.values(G.ws).map(w=>w.name));
-    const nGen=30+8*Object.values(G.cos).filter(c=>c.active).length;for(let i=0;i<nGen;i++){const f=Math.random()<.15;let n;do n=pick(f?Fw:F)+' '+pick(L);while(seen.has(n));seen.add(n);const y=+start.slice(0,4)-ri(20,38);
+    const nGen=30+8*Object.values(G.cos).filter(c=>c.active).length;for(let i=0;i<nGen;i++){const f=Math.random()<.35;let n;do n=pick(f?Fw:F)+' '+pick(L);while(seen.has(n));seen.add(n);const y=+start.slice(0,4)-ri(20,38);
       G.ws['g'+i]={id:'g'+i,name:n,gender:f?'F':'M',birth:`${y}-${pad(ri(1,12))}-${pad(ri(1,28))}`,debut:'',retire:'',al:pick([-80,-60,60,80,0]),align:'F',gim:'None',wt:f?ri(120,170):ri(195,320),cha:ri(30,75),wrk:ri(30,80),pop:ri(5,45),mom:50,status:'active',co:null,wage:0,left:0,next:null,riv:{},last:0,gm:0}}
     /* manager-only staff (§4.31) */const gi=Object.keys(G.ws).filter(k=>/^g\d+$/.test(k)).sort(()=>Math.random()-.5).slice(0,4+Object.values(G.cos).filter(c=>c.active).length);gi.forEach(k=>{const w=G.ws[k];w.mgr=true;w.mgonly=true;w.cha=ri(60,88);w.wrk=ri(15,40);w.gim=pick(['Showman','Villain','Hero']);w.pop=ri(10,40)})}
   if(choice.type==='new'){
@@ -709,7 +744,7 @@ function timeline(from,to){
   for(const w of Object.values(G.ws)){
     if(w.status==='future'&&w.debut&&w.debut<=to){w.status='active';news(`Debut: ${w.name} arrives on the Indies${age(w)!=null?`, age ${age(w)}`:''}.`,'db')}
   }
-  if(D(to).getUTCFullYear()!==D(from).getUTCFullYear()){awards(D(from).getUTCFullYear());yearly()}
+  if(D(to).getUTCFullYear()!==D(from).getUTCFullYear()){awards(D(from).getUTCFullYear());hofCeremony(D(from).getUTCFullYear());yearly()}
 }
 function closeCo(c,why){c.active=false;c.closed=true;roster(c.id).forEach(freeW);Object.values(G.ws).forEach(w=>{if(w.next&&w.next.co===c.id)w.next=null;if(w.co===c.id)freeW(w)});G.offers=(G.offers||[]).filter(o=>o.co!==c.id);G.rogue=(G.rogue||[]).filter(r=>r.co!==c.id);news(`${c.name} ${why}. Its wrestlers go to the Indies.`,'co')}
 const FAREWELL_WK=8;const pr2=w=>pr(w,'him');
@@ -916,14 +951,23 @@ function setFame(w,f){const old=tierOf(w);w.fame=clamp(f,10,3000);if(w.legend)w.
   if((nt[2]||0)>(old[2]||0)&&!(w.asc||[]).some(x=>x.t===nt[1])){if(nt[2]===3&&!w.legend){w.legend=true}if(nt[2]===4&&!w.hof)hofAdd(w);(w.asc=w.asc||[]).push({t:nt[1],d:G.date});if(w.co===G.me)G.achP='asc';news(`${w.name} has ascended: ${nt[1]}.`,'ms')}}
 /* Hall of Fame (§4.23): this game's list in G.hof, plus a list per scenario kept across every game (localStorage ro_hof). */
 function hofAll(){try{return JSON.parse(localStorage.ro_hof||'{}')}catch(e){return {}}}
-function hofAdd(w){w.hof=G.date;if(w.co===G.me)(G.achF=G.achF||{}).hof=1;const e={id:w.id,name:w.name,d:G.date,co:w.co&&G.cos[w.co]?G.cos[w.co].short:'Indies',fame:Math.round(w.fame),rec:w.rec?`${w.rec.w}-${w.rec.l}-${w.rec.d}`:'',game:G.gid||(G.gid='g'+Date.now().toString(36))};
-  (G.hof=G.hof||[]).push(e);try{const H=hofAll();(H[G.scen]=H[G.scen]||[]).push(e);localStorage.ro_hof=JSON.stringify(H)}catch(x){}news(`${w.name} has been inducted into the Hall of Fame.`,'ms')}
+function hofAdd(w){if(w.hof||w.hofQ)return;w.hofQ=G.date;(G.hofPend=G.hofPend||[]).push(w.id);news(`${w.name} has qualified for the Hall of Fame and will be inducted at the ${G.date.slice(0,4)} Hall of Fame Ceremony at the end of the year.`,'ms')}
+function hofCeremony(y){const ids=[...new Set(G.hofPend||[])].filter(id=>G.ws[id]&&!G.ws[id].hof);G.hofPend=[];if(!ids.length)return;
+  ids.forEach(id=>{const w=G.ws[id];hofInduct(w,1);delete w.hofQ});const names=ids.map(id=>G.ws[id].name);
+  (G.hofCer=G.hofCer||[]).push({y:+y,d:G.date,ids});news(`The ${y} Hall of Fame Ceremony inducted ${names.length>1?names.slice(0,-1).join(', ')+' and '+names[names.length-1]:names[0]}.`,'ms');if(!window.__ro)G.hofShow=G.hofCer.length-1}
+function hofCerHtml(k){const c=G.hofCer[k];if(!c)return '';const reigns=w=>Object.values(G.titles||{}).reduce((a,t)=>a+(t.reigns||t.r||[]).filter(r=>r&&r.h&&r.h.includes(w.id)).length,0);
+  return `<div class="hofcer"><div class="hch"><small>The ${c.y}</small><b>Hall of Fame Ceremony</b><span>${c.ids.length} inductee${c.ids.length===1?'':'s'} · ${fmtDate(c.d)}</span></div>
+   <div class="hcl">${c.ids.map(id=>{const w=G.ws[id];if(!w)return '';const e=(G.hof||[]).find(x=>x.id===id)||{};return `<div class="hci">${headImg(w,48)}<div><b>${esc(w.name)}</b><span>${esc(e.co||(w.co&&G.cos[w.co]?G.cos[w.co].short:'Indies'))} · popularity ${Math.round(w.fame||e.fame||0).toLocaleString('en-US')}</span><span>${w.rec?`Record ${w.rec.w}-${w.rec.l}-${w.rec.d}`:''}${reigns(w)?` · ${reigns(w)} title reign${reigns(w)===1?'':'s'}`:''}${(w.five||[]).length?` · ${(w.five||[]).length} five-star match${(w.five||[]).length===1?'':'es'}`:''}</span></div></div>`}).join('')}</div></div>`}
+function hofCerPop(){if(G.hofShow==null||window.__ro||HOME.includes(tab))return;const k=G.hofShow;delete G.hofShow;save();
+  openD(`<div class="db">${hofCerHtml(k)}<div class="dfoot"><a class="btn sm" href="#history/hof" data-x="1">See the Hall of Fame</a><button class="go" data-x="1">Close</button></div></div>`);dlg.onclick=e=>{if(e.target.closest('[data-x]'))closeD()}}
+function hofInduct(w,quiet){w.hof=G.date;if(w.co===G.me)(G.achF=G.achF||{}).hof=1;const e={id:w.id,name:w.name,d:G.date,co:w.co&&G.cos[w.co]?G.cos[w.co].short:'Indies',fame:Math.round(w.fame),rec:w.rec?`${w.rec.w}-${w.rec.l}-${w.rec.d}`:'',game:G.gid||(G.gid='g'+Date.now().toString(36))};
+  (G.hof=G.hof||[]).push(e);try{const H=hofAll();(H[G.scen]=H[G.scen]||[]).push(e);localStorage.ro_hof=JSON.stringify(H)}catch(x){}if(!quiet)news(`${w.name} has been inducted into the Hall of Fame.`,'ms')}
 let hofCo=null;
 function hofPage(){const mine=G.hof||[],all=(hofAll()[G.scen]||[]).filter(e=>e.game!==G.gid);
   const row=e=>`<tr><td><b>${G.ws[e.id]&&!e.game||G.ws[e.id]&&e.game===G.gid?`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-hw="${e.id}">${esc(e.name)}</button>`:esc(e.name)}</b></td><td data-l="Inducted">${fmtDate(e.d)}</td><td data-l="Company">${esc(e.co)}</td><td data-l="Record">${esc(e.rec||'–')}</td></tr>`;
   const tb=L=>`<table class="stack"><thead><tr><th>Wrestler</th><th>Inducted</th><th>Company</th><th>Record</th></tr></thead><tbody>${L.map(row).join('')}</tbody></table>`;
-  return `<div class="panel"><h3>Hall of Fame: this game</h3><p class="hint" style="margin-top:0">A wrestler is inducted when their popularity reaches 2,300.</p>${mine.length?tb(mine):'<div class="empty">Nobody has been inducted yet.</div>'}</div>
-   <div class="panel" style="margin-top:14px"><h3>Hall of Fame: other games of ${esc(G.scen)}</h3><p class="hint" style="margin-top:0">Inductees from every game you've played in this scenario on this device.</p>${all.length?tb(all):'<div class="empty">None yet.</div>'}</div>${coHofBox()}`}
+  return `<div class="panel"><h3>Hall of Fame: this game</h3><p class="hint" style="margin-top:0">A wrestler qualifies when their popularity reaches 2,300. Everyone who qualifies in a year is inducted together at that year's Hall of Fame Ceremony. No one qualifies, no ceremony.</p>${(G.hofPend||[]).filter(id=>G.ws[id]).length?`<p><b>Class of ${G.date.slice(0,4)} so far:</b> ${G.hofPend.filter(id=>G.ws[id]).map(id=>esc(G.ws[id].name)).join(', ')}</p>`:''}${mine.length?tb(mine):'<div class="empty">Nobody has been inducted yet.</div>'}</div>
+   <div class="panel" style="margin-top:14px"><h3>Hall of Fame: other games of ${esc(G.scen)}</h3><p class="hint" style="margin-top:0">Inductees from every game you've played in this scenario on this device.</p>${all.length?tb(all):'<div class="empty">None yet.</div>'}</div>${(G.hofCer||[]).length?`<div class="panel" style="margin-top:14px"><h3>Ceremonies</h3>${G.hofCer.slice().reverse().map((c,i)=>`<details ${i?'':'open'}><summary><b>${c.y} Hall of Fame Ceremony</b> <span class="sub">${c.ids.length} inducted</span></summary>${hofCerHtml(G.hofCer.length-1-i)}</details>`).join('')}</div>`:''}${coHofBox()}`}
 function coHofBox(){const cos=Object.values(G.cos).filter(c=>c.active||(c.hof||[]).length).sort((a,b)=>(b.id===G.me)-(a.id===G.me)||a.short.localeCompare(b.short));if(!hofCo||!G.cos[hofCo])hofCo=G.me;const c=G.cos[hofCo],L=c.hof||[];
   return `<div class="panel" style="margin-top:14px"><h3>Company Halls of Fame</h3><label style="max-width:280px">Company<select id="hofco">${cos.map(x=>`<option value="${x.id}" ${x.id===hofCo?'selected':''}>${esc(x.short)}${x.id===G.me?' (you)':''} · ${(x.hof||[]).length}</option>`).join('')}</select></label>
    <p class="hint">Wrestlers are inducted when their popularity reaches ${(c.hofAt||CO_HOF).toLocaleString('en-US')} while on the ${esc(c.short)} roster.${c.id===G.me?' Change this in Calendar and news.':''}</p>
@@ -1292,7 +1336,10 @@ function aiCard(c){
   const hf=FE().filter(f=>f.st==='cur'&&f.co===c.id&&f.p.slice(0,2).every(p=>p.length<=2&&p.every(id=>r.includes(W(id))))&&f.p[0].length===f.p[1].length).sort((a,b)=>b.heat-a.heat)[0];
   const hids=hf&&Math.random()<.7?hf.p.slice(0,2).flat():null;
   if(hids)for(let i=pairs.length-1;i>=0;i--)if(pairs[i].some(w=>hids.includes(w.id)))pairs.splice(i,1);
-  const use=pairs.slice(0,n);if(!use.length)return card;const main=use[0],top=use.flat(),rest=use.slice(1).sort(()=>Math.random()-.5);
+  /* Fair booking (owner, 26 Nov): women get at least one match whenever 2 can work, and a share of the card at least
+     equal to their share of the available roster. The main event still goes to the biggest draw, whoever that is. */
+  const fP=pairs.filter(p=>gk(p[0])==='F'),mP=pairs.filter(p=>gk(p[0])!=='F'),fSh=r.filter(w=>gk(w)==='F').length/r.length,kF=Math.min(fP.length,n,Math.max(fP.length?1:0,Math.ceil(n*fSh-.25)));
+  const use=[...fP.slice(0,kF),...mP.slice(0,n-kF)];if(use.length<n)use.push(...pairs.filter(p=>!use.includes(p)).slice(0,n-use.length));use.sort((a,b)=>b[0].pop+b[1].pop-a[0].pop-a[1].pop);if(!use.length)return card;const main=use[0],top=use.flat(),rest=use.slice(1).sort(()=>Math.random()-.5);
   rest.forEach(p=>card.push({t:'m',sides:[[p[0].id],[p[1].id]],win:null,fin:null}));
   const talker=r.find(w=>w.cha>=70&&!top.includes(w))||r.find(w=>w.cha>=72);
   if(talker)card.splice(1,0,{t:'s',g:pick(['Promo','Interview','Challenge']),who:[talker.id]});
@@ -1305,12 +1352,16 @@ function aiCard(c){
 }
 
 /* ---------- rival owners ---------- */
+const WOMEN_MIN=4,WOMEN_SHARE=.25;
 function aiSign(draft){
   for(const c of Object.values(G.cos)){
     if(!c.active||c.owner!=='ai')continue;
     let n=draft?1:2;
     while(n-->0&&roster(c.id).length<(draft?Math.min(target(c),7):target(c))&&c.cash>3000&&freeAgents().length>(draft?20:6)){
-      const fa=freeAgents().sort((a,b)=>b.pop-a.pop).slice(0,6).filter(w=>wageBill(c.id)+worth(w)<budget(c));
+      /* Women's division (owner, 26 Nov): a company with fewer than WOMEN_MIN working women looks for women first. TODO(ASK OWNER) number. */
+      const R0=roster(c.id),needF=!c.noWomen&&R0.length>=6&&R0.filter(w=>w.gender==='F'&&!w.mgr).length<Math.max(WOMEN_MIN,Math.round(R0.length*WOMEN_SHARE));
+      const pool=needF&&freeAgents().some(w=>w.gender==='F'&&!w.mgonly)?freeAgents().filter(w=>w.gender==='F'&&!w.mgonly):freeAgents();
+      const fa=pool.sort((a,b)=>b.pop-a.pop).slice(0,6).filter(w=>wageBill(c.id)+worth(w)<budget(c));
       if(!fa.length)break;const w=pick(fa);signW(w,c.id,worth(w),ri(3,8));
       if(!draft&&w.pop>=45)news(`${c.short} signed ${w.name}.`,'sg');
     }
@@ -1427,6 +1478,32 @@ const WEVS={storm:{t:'A big storm is forecast for show night. Expect a smaller c
   mixup:{t:'A venue mix-up means extra costs this week.',cost:1.5},sponsor:{t:'A local sponsor paid for a banner at your show.',cash:1},heat:{t:'A heat wave: fewer people want to sit in a hot arena.',crowd:.85}};
 function wevWeek(){G.wev=null;if(Math.random()>WEV_CH)return;const k=pick(Object.keys(WEVS)),E=WEVS[k],m=me();G.wev={k,wk:G.week};if(E.hype)m.hype=clamp((m.hype||0)+E.hype,0,100);if(E.cash){const v=r10(4000+m.pop*150);m.cash+=v;news(`${E.t} (+${money(v)})`,'me');return}news(`This week: ${E.t}`,'me')}
 const wev=(c,f)=>c.id===G.me&&G.wev&&G.wev.wk===G.week?(WEVS[G.wev.k][f]??1):1;
+/* Upstarts and mutinies (§4.65, owner 26 Nov). New companies can start up mid-game and spend their first weeks luring
+   talent. If most of a roster is unhappy for weeks, a group can walk out and start its own company. You get warned first.
+   TODO(ASK OWNER): every number here. */
+const UPSTART_P=.025,UPSTART_MAX=14,LURE_WKS=12,MUT_LOW=35,MUT_SHARE=.5,MUT_WARN=.4,MUT_WEEKS=3,MUT_P=.35,MUT_CD=26;
+const UPN1=['Rebellion','Uprising','Phoenix','Outlaw','Renegade','Vanguard','Liberty','Frontier','Insurgent','Wildfire','Riot','Breakaway','Crossfire','Defiant','Thunder Road'],UPN2=['Wrestling','Pro Wrestling','Championship Wrestling','Wrestling Alliance','Fight League','Wrestling Federation'];
+function upName(){for(let k=0;k<40;k++){const a=pick(UPN1),b=pick(UPN2),name=`${a} ${b}`,short=(a.split(' ').map(x=>x[0]).join('')+b.split(' ').map(x=>x[0]).join('')).toUpperCase();if(!Object.values(G.cos).some(c=>c.name===name||c.short===short))return {name,short}}return {name:'New Wave Wrestling '+G.week,short:'NWW'+G.week}}
+function spawnCo(o){let n=Object.keys(G.cos).length;while(G.cos['c'+n])n++;const id='c'+n,nm=o.name?o:upName();
+  const x={id,short:nm.short,name:nm.name,ownerName:o.owner||'',size:'Regional',open:G.date,close:'',renames:[],sty:[],pop:o.pop||30,cash:o.cash||r10(rnd(250000,900000)),active:true,closed:false,owner:'ai',weeklyLeft:ri(2,5),majorName:pick(EVN),hype:30,lastRating:null,broke:0,upstart:G.date,lure:G.week+LURE_WKS,why:o.why||'start'};
+  G.cos[id]=x;(o.ids||[]).forEach(wid=>{const w=G.ws[wid];if(w)signW(w,id,r10(worth(w)*1.1),ri(4,8))});return x}
+function upstartWeek(){const act=Object.values(G.cos).filter(c=>c.active);
+  if(act.length<UPSTART_MAX&&!G.opts.noUpstart&&Math.random()<UPSTART_P/4.3){const c=spawnCo({});news(`New company: ${c.name} (${c.short}) has launched with big money and plans to raid other rosters.`,'co')}
+  for(const c of act.filter(c=>c.lure>G.week)){const R=roster(c.id).length,need=target(c)-R;if(need<=0)continue;
+    const fa=freeAgents().filter(w=>w.status==='active'&&!w.mgonly).sort((a,b)=>b.pop-a.pop).slice(0,2);fa.forEach(w=>{if(c.cash>worth(w)*20){signW(w,c.id,r10(worth(w)*1.2),ri(4,8));news(`${c.short} signed ${w.name}.`,'sg')}});
+    const ai=Object.values(G.ws).filter(w=>w.status==='active'&&w.co&&w.co!==c.id&&w.co!==G.me&&G.cos[w.co]?.owner==='ai'&&w.left<=3&&!w.next).sort((a,b)=>b.pop-a.pop)[0];
+    if(ai&&Math.random()<.5){const from=co(ai.co).short;signW(ai,c.id,r10(worth(ai)*1.3),ri(4,8));news(`${c.short} lured ${ai.name} away from ${from}.`,'sg')}
+    const mine=roster(G.me).filter(w=>w.left<=4&&!w.next&&!G.offers.some(o=>o.w===w.id)&&w.guest==null).sort((a,b)=>b.pop-a.pop)[0];
+    if(mine&&Math.random()<.35){const firm=mine.left>2;G.offers.push({w:mine.id,co:c.id,wage:r10(worth(mine)*rnd(1.25,1.5)),len:pick([4,6,8]),week:G.week,fee:firm?r10(worth(mine)*mine.left*2):0});news(`${c.short}, the new company, made a big offer for ${mine.name}. Your decision is waiting on the Roster screen.`,'of')}}}
+const unrest=cid=>{const R=roster(cid).filter(w=>!w.mgonly&&w.guest==null),u=R.filter(w=>morOf(w)<MUT_LOW);return {n:R.length,u:u.length,share:R.length?u.length/R.length:0,L:u}};
+function mutinyWeek(){for(const c of Object.values(G.cos).filter(c=>c.active)){const x=unrest(c.id);
+  if(x.n<8||(c.mutCD||0)>G.week){c.mutW=0;continue}
+  if(c.id===G.me&&x.share>=MUT_WARN&&(!G.mutWarned||G.week-G.mutWarned>=4)){G.mutWarned=G.week;news(`Locker room warning: ${x.u} of ${x.n} wrestlers are unhappy. If more than half stay unhappy for ${MUT_WEEKS} weeks, a group may walk out and start their own company.`,'me')}
+  c.mutW=x.share>=MUT_SHARE?(c.mutW||0)+1:0;
+  if(c.mutW>=MUT_WEEKS&&Math.random()<MUT_P){const L=x.L.sort((a,b)=>b.pop-a.pop),k=clamp(Math.round(L.length*.6),3,10),grp=L.slice(0,k),lead=grp[0];
+    grp.forEach(w=>{w.mor=70});const n=spawnCo({ids:[],pop:clamp(Math.round(c.pop*.6),15,60),cash:r10(rnd(150000,500000)),owner:lead.name,why:'mutiny'});grp.forEach(w=>{signW(w,n.id,r10(worth(w)),ri(4,8))});
+    c.mutW=0;c.mutCD=G.week+MUT_CD;c.pop=clamp(c.pop-3,1,100);if(c.id===G.me)G.mutiny={co:n.id,ids:grp.map(w=>w.id),d:G.date};
+    news(`Walkout! ${lead.name} led ${grp.length} unhappy wrestlers out of ${c.short} to start ${n.name} (${n.short}): ${grp.map(w=>w.name).join(', ')}.`,c.id===G.me?'me':'co')}}}
 function aiOffers(){
   G.offers=G.offers.filter(o=>{const w=W(o.w);if(w.co===G.me&&w.left>2&&o.week!=null&&G.week-o.week>=2){news(`${co(o.co).short}'s offer for ${w.name} lapsed. ${w.name} stays under contract.`,'of');return false}return w.co===G.me});
   for(const w of roster(G.me)){
@@ -1448,7 +1525,7 @@ function advance(){
   timeline(from,G.date);if(from.slice(5,7)!==G.date.slice(5,7))monthly();
   for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;mo+=(65-mo)*(hasTr(w,'loyal')?.08:hasTr(w,'pro')?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=hasTr(w,'showboat')||hasTr(w,'diva')?3.5:hasTr(w,'pro')?1:2;if(hasTr(w,'hothead'))mo+=rnd(-3,3);if(hasTr(w,'greedy')&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w)-cancerDrag(w);if(w.dir==='push'&&w.pop>=40)mo+=.4;if(w.dir==='enhance'&&w.pop>=40)mo-=1;if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
   roster(G.me).forEach(w=>{if(w.farewell&&G.week>=w.farewell){news(`${w.name}'s farewell tour is over. Thank you, ${w.name}.`,'me');retireW(w)}});
-  aiSign(false);aiOffers();mergeWeek();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();
+  aiSign(false);aiOffers();mergeWeek();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();upstartWeek();mutinyWeek();
 
   for(const c of Object.values(G.cos)){if(!c.active)continue;
     c.pop+=((own(c,'museum')?60:50)-c.pop)*.02;if(c.owner==='ai'&&c.cash>100000&&!(c.deep&&slumpF(c)))c.cash-=(c.cash-100000)*.03;
@@ -1509,7 +1586,7 @@ function render(){
   if(!G&&!HOME.includes(tab))tab='home';navOpen=null;
   $('#nav').innerHTML=navHtml();setTimeout(tabSels,0);
   renderHdr();
-  ({dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();
+  ({dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab))hofCerPop();
   if(G&&['book','dash'].includes(tab)){const cb=campBox();if(cb)$('#app').insertAdjacentHTML('afterbegin',cb)}
 }
 function renderHdr(){
@@ -1607,7 +1684,7 @@ function vBook(){
   const r=roster(G.me),fc=feudCards();
   $('#app').innerHTML=`<div class="head"><div><h2>${major?esc(m.majorName)+' (Major Event)':esc(wkName(m))+', '+fmtDate(G.date)}</h2><p>Tap wrestlers in the roster to fill the card. Tap a name on the card to pick the winner. The last match is the main event.</p></div>
   ${wevB}<div class="btns"><button id="addm" ${r.length<2?'disabled':''}>+ Match</button><button id="adds" ${r.length?'':'disabled'}>+ Segment</button><button id="adda">+ Ad</button><button id="auto" ${r.length<2?'disabled':''}>Auto-fill</button>${G.tour?(G.card.some(x=>x.tour)?'':`<button id="tround" class="bl">Add ${esc(G.tour.name)} ${tourLabel(G.tour.alive.length).toLowerCase()}</button>`):`<button id="tnew">Tournament</button>`}<button id="skip" title="No show this week">Skip week</button><button class="go" id="run">Run the show</button></div></div>
-  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard">${card.length?card.map(row).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
+  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard"><div class="nbtitle">${major?esc(m.majorName):esc(wkName(m))} <small>${fmtDate(G.date)}</small></div>${card.length?card.map(row).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
   ${fc?`<details class="panel bkfe" ${G.bkFeudsShut?'':'open'}><summary><b>Your feuds</b> <span class="sub">tap one to book it</span></summary><p class="sub" style="margin:4px 0 0">Staleness counts their matches in the last 6 weeks; too many cools the feud.</p>${fc}</details>`:''}
   <details class="panel bkout"><summary><b>Show outlook</b> <span class="sub">expected profit</span> <b class="${pr<0?'neg':'pos'}">${money(pr)}</b></summary>${(()=>{const L=G.war||[],x=L[L.length-1];if(!x)return '';const mine=x.rows.find(r=>r.c===G.me);return `<div class="kv"><span>Last week's ratings war</span><b>${mine?`${ord(mine.rk)} of ${x.rows.length}`:'Sat out'}</b></div>`})()}
   <div class="kv"><span>Expected crowd</span><b>${crowd.toLocaleString('en-US')}</b></div>
@@ -1840,6 +1917,33 @@ function dFinish(i){
 }
 function runPlayer(){
   if(!G.card.some(x=>x.t==='m')){openD(`<div class="dh"><h3>Card needs a match</h3></div><div class="db"><p>Add at least one match before running the show.</p><div class="dfoot"><button class="go" data-x="1">OK</button></div></div>`);dlg.onclick=e=>{if(e.target.closest('[data-x]'))closeD()};return}
+  const card=G.card.slice(),ppl=x=>x.t==='m'?x.sides.flat():x.t==='s'?x.who:[],pre={};card.forEach(x=>ppl(x).forEach(id=>{const w=W(id);pre[id]=[w.pop,w.cha,w.wrk]}));
+  const res=runShow(G.me,G.card,true),m=me();achCheck();const lastM=card.map((x,i)=>x.t==='m'?i:-1).filter(i=>i>=0).pop();
+  const dl=(v,unit)=>{const r=Math.abs(v)>=10?Math.round(v):Math.round(v*10)/10;return r===0?'':`<span class="dchip ${r>0?'up':'dn'}">${r>0?'+':''}${r}${unit?' '+unit:''}</span>`};
+  const who=id=>{const w=W(id),p=pre[id]||[w.pop,w.cha,w.wrk];return `<span class="sp"><b>${esc(w.name)}</b>${dl(w.pop-p[0],'pop')}${w.cha>p[1]?'<span class="dchip st">+Cha</span>':''}${w.wrk>p[2]?'<span class="dchip st">+Wrk</span>':''}</span>`};
+  const row=(it,i)=>{const x=card[i]||{};
+    if(x.t==='a')return `<div class="srow ad"><span class="sno"></span><div><span class="stype">Sponsor break</span></div><b class="smo">${esc(it.sub)}</b></div>`;
+    if(x.t==='s')return `<div class="srow"><span class="sno">${i+1}</span><div class="smain"><span class="stype">Segment · ${esc(x.g)}</span><div class="sline">${x.who.map(id=>`<b>${esc(W(id).name)}</b>`).join(' &amp; ')}</div>
+      <div class="schg">${x.who.map(who).join('')}${(it.ups||[]).map(u=>`<span class="dchip st">${esc(u)}</span>`).join('')}${it.bonus?`<span class="dchip ${it.bonus<0?'dn':'up'}">${it.bonus<0?'Refunds ':'Buzz +'}${money(Math.abs(it.bonus))}</span>`:''}</div>
+      ${it.lines.length?`<details><summary>How it went</summary>${it.lines.map(l=>`<p>${esc(l)}</p>`).join('')}</details>`:''}</div><span class="sst">${stars(it.st)}</span></div>`;
+    const t=x.title&&G.titles?.[x.title],g=gimOf(x),fin=x.fin?(CLEAN.includes(x.fin.t)&&g.win?g.win:x.fin.t):'',won=x.win!=null&&x.fin&&!NOWIN.includes(x.fin.t);
+    return `<div class="srow${i===lastM?' main':''}${it.st>=5?' five5':''}"><span class="sno">${i+1}</span><div class="smain"><span class="stype">${i===lastM?'Main event':x.tour?'Tournament':'Match'}${t?` · <span class="sgold">🏆 ${esc(t.name)}</span>`:''}${g.k?` · ${esc(g.name)}`:''}</span>
+      <div class="sline">${won?`<b class="swin">${esc(nm(x.sides[x.win]))}</b> <i>def.</i> ${x.sides.filter((_,k)=>k!==x.win).map(sd=>esc(nm(sd))).join(', ')}`:x.sides.map(sd=>esc(nm(sd))).join(' <i>vs</i> ')}</div>
+      <div class="sfin">${fin?`<span class="sftag">${esc(fin)}</span>`:''}${x.tres?`<span class="sftag gold">${esc(x.tres)}</span>`:''}</div>
+      <div class="schg">${x.sides.flat().map(who).join('')}${(it.ups||[]).map(u=>`<span class="dchip st">${esc(u)}</span>`).join('')}${it.bonus?`<span class="dchip ${it.bonus<0?'dn':'up'}">${it.bonus<0?'Refunds ':'Buzz +'}${money(Math.abs(it.bonus))}</span>`:''}</div>
+      ${it.lines.length?`<details><summary>How it went</summary>${it.lines.map(l=>`<p>${esc(l)}</p>`).join('')}</details>`:''}</div><span class="sst">${stars(it.st)}</span></div>`};
+  const body=`<div class="scard"><div class="shead"><div class="sco">${logo(m,30)} ${esc(m.short)}${res.major?' <span class="sribbon">Major Event</span>':''}</div><b class="sname">${esc(res.name)}</b><span class="smeta">${fmtDate(G.date)} · ${res.crowd.toLocaleString('en-US')} fans</span><div class="sbig">${stars(res.rating)}</div></div>
+   ${res.items.filter(x=>x.st>=5&&x.sub!=='Segment').map(x=>`<div class="five" role="status"><b>★★★★★ FIVE-STAR MATCH!</b><span>${esc(x.label)}</span><div style="margin-top:4px;font-size:14px">A perfect match. It goes in the history books and on every wrestler's profile.</div></div>`).join('')}
+   <div class="srows">${res.items.map(row).join('')}</div>
+   <div class="smoney"><div><small>Tickets</small><b>${money(res.gate)}</b></div>${res.buys?`<div><small>Event buys (${res.buys.toLocaleString('en-US')})</small><b>${money(res.buyInc)}</b></div>`:''}<div><small>Ads and TV · ${res.viewers.toLocaleString('en-US')} viewers</small><b>${money(res.ads)}</b></div><div><small>Match bonuses</small><b class="${res.bonus<0?'neg':''}">${money(res.bonus)}</b></div><div><small>Wages and costs</small><b>-${money(res.wages+res.cost)}</b></div><div class="tot"><small>Profit</small><b class="${res.profit<0?'neg':'pos'}">${money(res.profit)}</b></div><div><small>Company popularity</small><b class="${res.popDelta<0?'neg':'pos'}">${res.popDelta>=0?'+':''}${res.popDelta.toFixed(1)}</b></div></div>
+   <div class="db" style="padding-top:0">${res.major?`<div class="panel" style="margin-top:12px"><h3>Plan the next Major Event</h3><p class="sub" style="margin:0">Your next Major Event is ${fmtDate(addDays(G.date,7*(()=>{for(let i=1;i<60;i++)if(isMajorDate(m,addDays(G.date,7*i)))return i;return 4})()))} (${CYC[m.cyc||1].toLowerCase()}, 3rd week of the month). Change how often in Calendar and news.</p><label style="margin-top:8px">Event name<input id="evn" maxlength="40" value="${esc(pick(EVN.filter(n=>n!==m.majorName)))}"></label></div>`:''}
+   <div class="dfoot"><button class="go" id="cont">Continue to next week</button></div></div></div>`;
+  openD(body,'wide');
+  dlg.onclick=e=>{if(e.target.id!=='cont')return;if(res.major){m.majorName=$('#evn').value.trim()||pick(EVN)}G.card=[];closeD();advance();render();window.scrollTo(0,0);nextRes()};
+}
+
+function runPlayer_old(){
+  if(!G.card.some(x=>x.t==='m')){openD(`<div class="dh"><h3>Card needs a match</h3></div><div class="db"><p>Add at least one match before running the show.</p><div class="dfoot"><button class="go" data-x="1">OK</button></div></div>`);dlg.onclick=e=>{if(e.target.closest('[data-x]'))closeD()};return}
   const res=runShow(G.me,G.card,true),m=me();achCheck();
   const body=`<div class="dh"><h3>${esc(res.name)}</h3><div>${fmtDate(G.date)} · ${res.crowd.toLocaleString('en-US')} fans</div></div><div class="db">
    ${res.items.filter(x=>x.st>=5&&x.sub!=='Segment').map(x=>`<div class="five" role="status"><b>★★★★★ FIVE-STAR MATCH!</b><span>${esc(x.label)}</span><div style="margin-top:4px;font-size:14px">A perfect match. It goes in the history books and on every wrestler's profile.</div></div>`).join('')}
@@ -1978,6 +2082,7 @@ function vDash(){const m=me(),R=roster(G.me),sec=(t,body,empty)=>`<div class="pa
   const li=a=>a.length?`<ul style="margin:4px 0 0;padding-left:20px">${a.map(x=>`<li style="margin:4px 0">${x}</li>`).join('')}</ul>`:'';
   const wb=w=>`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-dw="${w.id}">${esc(w.name)}</button>`;
   const alerts=[];if(G.merge&&G.cos[G.merge.co]?.active)alerts.push(`<b>${esc(G.cos[G.merge.co].short)}</b> wants to merge with you. See below.`);if((G.req||[]).some(r=>r.st==='open'))alerts.push(`<b>${G.req.filter(r=>r.st==='open').length}</b> talent request(s) waiting. See below.`);if(G.offers.length)alerts.push(`<b>${G.offers.length}</b> rival offer${G.offers.length===1?'':'s'} waiting for your answer. <a href="#roster/mine">Decide on My roster</a>`);
+  {const x=unrest(G.me);if(x.n>=8&&x.share>=MUT_WARN)alerts.push(`<b style="color:var(--red2)">Locker room unrest:</b> ${x.u} of ${x.n} wrestlers are unhappy. If more than half stay unhappy for ${MUT_WEEKS} weeks, a group may walk out and start their own company. <a href="#roster/mine">Filter by Unhappy</a>`)}
   if(m.cash<0)alerts.push(`<b style="color:var(--red2)">Your bank is below zero</b> (${m.broke} of ${dif().broke} weeks before you fold).`);
   R.filter(w=>(w.unh||0)>=4).forEach(w=>alerts.push(`${wb(w)} is miserable and wants to leave.`));
   titlesOf(G.me).filter(t=>t.unused).forEach(t=>alerts.push(`The ${esc(t.name)} wasn't defended last cycle and lost prestige.`));
@@ -2564,26 +2669,28 @@ function vStar(){
      <label style="margin-top:12px"><input type="checkbox" id="gsb" ${G.opts.sandbox?'checked':''}>Sandbox: allow editing stats and contracts</label></div>`
    :'<div class="panel empty">Pick a wrestler on the left.</div>'}</div></div>`;
 }
+/* Top rivals (owner, 26 Nov): up to 3, and only pairings whose rivalry score reaches RIVAL_MIN. TODO(ASK OWNER) threshold. */
+const RIVAL_MIN=120;
 function topRivals(w,n){const opp={};FE().filter(f=>f.st==='past'||f.st==='cur').forEach(f=>{if(!f.p.some(p=>p.includes(w.id)))return;f.p.filter(p=>!p.includes(w.id)).flat().forEach(id=>{const o=opp[id]=opp[id]||{n:0,pk:0};o.n++;o.pk=Math.max(o.pk,Math.round(f.pk||f.heat||0))})});
   (G.rivals||[]).forEach(r=>{const o=r[0]===w.id?r[1]:r[1]===w.id?r[0]:null;if(o&&!opp[o])opp[o]={n:0,pk:0}});
   Object.values(G.ws).forEach(x=>{if(x.id===w.id)return;const h=(w.hist||[]).filter(h=>h.vs.split(', ').includes(x.name)).length;if(h)(opp[x.id]=opp[x.id]||{n:0,pk:0}).m=h});
-  return Object.entries(opp).map(([id,o])=>({w:W(id),o,score:(isRival(w.id,id)?1000:0)+o.n*30+o.pk+(o.m||0)*5})).filter(x=>x.w).sort((a,b)=>b.score-a.score).slice(0,n)}
+  return Object.entries(opp).map(([id,o])=>({w:W(id),o,score:(isRival(w.id,id)?1000:0)+o.n*30+o.pk+(o.m||0)*5})).filter(x=>x.w&&x.score>=RIVAL_MIN).sort((a,b)=>b.score-a.score).slice(0,n)}
 function profGlance(w){
   const rs=Object.values(G.titles||{}).flatMap(t=>(t.reigns||[]).filter(r=>r.h&&r.h.includes(w.id)||!r.h?.length&&r.hn===w.name).map(r=>({t,r}))).sort((a,b)=>(b.r.won||'')<(a.r.won||'')?-1:1);
-  const fs=feudsOf(w.id).sort((a,b)=>b.heat-a.heat),rv=topRivals(w,2),H=(w.hist||[]).slice(0,5),F=w.five||[];
+  const fs=feudsOf(w.id).sort((a,b)=>b.heat-a.heat),rv=topRivals(w,3),H=(w.hist||[]).slice(0,5),F=w.five||[];
   const box=(t,inner)=>`<div class="panel"><h4>${t}</h4>${inner}</div>`,none=t=>`<div class="sub">${t}</div>`,link=x=>`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-star="${x.id}">${esc(x.name)}</button>`;
   return `<div class="glance">
    ${F.length?`<div class="panel" style="grid-column:1/-1;background:linear-gradient(135deg,#f6d26b33,#c9a22722)"><h4>★★★★★ Five-star matches (${F.length})</h4><ul>${F.slice().reverse().map(f=>`<li>${esc(f.txt)} <span class="sub">${esc(f.ev)} (${esc(f.co)}), ${fmtDate(f.d)}</span></li>`).join('')}</ul></div>`:''}
    ${box(`Title history (${rs.length})`,rs.length?`<ul>${rs.slice(0,5).map(({t,r})=>`<li>🏆 ${esc(t.name)} <span class="sub">${r.won?fmtDate(r.won):''}${r.lost?' to '+fmtDate(r.lost):r.pre?'':' · current'}</span></li>`).join('')}</ul>${rs.length>5?none('Full list under Career below.'):''}`:none('No title reigns yet.'))}
    ${box('Recent matches',H.length?`<ul>${H.map(h=>`<li><b class="${h.r==='w'?'pos':h.r==='l'?'neg':''}">${{w:'W',l:'L',d:'D'}[h.r]}</b> vs ${esc(h.vs)} <span class="sub">${stars(h.st)} · ${fmtDate(h.date)}</span></li>`).join('')}</ul>`:none('No matches yet.'))}
    ${box('Current feuds',fs.length?`<ul>${fs.map(f=>`<li>vs ${f.p.filter(p=>!p.includes(w.id)).flat().map(id=>W(id)).filter(Boolean).map(link).join(', ')} <span class="sub">heat ${Math.round(f.heat)}</span></li>`).join('')}</ul>`:none('Not in a feud.'))}
-   ${box('Top rivals',rv.length?`<ul>${rv.map(x=>`<li>${link(x.w)} <span class="sub">${isRival(w.id,x.w.id)?'rival · ':''}${x.o.n?`${x.o.n} feud${x.o.n>1?'s':''}`:''}${x.o.m?`${x.o.n?' · ':''}${x.o.m} recent match${x.o.m>1?'es':''}`:''}</span></li>`).join('')}</ul>`:none('No rivals yet.'))}
+   ${box('Top rivals',rv.length?`<ul>${rv.map(x=>`<li>${link(x.w)} <span class="sub">${isRival(w.id,x.w.id)?'rival · ':''}${x.o.n?`${x.o.n} feud${x.o.n>1?'s':''}`:''}${x.o.m?`${x.o.n?' · ':''}${x.o.m} recent match${x.o.m>1?'es':''}`:''} · score ${Math.min(999,x.score)}</span></li>`).join('')}</ul>`:none(`No rivals yet. A rivalry needs a score of ${RIVAL_MIN} from feuds, feud heat and matches against each other.`))}
   </div>`}
 function profCareer(w){
   const rs=Object.values(G.titles||{}).flatMap(t=>(t.reigns||[]).filter(r=>r.h&&r.h.includes(w.id)||!r.h?.length&&r.hn===w.name).map(r=>({t,r}))).sort((a,b)=>(a.r.won||'')<(b.r.won||'')?-1:1);
   const cr=w.car||{},aws=(G.awards||[]).flatMap(a=>[a.woty&&a.woty.name===w.name?`${a.y} Wrestler of the Year`:null,a.moty&&a.moty.txt.includes(w.name)?`${a.y} Match of the Year (${a.moty.txt})`:null]).filter(Boolean);
   const days=r=>r.won?daysBetween(r.won,r.lost||G.date):null,defs=r=>r.def.filter(x=>/retains/.test(x.res)).length;
-  const acc=[...aws.map(a=>'🏅 '+a),...(w.asc||[]).map(x=>`⬆ Ascended: ${x.t} (${fmtDate(x.d)})`),...(w.hof?[`🏛 Hall of Fame (${fmtDate(w.hof)})`]:[]),...(w.five||[]).map(f=>`★★★★★ Five-star match: ${f.txt} (${fmtDate(f.d)})`),...(w.chof||[]).map(x=>`🏛 ${x} Hall of Fame`),...(w.legend&&!(w.asc||[]).some(x=>x.t==='Legend')?['★ Became a Legend']:[]),...rs.filter(x=>!x.r.pre).map(x=>`🏆 Won the ${x.t.name}${x.r.wonAt?` at ${x.r.wonAt}`:''} (${fmtDate(x.r.won)})`)];
+  const acc=[...aws.map(a=>'🏅 '+a),...(w.asc||[]).map(x=>`⬆ Ascended: ${x.t} (${fmtDate(x.d)})`),...(w.hof?[`🏛 Hall of Fame (${fmtDate(w.hof)})`]:w.hofQ?[`🏛 Hall of Fame class of ${w.hofQ.slice(0,4)}: inducted at the year-end ceremony`]:[]),...(w.five||[]).map(f=>`★★★★★ Five-star match: ${f.txt} (${fmtDate(f.d)})`),...(w.chof||[]).map(x=>`🏛 ${x} Hall of Fame`),...(w.legend&&!(w.asc||[]).some(x=>x.t==='Legend')?['★ Became a Legend']:[]),...rs.filter(x=>!x.r.pre).map(x=>`🏆 Won the ${x.t.name}${x.r.wonAt?` at ${x.r.wonAt}`:''} (${fmtDate(x.r.won)})`)];
   const kv=(l,v)=>`<div class="kv"><span>${l}</span><b>${v}</b></div>`;
   return `<h3 style="margin-top:18px">Career</h3><div class="sheet" style="margin-top:6px">
    ${kv('Main events',`${cr.main||0} <span class="sub">${cr.mainW||0} won</span>`)}${kv('Opening matches',cr.open||0)}${kv('Major Event matches',`${cr.maj||0} <span class="sub">${cr.majW||0} won</span>`)}${kv('Title matches',cr.tm||0)}

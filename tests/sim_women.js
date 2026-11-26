@@ -1,0 +1,11 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();
+for(const ver of [1,3,6]){const p=await b.newPage();await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+await p.click(`[data-nver="${ver}"]`);await p.waitForTimeout(150);await p.click(`input[name=nco] >> nth=0`);await p.click('#nstartbtn');await p.waitForTimeout(400);
+for(let k=0;k<52;k++)await p.evaluate(()=>__ro.week());
+const r=await p.evaluate(()=>__ro.run(`(()=>{const gen={};Object.values(G.ws).forEach(w=>gen[w.name]=w.gender);const S0=G.shows.filter(s=>s.c!==G.me),S=S0.slice(Math.floor(S0.length*.75));let mt=0,wm=0,main=0,wmain=0,tt=0,wtt=0,rs=0,wrs=0,n=0;
+ S.forEach(s=>{const M=s.m||[];M.forEach((r,i)=>{const names=[...String(r[0]).split(/, | & /),...String(r[1]).split(/, | & /)];const fem=names.every(x=>gen[x]==='F');mt++;if(fem){wm++;wrs+=r[4]}rs+=r[4];if(i===M.length-1){main++;if(fem)wmain++}if(r[5]){tt++;if(fem)wtt++}})});
+ const ros=Object.values(G.ws).filter(w=>w.status==='active'&&w.co&&w.co!==G.me),fem=ros.filter(w=>w.gender==='F');
+ return {rosterWomenShare:(fem.length/ros.length).toFixed(2),matchShare:(wm/mt).toFixed(2),mainShare:(wmain/main).toFixed(3),titleShare:(wtt/tt).toFixed(2),avgStarsWomen:(wrs/wm).toFixed(2),avgStarsAll:(rs/mt).toFixed(2),avgPopW:(fem.reduce((a,w)=>a+w.pop,0)/fem.length).toFixed(0),avgPopAll:(ros.reduce((a,w)=>a+w.pop,0)/ros.length).toFixed(0)}})()`));
+console.log(ver,JSON.stringify(r));await p.close()}await b.close()})();
