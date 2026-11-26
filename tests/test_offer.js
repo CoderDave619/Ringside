@@ -1,5 +1,5 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
-(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:390,height:740}});await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&/^Start a new game/.test(d.textContent))d.querySelector('[data-y]').click()},40)});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:390,height:740}});await p.addInitScript(()=>{try{localStorage.ro_rcomp='0'}catch(e){}});await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&/^Start a new game/.test(d.textContent))d.querySelector('[data-y]').click()},40)});const errs=[];p.on('pageerror',e=>errs.push(e.message));
 let native=0;p.on('dialog',d=>{native++;d.accept()});
 await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
 await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(300);

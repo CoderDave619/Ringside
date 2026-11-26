@@ -1,0 +1,23 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+const YRS=+process.argv[2]||3;
+(async()=>{const b=await chromium.launch();const rows=[];const errs=[];
+const runs=[[1,'c0'],[3,'c3'],[4,'c5'],[5,'c6'],[6,'c0'],[6,'c3'],['t','c1'],[2,'c0']];
+await Promise.all([0,1].map(async lane=>{for(let i=lane;i<runs.length;i+=2){const [ver,co]=runs[i];const p=await b.newPage();p.on('pageerror',e=>errs.push(e.message));await p.route('https://**',r=>r.abort());
+await p.addInitScript(()=>{setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
+await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+if(ver==='t')await p.click('[data-nsrc=tutorial]');else await p.click(`[data-nver="${ver}"]`);await p.waitForTimeout(150);await p.click('input[name=nmode][value=career]');await p.click(`input[value=${co}]`);await p.click('#nstartbtn');await p.waitForTimeout(500);
+const r=await p.evaluate(Y=>{window.__full=true;const G=__ro.G;const S={};__ro.run('Object.values(G.ws).forEach(w=>trOf(w))');for(const w of Object.values(G().ws))S[w.id]={trt:w.trt.slice(),f:w.fame||w.pop*10,wrk:w.wrk,cha:w.cha,inj:(w.injH||[]).length,age:null};
+for(let k=0;k<52*Y;k++)__ro.week();const out=[];for(const w of Object.values(G().ws)){const s=S[w.id];if(!s||w.status!=='active')continue;out.push({trt:s.trt,df:(w.fame||w.pop*10)-s.f,dw:w.wrk-s.wrk,dc:w.cha-s.cha,inj:(w.injH||[]).length-s.inj,rat:w.rn?w.rsum/w.rn:null,rn:w.rn||0,mor:w.mor??70,signed:!!w.co,age:__ro.run(`age(G.ws['${w.id}'])`)})}return out},YRS);
+rows.push(...r);await p.close()}}));
+const all=rows;const keys=[...new Set(all.flatMap(r=>r.trt))].sort();
+const av=(a,f)=>{const v=a.map(f).filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((s,x)=>s+x,0)/v.length:NaN};
+const base={df:av(all,r=>r.df),dw:av(all,r=>r.dw),dc:av(all,r=>r.dc),inj:av(all.filter(r=>r.signed),r=>r.inj),rat:av(all.filter(r=>r.rn>5),r=>r.rat),mor:av(all.filter(r=>r.signed),r=>r.mor)};
+console.log('wrestlers',all.length,'errors',[...new Set(errs)].slice(0,3));
+const f=x=>isNaN(x)?'  -  ':x.toFixed(2).padStart(6);
+console.log('trait'.padEnd(10),'n'.padStart(4),'  dFame  dWrk  dCha  inj/yr rating morale');
+console.log('ALL'.padEnd(10),String(all.length).padStart(4),f(base.df),f(base.dw),f(base.dc),f(base.inj/YRS),f(base.rat),f(base.mor));
+for(const k of keys){const a=all.filter(r=>r.trt.includes(k));console.log(k.padEnd(10),String(a.length).padStart(4),f(av(a,r=>r.df)),f(av(a,r=>r.dw)),f(av(a,r=>r.dc)),f(av(a.filter(r=>r.signed),r=>r.inj)/YRS),f(av(a.filter(r=>r.rn>5),r=>r.rat)),f(av(a.filter(r=>r.signed),r=>r.mor)))}
+const young=all.filter(r=>r.age<=27),mid=all.filter(r=>r.age>27&&r.age<=34);
+console.log('growth/yr wrk: young',(av(young,r=>r.dw)/YRS).toFixed(2),'young hardw',(av(young.filter(r=>r.trt.includes('hardw')),r=>r.dw)/YRS).toFixed(2),'mid',(av(mid,r=>r.dw)/YRS).toFixed(2),'mid hardw',(av(mid.filter(r=>r.trt.includes('hardw')),r=>r.dw)/YRS).toFixed(2),'lazy',(av(all.filter(r=>r.trt.includes('lazy')),r=>r.dw)/YRS).toFixed(2));
+const n=all.map(r=>r.trt.length);console.log('traits per wrestler',[1,2,3].map(k=>k+':'+n.filter(x=>x===k).length).join(' '));
+await b.close()})();

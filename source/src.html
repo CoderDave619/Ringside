@@ -373,7 +373,7 @@ const sideName=(p,gid)=>{const g=gid&&grp(gid)||teamOf(p);return g?g.name:p.map(
 const fName=f=>f.p.map((p,i)=>sideName(p,f.g?.[i])).join(' vs ');
 const heatName=h=>h>=80?'Red hot':h>=55?'Hot':h>=30?'Warm':h>=15?'Cooling':'Cold';
 const heatCol=h=>h>=55?'var(--red2)':h>=30?'var(--gold)':'var(--blue)';
-const feudHeat=(f,d)=>{if(d>0)d*=Math.max(.15,1-f.heat/110)*(f.hm||1);f.heat=clamp(Math.round((f.heat+d)*10)/10,0,100);f.pk=Math.max(f.pk||0,f.heat)};
+const feudHeat=(f,d)=>{if(d>0)d*=Math.max(.15,1-f.heat/110)*(f.hm||1)*(f.p&&f.p.flat().some(id=>hasTr(W(id),'hothead'))?1.25:1);f.heat=clamp(Math.round((f.heat+d)*10)/10,0,100);f.pk=Math.max(f.pk||0,f.heat)};
 /* Feud history (§4.48): the pair's past makes a feud hotter to start and quicker to grow. TODO(ASK OWNER): numbers. */
 function feudHist(ps,why){const A=ps[0]||[],B=ps.slice(1).flat(),out=[];if(A.some(x=>B.some(y=>isRival(x,y))))out.push(['Rivals',20]);const both=g=>g.m.some(id=>A.includes(id))&&g.m.some(id=>B.includes(id))||(g.former||[]).some(id=>A.includes(id))&&g.m.concat(g.former||[]).some(id=>B.includes(id));
   const gs=TM().filter(both);if(gs.some(g=>g.st==='past'||(g.former||[]).length))out.push([gs.some(g=>g.kind==='tag')?'Former tag partners':'Former stablemates',15]);else if(gs.length)out.push(['Partners right now',10]);
@@ -411,7 +411,7 @@ const OUTS={none:'Just end it',team:'They join forces',injury:'Injury',timeoff:'
 function applyOutcome(o,src){const w=o.t?W(o.t):null,mine=x=>x&&x.co===G.me;
   if(o.k==='injury'&&window.__ro&&w.co===G.me){G.cnt=G.cnt||{};G.cnt.myInj=(G.cnt.myInj||0)+1;G.cnt.injSrc=G.cnt.injSrc||{};G.cnt.injSrc[src]=(G.cnt.injSrc[src]||0)+1}
   if(o.k==='injury'&&w.co){(w.injH=w.injH||[]).push({d:G.date,src:src||''});if(w.injH.length>12)w.injH.shift()}
-  if(o.k==='injury'||o.k==='timeoff'){let wk=o.wk||ri(o.k==='injury'?3:2,o.k==='injury'?8:5);if(o.k==='injury'&&w.co===G.me)wk=Math.max(1,Math.round(wk*(1-stfMy('doc')*.35)));w.out=G.week+wk;w.outWhy=o.k;w.fat=0;if(o.k==='injury')w.mor=clamp((w.mor??70)-5,0,100);else w.mor=clamp((w.mor??70)+5,0,100);
+  if(o.k==='injury'||o.k==='timeoff'){let wk=o.wk||ri(o.k==='injury'?3:2,o.k==='injury'?8:5);if(o.k==='injury'&&w.co===G.me)wk=Math.max(1,Math.round(wk*(1-stfMy('doc')*.35)));if(o.k==='injury')wk=Math.max(1,Math.round(wk*(hasTr(w,'ironb')?.75:1)*(hasTr(w,'vet')?1.25:1)));w.out=G.week+wk;w.outWhy=o.k;w.fat=0;if(o.k==='injury')w.mor=clamp((w.mor??70)-5,0,100);else w.mor=clamp((w.mor??70)+5,0,100);
     G.card=G.card.filter(x=>x.t==='a'||!(x.t==='m'?x.sides.flat():x.who).includes(w.id));news(`${w.name} ${o.k==='injury'?'is injured':'takes time off'}${src?` after ${src}`:''}: out about ${wk} weeks.`,mine(w)?'me':'mt')}
   else if(o.k==='turn'){const dir=o.dir||(w.align==='H'?'F':'H');const nv=dir==='H'?60:dir==='F'?-60:0;if(alLetter(nv)!==w.align){gainPop(w,w.mom>=60?3:-1);w.al=nv;w.align=alLetter(nv);news(`${w.name} turned ${dir==='F'?'face':dir==='H'?'heel':'tweener'}${src?` after ${src}`:''}.`,mine(w)?'me':'mt')}}
   else if(o.k==='leave'){const was=w.co;news(`${w.name} leaves town${src?` after ${src}`:''}.`,was===G.me?'me':'co');freeW(w);w.refused=G.week;mom(w,-10)}
@@ -527,7 +527,7 @@ function newGame(scen,start,choice,opts){
   });
   scen.wrestlers.forEach((s,i)=>{
     const w={id:'w'+i,name:s.name,gender:s.gender||'',birth:s.birth||'',debut:s.debut||'',retire:s.retire||'',al:s.al!=null&&s.al!==''?clamp(+s.al,-100,100):alDefault(s.align),align:'F',gim:s.gim||'None',wt:+s.wt||0,legend:!!s.legend,lp:0,cha:+s.cha||50,wrk:+s.wrk||50,...Object.fromEntries(XSTATS.filter(x=>+s[x.k]).map(x=>[x.k,clamp(+s[x.k],1,100)])),per:PERS[s.per]?s.per:undefined,spec:[s.spec0,s.spec1].filter((k,i,a)=>SPECS[k]&&a.indexOf(k)===i).length?[s.spec0,s.spec1].filter((k,i,a)=>SPECS[k]&&a.indexOf(k)===i):undefined,pop:+s.pop||30,mom:50,status:'active',co:null,wage:0,left:0,next:null,riv:{},last:0,gm:0,...(s.px&&typeof s.px==='object'?{px:window.WrestlerLook?WrestlerLook.normalize(s.px):s.px}:{})};
-    w.align=alLetter(w.al);w.death=s.death||'';
+    w.align=alLetter(w.al);w.death=s.death||'';if(Array.isArray(s.trx)&&s.trx.length)w.trt=[perOf(w),...s.trx.filter(k=>TRAITS[k]&&k!==w.per)].slice(0,3);
     if(w.death&&w.death<=start){w.status='retired';w.dead=true}
     else if(w.retire&&w.retire<=start)w.status='retired';
     else if(w.debut&&w.debut>start)w.status='future';
@@ -653,10 +653,17 @@ function awards(y){
   if(woty)news(`${y} Wrestler of the Year: ${woty.name} (${woty.co}), ${woty.w}-${woty.l}-${woty.d}.`,'aw');
   if(moty)news(`${y} Match of the Year: ${moty.txt} at ${moty.ev} (${moty.co}), ${stars(moty.st)}.`,'aw');
 }
+/* Monthly growth (§4.60). Chances per month to gain 1 workrate / 1 charisma. Young wrestlers grow, Hard Workers keep growing,
+   Lazy wrestlers slip without big matches. Free agents grow at half speed. TODO(ASK OWNER): pacing. */
+const GROW={young:[.22,.12],mid:[.07,.05],hardw:[.18,.08],lazy:.25},MENTOR_P=.05;
+function monthly(){for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
+  b=a<=27?GROW.young:a<=33?GROW.mid:[0,0],pw=(b[0]+(hw&&a<=38?GROW.hardw[0]:0))*f,pc=(b[1]+(hw&&a<=38?GROW.hardw[1]:0))*f;
+  if(w.wrk<95&&Math.random()<pw){w.wrk++;w.grow=(w.grow||0)+1}if(w.cha<95&&Math.random()<pc){w.cha++;w.grow=(w.grow||0)+1}
+  if(hasTr(w,'lazy')&&G.week-(w.bigW??-99)>8&&Math.random()<GROW.lazy&&w.wrk>20){w.wrk--;w.grow=(w.grow||0)-1}
+  if(hasTr(w,'party')&&Math.random()<.06){gainPop(w,-3);w.mor=clamp((w.mor??70)-6,0,100);if(w.co===G.me||w.pop>=60)news(`${w.name} got into trouble on a night out. ${w.co===G.me?'The fans noticed, and so did the locker room.':''}`.trim(),w.co===G.me?'me':'')}}}
 function yearly(){
   for(const w of Object.values(G.ws)){
     if(w.status!=='active')continue;const a=age(w);if(a==null)continue;
-    if(a<=25&&w.wrk<75)w.wrk=clamp(w.wrk+ri(0,2),1,100);
     if(a>=35)w.wrk=clamp(w.wrk-ri(0,2),1,100);
     if(a>=42)w.wrk=clamp(w.wrk-ri(0,2),1,100);
     if(!G.opts.retire)continue;
@@ -729,7 +736,7 @@ const PSTATS=[
   {k:'agi',name:'Agility',hint:'Speed and quickness. Helps high-flyers and avoids some injuries.',seed:w=>{const wt=w.wt||(w.gender==='F'?145:240);return Math.round(clamp(rnd(30,60)+((w.gender==='F'?150:240)-wt)*.4-((age(w)??30)>34?((age(w)??30)-34)*1.2:0),5,95))}},
   {k:'psy',name:'Psychology',hint:'Telling a story in the ring. Lifts every match and makes feuds land harder.',seed:w=>Math.round(clamp(w.wrk*.5+rnd(10,30)+Math.min(20,Math.max(0,((age(w)??28)-24)*1.5)),5,95))}];
 const XSTATS=PSTATS.filter(x=>!x.core);
-function pst(w,k){if(w[k]==null){const d=PSTATS.find(x=>x.k===k);w[k]=d&&d.seed?d.seed(w):50}return w[k]}
+function pst(w,k){if(w[k]==null){const d=PSTATS.find(x=>x.k===k);w[k]=d&&d.seed?d.seed(w):50}return k==='psy'&&w.trt&&w.trt.includes('vet')?Math.min(100,w[k]+8):w[k]}
 const LONG_GIMS=['iron','2of3','gauntlet','royal','rumble','chamber','lms'];
 const SPECS={
   highflyer:{name:'High-flyer',stat:'fly',style:'lucha',hint:'Better matches the higher their High Flying and Agility. Slightly more injuries.',ok:w=>pst(w,'fly')>=55},
@@ -749,6 +756,36 @@ function specOf(w){if(!w.spec){const c=Object.keys(SPECS).filter(k=>SPECS[k].ok(
 const hasSpec=(w,k)=>specOf(w).includes(k);
 const specPow=(w,k)=>hasSpec(w,k)?pst(w,SPECS[k].stat)/100:0;
 function perOf(w){if(!w.per)w.per=pick(['loyal','greedy','leader','hothead','showboat','pro','pro','loyal']);return w.per}
+/* Traits (§4.60, owner 26 Nov). Every wrestler has 1 to 3. The first is their old personality, so existing saves keep it.
+   t: '+' good, '-' bad, '~' mixed. Effects are small on purpose and stack by multiplying. TODO(ASK OWNER): all numbers. */
+const TRAITS={
+ loyal:{n:'Loyal',t:'+',h:'Re-signs 10% cheaper, rarely tempted by rival offers, morale recovers faster.'},
+ greedy:{n:'Greedy',t:'-',h:'Asks 15% more, gets upset faster when underpaid, and rivals tempt them easily.'},
+ leader:{n:'Locker Room Leader',t:'+',h:'Lifts the whole roster\'s morale each week and vouches for young talent.'},
+ hothead:{n:'Hothead',t:'~',h:'Feuds heat up 25% faster, but morale swings and backstage fights are more likely.'},
+ showboat:{n:'Showboat',t:'~',h:'Segments rate higher, matches a little lower, and sulks when left off shows.'},
+ pro:{n:'Professional',t:'+',h:'Steady morale, 10% less fatigue and a small boost to every match.'},
+ hardw:{n:'Hard Worker',t:'+',h:'Keeps improving: a better monthly chance to gain workrate and charisma, up to age 38.'},
+ workh:{n:'Workhorse',t:'+',h:'Builds 30% less fatigue, so they can work more shows.'},
+ crowdf:{n:'Crowd Favourite',t:'+',h:'Gains popularity 20% faster.'},
+ mic:{n:'Mic Wizard',t:'+',h:'Promos and backstage segments rate higher.'},
+ bigm:{n:'Big Match Player',t:'+',h:'Matches rate higher at Major Events.'},
+ ironb:{n:'Iron Body',t:'+',h:'40% fewer injuries and recovers 25% faster.'},
+ mentor:{n:'Mentor',t:'+',h:'Wrestlers 25 or under who team with or face them can pick up workrate.'},
+ safe:{n:'Safe Worker',t:'+',h:'Opponents and partners get injured 30% less often.'},
+ lazy:{n:'Lazy',t:'-',h:'Workrate slips unless they work a main event or Major Event every couple of months.'},
+ diva:{n:'Diva',t:'-',h:'Morale drops when left off the card and after every loss.'},
+ injp:{n:'Injury Prone',t:'-',h:'Gets hurt 50% more often.'},
+ reck:{n:'Reckless',t:'~',h:'Risky spots lift match ratings a little, but others in the match get hurt 40% more.'},
+ party:{n:'Party Animal',t:'-',h:'Now and then gets into trouble outside the ring, costing popularity and morale.'},
+ cancer:{n:'Locker Room Cancer',t:'-',h:'Drags down the whole roster\'s morale each week.'},
+ vet:{n:'Ring Veteran',t:'~',h:'Extra ring psychology (+8), but injuries keep them out 25% longer.'}};
+const TR_X=[['loyal','greedy'],['leader','cancer'],['ironb','injp'],['hardw','lazy'],['safe','reck'],['pro','diva'],['pro','lazy'],['workh','lazy'],['pro','cancer']];
+const trClash=(L,k)=>L.some(x=>TR_X.some(p=>p.includes(x)&&p.includes(k)&&x!==k));
+function trOf(w){if(!Array.isArray(w.trt)){const L=[perOf(w)],n=1+(Math.random()<.45?1:0)+(Math.random()<.12?1:0),K=Object.keys(TRAITS);let g=0;
+  while(L.length<n&&g++<60){const k=pick(K);if(L.includes(k)||trClash(L,k))continue;if(k==='vet'&&(age(w)??30)<32)continue;if(k==='mentor'&&(age(w)??30)<30)continue;L.push(k)}w.trt=L}return w.trt}
+const hasTr=(w,k)=>!!w&&trOf(w).includes(k);
+const trTag=k=>{const T=TRAITS[k];return `<span class="k" style="background:${T.t==='+'?'var(--greenbg)':T.t==='-'?'light-dark(#fde3e6,#3d1820)':'var(--goldbg)'};color:${T.t==='+'?'var(--face)':T.t==='-'?'var(--heel)':'var(--gold)'}">${T.n}</span>`};
 /* How much match quality the stats and specialties add, for one match. */
 function attrBonus(m){const all=m.sides.flat().map(W),g=gimOf(m);let s=0;
   all.forEach(w=>{let b=0;b+=hasSpec(w,'highflyer')?(pst(w,'fly')*.6+pst(w,'agi')*.4)/100*.3:0;b+=(pst(w,'fly')-50)/100*.08;b+=(pst(w,'psy')-50)/100*.25;{const h=mHeat(m.sides);if(h)b+=h/100*(pst(w,'psy')-50)/100*.2}
@@ -756,14 +793,14 @@ function attrBonus(m){const all=m.sides.flat().map(W),g=gimOf(m);let s=0;
     if(['Hardcore','Deathmatch'].includes(g.cat))b+=(pst(w,'brw')-50)/100*.2+(hasSpec(w,'brawler')?.1+specPow(w,'brawler')*.1:0);
     if(hasSpec(w,'powerhouse')){const opp=m.sides.filter(sd=>!sd.includes(w.id)).flat().map(W);if(opp.length&&avg(opp.map(o=>o.wt||220))<(w.wt||250)-40)b+=.1}
     if(LONG_GIMS.includes(g.k))b+=(pst(w,'fit')-50)/100*.3+specPow(w,'ironman')*.2;
-    if(perOf(w)==='pro')b+=.05;s+=b});
+    if(hasTr(w,'pro'))b+=.05;s+=b});
   return s/Math.max(1,all.length)}
-function fatMul(w){let f=1.3-pst(w,'fit')/100*.6;if(hasSpec(w,'ironman'))f*=.8;if(hasSpec(w,'giant'))f*=1.15;if(perOf(w)==='pro')f*=.9;return f}
+function fatMul(w){let f=1.3-pst(w,'fit')/100*.6;if(hasSpec(w,'ironman'))f*=.8;if(hasSpec(w,'giant'))f*=1.15;if(hasTr(w,'pro'))f*=.9;if(hasTr(w,'workh'))f*=.7;return f}
 /* Injuries (§4.35): every match carries a small injury risk that grows with fatigue. A game setting sets how often. TODO(ASK OWNER): numbers. */
 const INJ_SET={off:{name:'Off',m:0,hint:'No injuries from matches. Injuries you book in storylines still happen.'},rare:{name:'Rare',m:.4,hint:'Injuries are uncommon, even for tired wrestlers.'},normal:{name:'Normal',m:1,hint:'Tired wrestlers get hurt more often. Rest them.'},frequent:{name:'Frequent',m:2,hint:'A hard-hitting world. Fatigue is dangerous.'}};
 const INJ_BASE=.004;
 const injSet=()=>(INJ_SET[G?.opts?.inj]||INJ_SET.normal).m;
-function injMul(w){let f=(1.4-pst(w,'fit')/100*.8)*(w.co&&w.co===G.me?1-stfMy('doc')*.3:1);if(hasSpec(w,'highflyer'))f*=1+pst(w,'fly')/250;f*=1.15-pst(w,'agi')/100*.3;return f}
+function injMul(w){let f=(1.4-pst(w,'fit')/100*.8)*(w.co&&w.co===G.me?1-stfMy('doc')*.3:1);if(hasSpec(w,'highflyer'))f*=1+pst(w,'fly')/250;f*=1.15-pst(w,'agi')/100*.3;if(hasTr(w,'ironb'))f*=.6;if(hasTr(w,'injp'))f*=1.5;return f}
 function rateMatch(m,finCount){
   const all=m.sides.flat().map(W);const wk=all.map(w=>w.wrk+champB(w));
   let s=(.65*Math.max(...wk)+.35*avg(wk))/20*.6;
@@ -783,6 +820,7 @@ function rateMatch(m,finCount){
   if(!CLEAN.includes(m.fin.t)&&finCount[m.fin.t]>1)s-=.2*(finCount[m.fin.t]-1);
   if(m.win!=null&&CLEAN.includes(m.fin.t)){const wp=avg(m.sides[m.win].map(id=>W(id).pop)),lp=avg(opp(m,m.win).map(id=>W(id).pop));if(wp-lp>35)s-=.3}
   if(m.sides.every(sd=>sd.length>1)){s+=.1;m.sides.forEach(sd=>{s+=teamOf(sd)?.12:-.05})}
+  s+=avg(all.map(w=>(hasTr(w,'reck')?.2:0)+(m.maj&&hasTr(w,'bigm')?.35:0)-(hasTr(w,'showboat')?.08:0)));
   return clampQ(toStars(s+rnd(-.5,.5)));
 }
 /* Popularity scale (§4.23). w.fame is the popularity players see (10 to 3,000). w.pop stays the internal 1-100 drawing power
@@ -813,7 +851,7 @@ function coHofBox(){const cos=Object.values(G.cos).filter(c=>c.active||(c.hof||[
   return `<div class="panel" style="margin-top:14px"><h3>Company Halls of Fame</h3><label style="max-width:280px">Company<select id="hofco">${cos.map(x=>`<option value="${x.id}" ${x.id===hofCo?'selected':''}>${esc(x.short)}${x.id===G.me?' (you)':''} · ${(x.hof||[]).length}</option>`).join('')}</select></label>
    <p class="hint">Wrestlers are inducted when their popularity reaches ${(c.hofAt||CO_HOF).toLocaleString('en-US')} while on the ${esc(c.short)} roster.${c.id===G.me?' Change this in Calendar and news.':''}</p>
    ${L.length?`<table class="stack"><thead><tr><th>Wrestler</th><th>Inducted</th><th class="n">Popularity then</th></tr></thead><tbody>${L.map(e=>`<tr><td><b>${G.ws[e.id]?`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-hw="${e.id}">${esc(e.name)}</button>`:esc(e.name)}</b></td><td data-l="Inducted">${fmtDate(e.d)}</td><td class="n" data-l="Popularity">${e.fame.toLocaleString('en-US')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nobody yet.</div>'}</div>`}
-function gainPop(w,d){const f=fameOf(w);if(d>0){d*=(1+(w.mom-50)/100)*(.6+w.cha/250)*fameSat(f);if(w.co&&G.cos[w.co])d*=1+.3*styFit(w,G.cos[w.co])*styleBoom(G.cos[w.co]);{const m=w.mgBy&&G.ws[w.mgBy];if(m&&m.co===w.co)d*=1+Math.max(0,m.cha-50)/250}}else d*=ASC_LOSS[ascOf(w)];setFame(w,f+d*10)}
+function gainPop(w,d){const f=fameOf(w);if(d>0){if(hasTr(w,'crowdf'))d*=1.2;d*=(1+(w.mom-50)/100)*(.6+w.cha/250)*fameSat(f);if(w.co&&G.cos[w.co])d*=1+.3*styFit(w,G.cos[w.co])*styleBoom(G.cos[w.co]);{const m=w.mgBy&&G.ws[w.mgBy];if(m&&m.co===w.co)d*=1+Math.max(0,m.cha-50)/250}}else d*=ASC_LOSS[ascOf(w)];setFame(w,f+d*10)}
 const mom=(w,d)=>{w.mom=clamp(w.mom+d,0,100)};
 /* Creative direction (§4.47): how you plan to use a wrestler. Push: wins count more, losses hurt more, they like it.
    Protect: losses hurt half as much, wins count a bit less. Enhancement: beating them helps opponents more, but a popular
@@ -830,7 +868,7 @@ function applyMatch(m,st,c,isMain,major,sr){const S=st;if(sr!=null)st=sr; // st 
   }else all.forEach(w=>gainPop(w,q*slot*coF*.7));
   all.forEach(w=>{if(st>=3.5)mom(w,4);if(st<2)mom(w,-4);w.last=G.week;if(st>=3)w.gm=1});
     m.sides.forEach((sd,si)=>sd.forEach(id=>{const w=W(id);w.rec=w.rec||{w:0,l:0,d:0};const r=m.win==null?'d':m.win===si?'w':'l';w.rec[r]++;
-    w.wear=(w.wear||0)+(major?2:1);w.fat=clamp((w.fat||0)+(major?12:8)*fatMul(w),0,100);w.rsum=(w.rsum||0)+S;w.rn=(w.rn||0)+1;const cr=w.car=w.car||{main:0,open:0,maj:0,mainW:0,majW:0,tm:0};if(isMain)cr.mainLast=G.week;if(isMain){cr.main++;if(r==='w')cr.mainW++}if(m.op)cr.open++;if(major){cr.maj++;if(r==='w')cr.majW++}if(m.title)cr.tm++;if(!w.bm||S>w.bm.st)w.bm={st:S,vs:m.sides.filter((_,k)=>k!==si).map(nm).join(', '),ev:m.ev||'',d:G.date,co:c.short,r};if(r==='w'&&(isMain||major))w.mor=clamp((w.mor??70)+1,0,100);w.hist=w.hist||[];w.hist.unshift({date:G.date,co:c.short,vs:m.sides.filter((_,k)=>k!==si).map(nm).join(', '),gm:gimOf(m).k?gimOf(m).name:'',r,fin:m.fin.t,st:S,main:isMain,major});if(w.hist.length>15)w.hist.length=15}));
+    w.wear=(w.wear||0)+(major?2:1);w.fat=clamp((w.fat||0)+(major?12:8)*fatMul(w),0,100);w.rsum=(w.rsum||0)+S;w.rn=(w.rn||0)+1;const cr=w.car=w.car||{main:0,open:0,maj:0,mainW:0,majW:0,tm:0};if(isMain)cr.mainLast=G.week;if(isMain){cr.main++;if(r==='w')cr.mainW++}if(m.op)cr.open++;if(major){cr.maj++;if(r==='w')cr.majW++}if(m.title)cr.tm++;if(!w.bm||S>w.bm.st)w.bm={st:S,vs:m.sides.filter((_,k)=>k!==si).map(nm).join(', '),ev:m.ev||'',d:G.date,co:c.short,r};if(r==='w'&&(isMain||major))w.mor=clamp((w.mor??70)+1,0,100);if(r==='l'&&hasTr(w,'diva'))w.mor=clamp((w.mor??70)-3,0,100);if(isMain||major)w.bigW=G.week;if((age(w)??99)<=25&&w.wrk<95&&all.some(x=>x!==w&&hasTr(x,'mentor'))&&Math.random()<MENTOR_P){w.wrk++;w.grow=(w.grow||0)+1}w.hist=w.hist||[];w.hist.unshift({date:G.date,co:c.short,vs:m.sides.filter((_,k)=>k!==si).map(nm).join(', '),gm:gimOf(m).k?gimOf(m).name:'',r,fin:m.fin.t,st:S,main:isMain,major});if(w.hist.length>15)w.hist.length=15}));
   if(m.title)all.forEach(w=>{if(w.shot)delete w.shot});
   if(m.win!=null){const Wn=m.sides[m.win].map(W),L=opp(m,m.win).map(W),ft=m.fin.t;
     if(['Ref missed it','Interference','Screwjob'].includes(ft))Wn.forEach(w=>alPts(w,major?8:6,'cheated to win'));
@@ -849,7 +887,7 @@ function applyMatch(m,st,c,isMain,major,sr){const S=st;if(sr!=null)st=sr; // st 
   if(!f)rivalSpark(m.sides,'In the ring');
   else if(m.win==null&&m.sides.length===2)potFeud(m.sides,'Unfinished business');
   /* gimmick effects: fatigue, injuries, stakes */
-  all.forEach(w=>{w.fat=clamp((w.fat||0)+gm.fat*fatMul(w),0,100);const ic=((gm.inj||0)+INJ_BASE*(1+fatOf(w)/30))*(st>=4?1.2:1)*injMul(w)*injSet();if(ic&&Math.random()<ic)applyOutcome({k:'injury',t:w.id,wk:ri(1,gm.inj>=.08?6:4)},gm.k?`a ${gm.name}`:fatOf(w)>=50?'wrestling while worn down':'a match')});
+  all.forEach(w=>{w.fat=clamp((w.fat||0)+gm.fat*fatMul(w),0,100);const oth=all.filter(x=>x!==w),ic=((gm.inj||0)+INJ_BASE*(1+fatOf(w)/30))*(st>=4?1.2:1)*injMul(w)*injSet()*(oth.some(x=>hasTr(x,'safe'))?.7:1)*(oth.some(x=>hasTr(x,'reck'))?1.4:1);if(ic&&Math.random()<ic)applyOutcome({k:'injury',t:w.id,wk:ri(1,gm.inj>=.08?6:4)},gm.k?`a ${gm.name}`:fatOf(w)>=50?'wrestling while worn down':'a match')});
   if(gm.out&&m.win!=null&&m.sides.length===2){const L=opp(m,m.win).map(W),Wn=m.sides[m.win].map(W);
     if(gm.out==='hair'){L.forEach(w=>{gainPop(w,-1);alPts(w,-2);news(`${w.name} had ${pr(w,'his')} head shaved after losing a Hair vs Hair match.`,'mt')});Wn.forEach(w=>gainPop(w,1.5))}
     else if(gm.out==='mask'){L.forEach(w=>{if(w.gim==='Masked')w.gim='None';gainPop(w,1);news(`${w.name} was unmasked after losing a Mask vs Mask match.`,'mt')});Wn.forEach(w=>gainPop(w,2))}
@@ -858,7 +896,7 @@ function applyMatch(m,st,c,isMain,major,sr){const S=st;if(sr!=null)st=sr; // st 
   if(m.title&&m.win!=null&&m.sides[0].length===1&&m.sides.length===2&&G.titles?.[m.title]){const r0=reignOf(G.titles[m.title]),wn=m.sides[m.win][0],ls=opp(m,m.win)[0];
     if(r0&&r0.h.includes(ls)&&!dirty)startFeud([[wn],[ls]],'Lost the title',0);else if(r0&&r0.h.includes(wn))potFeud([[ls],[wn]],'Title chase')}
 }
-function rateSeg(g){const ws=g.who.map(W);let s=(.7*avg(ws.map(w=>w.cha+champB(w)))+.3*avg(ws.map(w=>w.pop)))/20*.9;if(g.who.length>1){const h=feudInSeg(g.who)?.heat||0;if(h)s+=.08+.3*h/100}s+=ws.reduce((t,w)=>t+(w.gim&&w.gim!=='None'?(gfit(w)?.15:-.1):0),0)/ws.length;s+=ws.filter(w=>perOf(w)==='showboat').length*.12/ws.length;if(ws.some(w=>mgrOf(w)))s+=.08;{const c=co(ws[0]?.co);if(c){s+=coSty(c).reduce((t,k)=>t+(STYLES[k].seg||0),0);s+=(avg(ws.map(w=>stySkill(w,c)))-40)/100*.3}}return clampQ(toStars(s+rnd(-.4,.4)))}
+function rateSeg(g){const ws=g.who.map(W);let s=(.7*avg(ws.map(w=>w.cha+champB(w)))+.3*avg(ws.map(w=>w.pop)))/20*.9;if(g.who.length>1){const h=feudInSeg(g.who)?.heat||0;if(h)s+=.08+.3*h/100}s+=ws.reduce((t,w)=>t+(w.gim&&w.gim!=='None'?(gfit(w)?.15:-.1):0),0)/ws.length;s+=ws.filter(w=>hasTr(w,'showboat')).length*.12/ws.length;s+=ws.filter(w=>hasTr(w,'mic')).length*.3/ws.length;if(ws.some(w=>mgrOf(w)))s+=.08;{const c=co(ws[0]?.co);if(c){s+=coSty(c).reduce((t,k)=>t+(STYLES[k].seg||0),0);s+=(avg(ws.map(w=>stySkill(w,c)))-40)/100*.3}}return clampQ(toStars(s+rnd(-.4,.4)))}
 function applySeg(g,st,c,major){
   const coF=.7+c.pop/200,d=(st-2)*.7*coF*(major?1.3:1),ws=g.who.map(W);
   ws.forEach(w=>{gainPop(w,g.t==='Interview'?Math.max(d*.6,.2):d);mom(w,st>=3?3:-1);w.last=G.week;w.fat=clamp((w.fat||0)+2,0,100);if(st>=3)w.gs=1});
@@ -1053,7 +1091,7 @@ function runShow(cid,card,isPlayer){
       if(x.fin.t==='Ref missed it'&&!x.fin.c)x.fin.c=pick(CT);
       if(NOWIN.includes(x.fin.t))x.win=null;
       finCount[x.fin.t]=(finCount[x.fin.t]||0)+1;
-      const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===card.findIndex(y=>y.t==='m')&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
+      x.maj=major;const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===card.findIndex(y=>y.t==='m')&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
       items.push({label:`${x.tour&&G.tour?G.tour.name+' '+tourLabel(G.tour.alive.length).toLowerCase()+': ':''}${x.title&&G.titles?.[x.title]?G.titles[x.title].name+': ':''}${gimOf(x).k?gimOf(x).name+': ':''}${vsTxt(x)}`,sub:x.win!=null?`${nm(x.sides[x.win])} wins (${CLEAN.includes(x.fin.t)&&gimOf(x).win?gimOf(x).win:x.fin.t})`:x.fin.t,st,w:slotW(x,i,firstM,lastM),lines:pbpMatch(x,st),bonus:pf.bonus,ups:pf.ups});
     }else if(x.t==='s'){nSeg++;const st=Math.min(5,rateSeg(x)+crewB(c,x)+stf(c,'ann')*.1);const sr=rawR(st);hot+=hotVal(sr,x.who,major,x.who.length>1?feudInSeg(x.who)?.heat||0:0);applySeg(x,sr,c,major,st);const pf=perf(sr,crowd,x.who,'cha');bonus+=pf.bonus;items.push({label:`${x.g}: ${nm(x.who)}`,sub:'Segment',st,w:1,lines:pbpSeg(x,st,c),bonus:pf.bonus,ups:pf.ups})}
     else{nAds++;const p=adPay(c);ads+=p;items.push({label:'Sponsor break',sub:`+${money(p)}`,st:null,w:0,lines:[]})}
@@ -1206,15 +1244,17 @@ function hapWeek(w){const r=[];let d=0;const add=(v,t)=>{d+=v;r.push([v,t])};
   if(holds(w).length)r.push([.5,'Holding a title']);
   if(G.week-(w.last||0)<=2)add(.6,'Booked regularly');else if(G.week-(w.last||0)>3&&!w.mgr)r.push([-2,'Left off shows']);
   if((w.streak||0)>=3)add(.5,'On a winning streak');if((w.lstreak||0)>=3)add(-1,'On a losing streak');
-  const wv=worth(w);if((w.wage||0)<wv*.8)add(perOf(w)==='greedy'?-1.5:-1,'Feels underpaid');else if((w.wage||0)>wv*1.2)add(.5,'Well paid');
+  const wv=worth(w);if((w.wage||0)<wv*.8)add(hasTr(w,'greedy')?-1.5:-1,'Feels underpaid');else if((w.wage||0)>wv*1.2)add(.5,'Well paid');
   if((w.car?.mainLast||-99)>=G.week-4)add(.5,'Main-evented recently');
   if(fatOf(w)>70)add(-1,'Worn out');
   if(leaderLift(w)>0)r.push([leaderLift(w),'A locker-room leader keeps spirits up']);
+  if(cancerDrag(w)>0)r.push([-cancerDrag(w),'A locker-room cancer is souring the mood']);
   w.hap=r.filter(x=>x[0]).map(x=>[Math.round(x[0]*10)/10,x[1]]);
   if(morOf(w)<20&&w.co===G.me){w.unh=(w.unh||0)+1;if(w.unh===4)news(`${w.name} is miserable and has asked to be let go. Book them better, pay them more or release them.`,'me')}else w.unh=0;
   return d}
 const hapWord=v=>v<20?'Miserable':v<35?'Unhappy':v<60?'Okay':v<80?'Happy':'Thrilled';
-function leaderLift(w){if(!w.co||perOf(w)==='leader')return 0;return Math.min(.6,roster(w.co).filter(x=>x.per==='leader'&&x.mor>=50).length*.3)}
+function leaderLift(w){if(!w.co||hasTr(w,'leader'))return 0;return Math.min(.6,roster(w.co).filter(x=>hasTr(x,'leader')&&x.mor>=50).length*.3)}
+function cancerDrag(w){if(!w.co||hasTr(w,'cancer'))return 0;return Math.min(1,roster(w.co).filter(x=>hasTr(x,'cancer')).length*.4)}
 /* Backstage politics (§4.29): at most one simple event a week for your company, shown as news. TODO(ASK OWNER): events, odds. */
 const BACKSTAGE_CH=.08; // TODO(ASK OWNER): chance per show of one backstage event
 /* Disputes (§4.29): conflict events leave a dispute you can settle from the Dashboard. TODO(ASK OWNER): numbers. */
@@ -1249,13 +1289,13 @@ function dMgr(w){const R=roster(w.co).filter(m=>m.id!==w.id&&!isOut(m)&&m.mgBy!=
 function backstage(){if(Math.random()>BACKSTAGE_CH)return;const R=roster(G.me).filter(w=>w.status==='active'&&!isOut(w));if(R.length<3)return;
   const ev=[];
   const fz=FE().filter(f=>f.st==='cur'&&f.co===G.me);if(fz.length){const fl=()=>{const f=pick(fz),a=W(f.p[0][0]),b=W(f.p[1][0]);feudHeat(f,8);f.lw=G.week;if(!(G.disp||[]).some(d=>d.st!=='done'&&d.a===a.id&&d.b===b.id))addDispute(a,b,'Locker room fight');news(`Backstage: ${a.name} and ${b.name} had to be pulled apart in the locker room. Their feud just got hotter.`,'me')};ev.push(fl)}
-  const hot=R.filter(w=>perOf(w)==='hothead'&&morOf(w)<45);if(hot.length)ev.push(()=>{const a=pick(hot),b=pick(R.filter(x=>x.id!==a.id));a.mor=clamp(morOf(a)-5,0,100);b.mor=clamp(morOf(b)-5,0,100);
+  const hot=R.filter(w=>hasTr(w,'hothead')&&morOf(w)<45);if(hot.length)ev.push(()=>{const a=pick(hot),b=pick(R.filter(x=>x.id!==a.id));a.mor=clamp(morOf(a)-5,0,100);b.mor=clamp(morOf(b)-5,0,100);
     {const ef=feudIn([a.id],[b.id]);if(ef){feudHeat(ef,6);ef.lw=G.week}else potFeud([[a.id],[b.id]],'Backstage scuffle',25)}addDispute(a,b,'Backstage scuffle');news(`Backstage: ${a.name} got into a scuffle with ${b.name}. Both are upset, and there may be a feud in it.`,'me')});
-  const lead=R.filter(w=>perOf(w)==='leader'&&morOf(w)>=60),young=R.filter(w=>w.pop<45);if(lead.length&&young.length)ev.push(()=>{const a=pick(lead),b=pick(young);gainPop(b,1.5);mom(b,5);b.mor=clamp(morOf(b)+5,0,100);news(`Backstage: ${a.name} has been vouching for ${b.name}. ${b.name} has a little more momentum.`,'me')});
-  const sour=R.filter(w=>perOf(w)==='leader'&&morOf(w)<35);if(sour.length)ev.push(()=>{const a=pick(sour);R.forEach(x=>{if(x.id!==a.id)x.mor=clamp(morOf(x)-2,0,100)});news(`Backstage: ${a.name} is unhappy, and the whole locker room can feel it. Morale is down.`,'me')});
+  const lead=R.filter(w=>hasTr(w,'leader')&&morOf(w)>=60),young=R.filter(w=>w.pop<45);if(lead.length&&young.length)ev.push(()=>{const a=pick(lead),b=pick(young);gainPop(b,1.5);mom(b,5);b.mor=clamp(morOf(b)+5,0,100);news(`Backstage: ${a.name} has been vouching for ${b.name}. ${b.name} has a little more momentum.`,'me')});
+  const sour=R.filter(w=>hasTr(w,'leader')&&morOf(w)<35);if(sour.length)ev.push(()=>{const a=pick(sour);R.forEach(x=>{if(x.id!==a.id)x.mor=clamp(morOf(x)-2,0,100)});news(`Backstage: ${a.name} is unhappy, and the whole locker room can feel it. Morale is down.`,'me')});
   const champ=R.find(w=>holds(w).some(t=>t.tier===1)),jeal=champ&&R.filter(w=>w.id!==champ.id&&w.pop>champ.pop&&morOf(w)<50);if(jeal&&jeal.length)ev.push(()=>{const a=pick(jeal);{const ef=feudIn([a.id],[champ.id]);if(ef){feudHeat(ef,5);ef.lw=G.week}else potFeud([[a.id],[champ.id]],'Jealousy',30)}addDispute(a,champ,'Jealous of the champion');news(`Backstage: ${a.name} thinks they should be champion instead of ${champ.name}. It could turn into a feud.`,'me')});
   const pals=R.filter(w=>morOf(w)>=70),pp=[];pals.forEach((x,i)=>pals.slice(i+1).forEach(y=>{if(!feudIn([x.id],[y.id]))pp.push([x,y])}));if(pp.length)ev.push(()=>{const [a,b]=pick(pp);[a,b].forEach(x=>x.mor=clamp(morOf(x)+3,0,100));(G.pals=G.pals||[]).push([a.id,b.id]);news(`Backstage: ${a.name} and ${b.name} have become good friends. They might make a good team.`,'me')});
-  const rg=R.filter(w=>w.pop>=40&&w.left>2&&!w.next&&!w.mgonly&&(morOf(w)<45||perOf(w)==='greedy')&&!(G.rogue||[]).some(x=>x.w===w.id)),rc=Object.values(G.cos).filter(c=>c.active&&c.owner==='ai'&&c.cash>50000);
+  const rg=R.filter(w=>w.pop>=40&&w.left>2&&!w.next&&!w.mgonly&&(morOf(w)<45||hasTr(w,'greedy'))&&!(G.rogue||[]).some(x=>x.w===w.id)),rc=Object.values(G.cos).filter(c=>c.active&&c.owner==='ai'&&c.cash>50000);
   if(rg.length&&rc.length&&Math.random()<ROGUE_CH)ev.push(()=>{const w=pick(rg),c=pick(rc);(G.rogue=G.rogue||[]).push({w:w.id,co:c.id,wk:G.week});gainPop(w,ROGUE_POP);w.rogueT=G.week+ROGUE_WK;mom(w,10);news(`Backstage: ${w.name} has walked out and says they're joining ${c.short}, even though their contract with you has ${w.left} Major Events left. Decide on the Dashboard.`,'me')});
   if(ev.length)pick(ev)()}
 /* Rogue talent (§4.29): a wrestler walks out to join a rival mid-contract. Sue: they stay yours on paper, you keep paying,
@@ -1314,7 +1354,7 @@ function aiOffers(){
   G.offers=G.offers.filter(o=>{const w=W(o.w);if(w.co===G.me&&w.left>2&&o.week!=null&&G.week-o.week>=2){news(`${co(o.co).short}'s offer for ${w.name} lapsed. ${w.name} stays under contract.`,'of');return false}return w.co===G.me});
   for(const w of roster(G.me)){
     if(w.next||G.offers.some(o=>o.w===w.id))continue;
-    const firm=w.left>2,pm=({loyal:.4,greedy:1.6}[perOf(w)]||1)*(morOf(w)<40?1.8:morOf(w)>75?.6:1),chance=(firm?(w.pop>=55?.012*(w.pop/40):0):.06*(w.pop/40))*pm*(1-stfMy('agent')*.4);
+    const firm=w.left>2,pm=(hasTr(w,'loyal')?.4:1)*(hasTr(w,'greedy')?1.6:1)*(morOf(w)<40?1.8:morOf(w)>75?.6:1),chance=(firm?(w.pop>=55?.012*(w.pop/40):0):.06*(w.pop/40))*pm*(1-stfMy('agent')*.4);
     if(Math.random()>=chance)continue;
     for(const c of Object.values(G.cos).filter(c=>c.active&&c.owner==='ai').sort(()=>Math.random()-.5)){
       if(c.cash>(firm?40000:15000)&&roster(c.id).length<target(c)+2){
@@ -1328,8 +1368,8 @@ function advance(){
   for(const c of Object.values(G.cos))if(c.active&&c.owner==='ai'){const card=aiCard(c);if(card.length)runShow(c.id,card,false);else{c.cash-=showCost(c,false)*.3}}
   ratingsWar();trendWeek();
   const from=G.date;G.date=addDays(G.date,7);G.week++;syncSched();if(['01','07'].includes(G.date.slice(5,7))&&+G.date.slice(8,10)<=7)aiCycReview();Object.values(G.ws).forEach(w=>{delete w.fresh});
-  timeline(from,G.date);
-  for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;const pe=perOf(w);mo+=(65-mo)*(pe==='loyal'?.08:pe==='pro'?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=pe==='showboat'?3.5:pe==='pro'?1:2;if(pe==='hothead')mo+=rnd(-3,3);if(pe==='greedy'&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w);if(w.dir==='push'&&w.pop>=40)mo+=.4;if(w.dir==='enhance'&&w.pop>=40)mo-=1;if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
+  timeline(from,G.date);if(from.slice(5,7)!==G.date.slice(5,7))monthly();
+  for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;mo+=(65-mo)*(hasTr(w,'loyal')?.08:hasTr(w,'pro')?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=hasTr(w,'showboat')||hasTr(w,'diva')?3.5:hasTr(w,'pro')?1:2;if(hasTr(w,'hothead'))mo+=rnd(-3,3);if(hasTr(w,'greedy')&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w)-cancerDrag(w);if(w.dir==='push'&&w.pop>=40)mo+=.4;if(w.dir==='enhance'&&w.pop>=40)mo-=1;if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
   roster(G.me).forEach(w=>{if(w.farewell&&G.week>=w.farewell){news(`${w.name}'s farewell tour is over. Thank you, ${w.name}.`,'me');retireW(w)}});
   aiSign(false);aiOffers();mergeWeek();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();
 
@@ -1714,7 +1754,7 @@ function dCounter(i){
 }
 function dContract(id){
   const w=W(id),mine=w.co===G.me,other=w.co&&!mine,m=me();let li=2,pct=100,msg='';
-  const base=r10(Math.max(worth(w),other?r10(w.wage*1.1):0)*(1-stfMy('agent')*.1));
+  const base=r10(Math.max(worth(w),other?r10(w.wage*1.1):0)*(1-stfMy('agent')*.1)*(hasTr(w,'greedy')?1.15:1)*(mine&&hasTr(w,'loyal')?.9:1));
   const canSign=mine?w.left<=2:true;
   const wageAt=i=>r10(base*LEN[i][1]*pct/100);
   const odds=()=>pct>=100?'Very likely to accept':pct>=85?'Might accept':'Will refuse';
@@ -2143,7 +2183,7 @@ function gwForm(w){if(!G.opts.sandbox&&!w.fresh&&w.co!==G.me)return `<p class="s
    <label>Charisma<input type="number" min="0" max="100" data-g="cha" value="${w.cha}" ${sb||w.fresh?'':'disabled'}></label>
    <label>Workrate<input type="number" min="0" max="100" data-g="wrk" value="${w.wrk}" ${sb||w.fresh?'':'disabled'}></label>
    ${XSTATS.map(x=>`<label>${x.name}<input type="number" min="1" max="100" data-g="${x.k}" value="${pst(w,x.k)}" ${sb||w.fresh?'':'disabled'}></label>`).join('')}
-   <label>Personality<select data-g="per" ${sb||w.fresh?'':'disabled'}>${Object.entries(PERS).map(([k,v])=>`<option value="${k}" ${perOf(w)===k?'selected':''}>${v.name}</option>`).join('')}</select></label>
+   <div class="wide"><label>Traits (up to 3; tap to add or remove)</label><div class="chips" style="margin-top:4px">${Object.entries(TRAITS).map(([k,v])=>`<button class="${hasTr(w,k)?'sel':''}" data-gtr="${k}" ${sb||w.fresh?'':'disabled'} title="${esc(v.h)}">${v.t==='+'?'▲':v.t==='-'?'▼':'◆'} ${v.n}</button>`).join('')}</div></div>
    ${[0,1].map(i=>`<label>Specialty ${i+1}<select data-g="spec${i}" ${sb||w.fresh?'':'disabled'}><option value="">None</option>${Object.entries(SPECS).map(([k,v])=>`<option value="${k}" ${specOf(w)[i]===k?'selected':''}>${v.name}</option>`).join('')}</select></label>`).join('')}
    <label>Popularity (10 to 3,000)<input type="number" min="10" max="3000" data-g="pop" value="${Math.round(fameOf(w))}" ${sb||w.fresh?'':'disabled'}></label>
    <label>Momentum (0 cold, 100 hot)<input type="number" min="0" max="100" data-g="mom" value="${Math.round(w.mom)}" ${sb||w.fresh?'':'disabled'}></label>
@@ -2224,6 +2264,7 @@ document.addEventListener('change',e=>{if(!['edit','superstars'].includes(tab)||
 document.addEventListener('click',e=>{if(!['edit','superstars'].includes(tab)||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
   if(d.gc){gcat=d.gc;gsel=null;gq='';gmsg='';gView()}
   else if(d.gs){gsel=d.gs;gmsg='';gView()}
+  else if(d.gtr){const w=G.ws[gsel],L=trOf(w).slice(),k=d.gtr,i=L.indexOf(k);if(i>=0){if(L.length>1)L.splice(i,1)}else{if(trClash(L,k)){gmsg=`${TRAITS[k].n} clashes with a trait they already have.`;gView();return}if(L.length>=3)L.shift();L.push(k)}w.trt=L;w.per=TRAITS[L[0]]&&PERS[L[0]]?L[0]:w.per;save();gView()}
   else if(t.id==='gdone'){delete G.ws[gsel].fresh;save();gView()}
   else if(t.id==='gback'){const w=G.ws[gsel];w.status='active';w.retire='';news(`${w.name} returns to the business as a free agent.`);save();gView()}
   else if(t.id==='gadd'){
@@ -2302,7 +2343,7 @@ function profSheet(w){
   return `<div class="sheet">
    ${kv('Champion',ch.length?ch.map(t=>`🏆 ${esc(t.name)} <span class="sub">since ${fmtDate(reignOf(t).won)}, ${reignOf(t).def.length} defence${reignOf(t).def.length===1?'':'s'}</span>`).join('<br>'):'<span class="sub">No title</span>')}
    ${kv('Manager',w.mgr||clientsOf(w).length?`${w.mgonly?'Manager only':w.mgr?'Manager':'Wrestler'}${clientsOf(w).length?` · manages ${clientsOf(w).map(x=>esc(x.name)).join(', ')}`:' · no clients yet'}`:mgrOf(w)?`Managed by ${esc(mgrOf(w).name)}`:'<span class="sub">None</span>')}
-   ${kv('Personality',`${PERS[perOf(w)].name} <span class="sub">${PERS[perOf(w)].hint}</span>`)}
+   <div class="kv" style="grid-column:1/-1;display:block"><span>Traits</span><div style="margin-top:4px">${trOf(w).map(k=>`<div style="margin:3px 0">${trTag(k)} <span class="sub">${TRAITS[k].h}</span></div>`).join('')}${w.grow?`<div class="sub" style="margin-top:4px">Growth since the start: ${w.grow>0?'+':''}${w.grow} stat point${Math.abs(w.grow)===1?'':'s'}</div>`:''}</div></div>
    ${kv('Specialties',specOf(w).map(k=>`${SPECS[k].name} <span class="sub">(${PSTATS.find(x=>x.k===SPECS[k].stat).name} ${pst(w,SPECS[k].stat)})</span>`).join(', '))}
    <div class="kv" style="grid-column:1/-1;display:block"><span>Physical stats</span><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 14px;margin-top:4px">${XSTATS.map(x=>`<div title="${esc(x.hint)}" style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span class="sub" style="margin:0">${x.name}</span><b>${met(pst(w,x.k),'var(--blue)')} ${pst(w,x.k)}</b></div>`).join('')}</div></div>
    ${(()=>{const opp={};FE().filter(f=>f.st==='past'||f.st==='cur').forEach(f=>{if(!f.p.some(p=>p.includes(w.id)))return;f.p.filter(p=>!p.includes(w.id)).flat().forEach(id=>{const o=opp[id]=opp[id]||{n:0,pk:0,m:0};o.n++;o.pk=Math.max(o.pk,Math.round(f.pk||f.heat));o.m+=f.m||0})});
@@ -2913,7 +2954,7 @@ function vEditor(){
    <label>Charisma (0 to 100)<input type="number" min="0" max="100" data-f="cha" value="${w.cha}"></label>
    <label>Workrate (0 to 100)<input type="number" min="0" max="100" data-f="wrk" value="${w.wrk}"></label>
    ${XSTATS.map(x=>`<label>${x.name}<input type="number" min="1" max="100" placeholder="Random" data-f="${x.k}" value="${w[x.k]??''}" ></label>`).join('')}
-   <label>Personality<select data-f="per" ><option value="">Random</option>${Object.entries(PERS).map(([k,v])=>`<option value="${k}" ${w.per===k?'selected':''}>${v.name}</option>`).join('')}</select></label>
+   <label>Main trait<select data-f="per" ><option value="">Random</option>${Object.entries(PERS).map(([k,v])=>`<option value="${k}" ${w.per===k?'selected':''}>${v.name}</option>`).join('')}</select></label><label>Extra traits (comma separated, optional)<input data-f="trx" value="${esc((w.trx||[]).map(k=>TRAITS[k]?.n||k).join(', '))}" placeholder="Hard Worker, Mic Wizard"></label>
    ${[0,1].map(i=>`<label>Specialty ${i+1}<select data-f="spec${i}" ><option value="">${i?'None':'Computer picks'}</option>${Object.entries(SPECS).map(([k,v])=>`<option value="${k}" ${w['spec'+i]===k?'selected':''}>${v.name}</option>`).join('')}</select></label>`).join('')}
    <label>Popularity (10 to 1,000)<input type="number" min="10" max="1000" step="10" data-f="pop" value="${Math.round((+w.pop||0)*10)}"></label>
    <label>Starting wage per show<input type="number" min="0" data-f="wage" placeholder="Blank = their worth" value="${w.wage??''}"></label>
@@ -2974,6 +3015,7 @@ document.addEventListener('input',e=>{
   else if(['cha','wrk','pop'].includes(f))x[f]=clamp(+t.value||0,0,100);
   else if(f==='al'){x.al=clamp(+t.value,-100,100);x.align=alLetter(x.al);const l=document.querySelector('[data-alv]');if(l)l.textContent=alName(x.al)}
   else if(f==='gen')x.gen=t.value||'any';
+  else if(f==='trx')x.trx=t.value.split(',').map(n=>n.trim().toLowerCase()).map(n=>Object.keys(TRAITS).find(k=>TRAITS[k].n.toLowerCase()===n||k===n)).filter(Boolean).slice(0,2);
   else if(['wage','left','cash'].includes(f))x[f]=t.value===''?'':+t.value;
   else if(f==='wt')x.wt=clamp(+t.value||0,0,700);
   else if(f==='legend')x.legend=!!t.value;
