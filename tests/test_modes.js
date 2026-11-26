@@ -4,7 +4,7 @@ await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/in
 await p.click('input[value=story]');await p.waitForTimeout(150);
 console.log('story picks new co',await p.$eval('input[value=new]',x=>x.checked));
 await p.fill('#nn','Neon Wrestling');await p.fill('#ns','NEON');await p.selectOption('#nsz','Local');
-await p.click('#nstartbtn');await p.waitForTimeout(400);
+await p.click('#nstartbtn');await p.waitForTimeout(300);await p.evaluate(()=>{location.hash='book'});await p.waitForTimeout(400);
 console.log('camp box',(await p.evaluate(()=>document.querySelector('.camp')?.innerText||'none')).slice(0,120).replace(/\n/g,' | '));
 await p.screenshot({path:'/tmp/camp.png'});
 await p.evaluate(()=>__ro.run(`freeAgents().slice(0,8).forEach(w=>signW(w,G.me,100,8));achCheck();save();render()`));await p.waitForTimeout(200);console.log('after signing',(await p.evaluate(()=>document.querySelector('.camp')?.innerText||'none')).slice(0,60).replace(/\n/g,' | '));

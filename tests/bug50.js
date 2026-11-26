@@ -1,7 +1,7 @@
 // 50-run bug test: node bug50.js [runs] [years] [parallel]
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const RUNS=+(process.argv[2]||50),YEARS=+(process.argv[3]||5),PAR=+(process.argv[4]||8);
-const TABS=['dash','book','roster','superstars','feuds','teams','company','titles','events','business','calendar','war','companies','history/ev','history/tt','history/yr','history/st','history/rk','history/hof','history/aw','history/rec','history/wl','history/time','edit','home'];
+const TABS=['office','news','settings','dash','book','roster','superstars','feuds','teams','company','titles','events','business','calendar','war','companies','history/ev','history/tt','history/yr','history/st','history/rk','history/hof','history/aw','history/rec','history/wl','history/time','edit','home'];
 async function one(b,i){const diff=['relaxed','standard','tough'][i%3],inj=['off','rare','normal','frequent'][Math.floor(i/3)%4],src=i%7===6?'tutorial':'builtin',ver=1+i%6,start=src==='tutorial'?'tut':['1994','2003','2011','2015','2020','2026'][ver-1];
   const p=await b.newPage({viewport:{width:i%4===0?390:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message.slice(0,160)));p.on('console',m=>{if(m.type()==='error'&&!/TUNNEL|net::/.test(m.text()))errs.push('console: '+m.text().slice(0,160))});p.on('dialog',d=>d.accept());await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
   await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);

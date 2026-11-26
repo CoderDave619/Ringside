@@ -6,7 +6,7 @@ await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);G.cos[G.me].cash=
 // scout
 await p.click('[data-hire=scout]');await p.click('[data-hp] >> nth=-1');await p.waitForTimeout(80);await p.click('[data-sact="scout:find"]');await p.waitForTimeout(80);
 // brands + draft
-await p.fill('[data-brand="0"]','Monday Mayhem');await p.fill('[data-brand="1"]','Friday Fury');await p.click('[data-bsave]');await p.waitForTimeout(80);await p.click('[data-draft]');await p.waitForTimeout(80);
+await p.evaluate(()=>{location.hash='calendar'});await p.waitForTimeout(200);await p.fill('[data-brand="0"]','Monday Mayhem');await p.fill('[data-brand="1"]','Friday Fury');await p.click('[data-bsave]');await p.waitForTimeout(80);await p.click('[data-draft]');await p.waitForTimeout(80);
 console.log('BR',await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).filter(w=>w.co===G.me).map(w=>w.name.split(' ')[0]+':'+(w.brand||'-')).join(' ')}),await p.evaluate(()=>JSON.parse(localStorage.ro_save).news.slice(0,3).map(n=>n.text)));
 // tournament across shows (brands cleared so all 4 can wrestle)
 await p.click('[data-bclear]');await p.fill('[data-brand="1"]','');await p.click('[data-bsave]');

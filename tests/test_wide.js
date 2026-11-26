@@ -7,7 +7,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   await p.route('https://**', r => r.abort());
   await p.goto('file:///home/user/game/index.html#new');
   await p.waitForTimeout(300);
-  await p.click('input[value=c0]'); await p.click('#nstartbtn'); await p.waitForTimeout(200);
+  await p.click('input[value=c0]'); await p.click('#nstartbtn');await p.waitForTimeout(300);await p.evaluate(()=>{location.hash='book'}); await p.waitForTimeout(200);
   for (let i = 0; i < 4; i++) { await p.click('#auto'); await p.click('#run'); await p.click('#cont'); await p.waitForTimeout(50); }
   const check = async (w) => {
     await p.setViewportSize({ width: w, height: 900 });

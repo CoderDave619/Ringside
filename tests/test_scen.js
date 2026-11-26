@@ -35,7 +35,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   console.log('NEWGAME sources', opts);
   await p.click('[data-nsrc="s:Test World"]'); await p.waitForTimeout(100);
   console.log('NEW page', (await p.textContent('#app')).replace(/\s+/g,' ').slice(0,900)); console.log('ED', await p.evaluate(()=>localStorage.getItem('ro_ed').slice(0,500)));
-  await p.click('input[name=nco] >> nth=0'); await p.click('#nstartbtn'); await p.waitForTimeout(200);
+  await p.click('input[name=nco] >> nth=0'); await p.click('#nstartbtn');await p.waitForTimeout(300);await p.evaluate(()=>{location.hash='book'}); await p.waitForTimeout(200);
   console.log('NAV game:', (await p.textContent('#nav')));
   console.log('HDR', (await p.textContent('#hdr')).replace(/\s+/g, ' '));
   console.log('GAME TITLES', await p.evaluate(()=>{const g=JSON.parse(localStorage.getItem('ro_save'));return JSON.stringify(Object.values(g.titles).map(t=>[t.name,t.reigns.map(r=>r.hn+(r.pre?'(pre)':''))]))}));
