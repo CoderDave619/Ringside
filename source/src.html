@@ -327,7 +327,7 @@ const target=c=>clamp(6+Math.round(c.pop/12)+(SIZES[c.size]?.t||0),4,18);
 const wageBill=cid=>roster(cid).reduce((t,w)=>t+w.wage,0);
 const budget=c=>(800+c.pop*45+1800)*1.5*.75;
 /* ---------- feuds ---------- */
-const REASONS=['Title chase','Lost the title','Dirty finish','Ambush','Called out','Contract signed','Unfinished business','Jealousy','Betrayal','Respect turned sour','Rookie vs veteran','Hero vs villain','Injury revenge','Family matter','Tag team rivalry','Faction war','Partners split','Personal'];
+const REASONS=['Disrespect','Backstage fight','Title chase','Lost the title','Dirty finish','Ambush','Called out','Contract signed','Unfinished business','Jealousy','Betrayal','Respect turned sour','Rookie vs veteran','Hero vs villain','Injury revenge','Family matter','Tag team rivalry','Faction war','Partners split','Personal'];
 /* groups: tag teams (2+ linked wrestlers) and factions (wrestlers and teams linked together) */
 const TM=()=>G.teams||(G.teams=[]);
 const gLog=(g,t)=>{(g.log=g.log||[]).push({d:G.date,t})};
@@ -349,18 +349,38 @@ const sideName=(p,gid)=>{const g=gid&&grp(gid)||teamOf(p);return g?g.name:p.map(
 const fName=f=>f.p.map((p,i)=>sideName(p,f.g?.[i])).join(' vs ');
 const heatName=h=>h>=80?'Red hot':h>=55?'Hot':h>=30?'Warm':h>=15?'Cooling':'Cold';
 const heatCol=h=>h>=55?'var(--red2)':h>=30?'var(--gold)':'var(--blue)';
-const feudHeat=(f,d)=>{if(d>0)d*=Math.max(.15,1-f.heat/110);f.heat=clamp(Math.round((f.heat+d)*10)/10,0,100);f.pk=Math.max(f.pk||0,f.heat)};
+const feudHeat=(f,d)=>{if(d>0)d*=Math.max(.15,1-f.heat/110)*(f.hm||1);f.heat=clamp(Math.round((f.heat+d)*10)/10,0,100);f.pk=Math.max(f.pk||0,f.heat)};
+/* Feud history (§4.48): the pair's past makes a feud hotter to start and quicker to grow. TODO(ASK OWNER): numbers. */
+function feudHist(ps,why){const A=ps[0]||[],B=ps.slice(1).flat(),out=[];if(A.some(x=>B.some(y=>isRival(x,y))))out.push(['Rivals',20]);const both=g=>g.m.some(id=>A.includes(id))&&g.m.some(id=>B.includes(id))||(g.former||[]).some(id=>A.includes(id))&&g.m.concat(g.former||[]).some(id=>B.includes(id));
+  const gs=TM().filter(both);if(gs.some(g=>g.st==='past'||(g.former||[]).length))out.push([gs.some(g=>g.kind==='tag')?'Former tag partners':'Former stablemates',15]);else if(gs.length)out.push(['Partners right now',10]);
+  const pf=FE().filter(f=>f.st==='past'&&f.p.some(p=>p.some(id=>A.includes(id)))&&f.p.some(p=>p.some(id=>B.includes(id)))).length;if(pf)out.push([pf>1?`Old rivals (${pf} past feuds)`:'Old rivals',Math.min(16,pf*8)]);
+  const na=new Set(B.map(id=>W(id).name));const met=A.reduce((t,id)=>t+(W(id).hist||[]).filter(h=>[...na].some(n=>(h.vs||'').includes(n))).length,0);if(met>=2)out.push([`Faced each other ${met} times recently`,Math.min(10,met*2)]);
+  if((G.pals||[]).some(([x,y])=>A.includes(x)&&B.includes(y)||A.includes(y)&&B.includes(x)))out.push(['Were friends',12]);
+  if((G.disp||[]).some(d=>A.includes(d.a)&&B.includes(d.b)||A.includes(d.b)&&B.includes(d.a)))out.push(['Backstage trouble',6]);
+  const fit={Betrayal:['Former tag partners','Former stablemates','Partners right now','Were friends'],'Partners split':['Former tag partners','Partners right now'],'Respect turned sour':['Were friends','Faced each other'],'Unfinished business':['Old rivals'],'Backstage fight':['Backstage trouble'],'Title chase':['🏆']};
+  const has=k=>k==='🏆'?ps.flat().some(id=>holds(W(id)).length):out.some(o=>o[0].startsWith(k));if(why&&(fit[why]||[]).some(has))out.push(['Believable reason',5]);
+  return out}
+const histPts=h=>h.reduce((t,x)=>t+x[1],0);
+/* Rivals (§4.49): a feud that peaked at 75+ heat makes its two lead wrestlers permanent rivals. Their feuds start hotter
+   (+20 history) and grow faster, and any match or segment between them later reignites the feud. TODO(ASK OWNER) */
+const RIVAL_AT=90;
+const isRival=(a,b)=>(G.rivals||[]).some(r=>r[0]===a&&r[1]===b||r[0]===b&&r[1]===a);
+const rivalsOf=id=>(G.rivals||[]).filter(r=>r.includes(id)).map(r=>r[0]===id?r[1]:r[0]);
+const pairFeuds=(a,b)=>FE().filter(f=>f.st==='past'||f.st==='cur').filter(f=>f.p.some(p=>p.includes(a))&&f.p.some(p=>p.includes(b))&&!f.p.some(p=>p.includes(a)&&p.includes(b)));
+const RIVAL_TIMES=3;
+function rivalCheck(f){if(f.p.length!==2)return;const a=f.p[0][0],b=f.p[1][0];if(!a||!b||isRival(a,b))return;const n=pairFeuds(a,b).filter(x=>x.m>=2||(x.pk||0)>=40).length;if(!(((f.pk||f.heat)>=RIVAL_AT&&(f.m||0)>=4)||n>=RIVAL_TIMES))return;(G.rivals=G.rivals||[]).push([a,b,G.date]);news(`${W(a).name} and ${W(b).name} are now rivals for life. Any time they cross paths, sparks will fly.`,W(a).co===G.me?'me':'fd')}
+function rivalSpark(sides,src){if(sides.length!==2)return;const a=sides[0],b=sides[1];const r=a.some(x=>b.some(y=>isRival(x,y)));if(!r||feudIn(a,b))return;const f=startFeud([a.slice(),b.slice()],'Rivals reignite',0,'game');if(f&&f.co===G.me)news(`${src}: old rivals ${nm(a)} and ${nm(b)} are at it again.`,'fd')}
 const feudStartHeat=ps=>{const al=ps.map(p=>avg(p.map(id=>W(id).al??0))),pop=avg(ps.flat().map(id=>W(id).pop));return clamp(Math.round(15+(Math.max(...al)-Math.min(...al))/14+pop/5+(ps.length-2)*3),10,60)};
 const okSides=ps=>{const ids=ps.flat();return ps.length>=2&&ps.length<=4&&ps.every(p=>p.length)&&new Set(ids).size===ids.length};
 function startFeud(ps,why,heat,src='game',gs){ps=ps.map(p=>p.slice());if(!okSides(ps))return null;const cur=feudOf(ps);if(cur){feudHeat(cur,Math.max(4,(heat||0)/4));cur.lw=G.week;return cur}
   const pf=feudOf(ps,'pot'),x=W(ps[0][0]);if(src==='game'&&x.co&&FE().filter(f=>f.st==='cur'&&f.co===x.co).length>=Math.max(3,Math.ceil(roster(x.co).length/2)))return null;
   const f=pf||{id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),p:ps,g:gs||ps.map(p=>teamOf(p)?.id||null),why:why||'Personal',heat:0,co:x.co||null,m:0,sg:0,best:0};
-  Object.assign(f,{st:'cur',d0:G.date,w0:G.week,lw:G.week,src,f10:1,pop0:Object.fromEntries(ps.flat().map(id=>[id,fameOf(W(id))])),rs:0});if(pf&&why&&src==='you')f.why=why;f.heat=Math.max(f.heat,heat||feudStartHeat(ps));f.pk=Math.max(f.pk||0,f.heat);
+  Object.assign(f,{st:'cur',d0:G.date,w0:G.week,lw:G.week,src,f10:1,pop0:Object.fromEntries(ps.flat().map(id=>[id,fameOf(W(id))])),rs:0});if(pf&&why&&src==='you')f.why=why;{const hs=feudHist(ps,f.why);f.hist=hs;f.hm=1+histPts(hs)/100;f.heat=Math.max(f.heat,clamp((heat||feudStartHeat(ps))+histPts(hs),0,90))}f.pk=Math.max(f.pk||0,f.heat);
   if(!pf)FE().push(f);if(f.co===G.me)news(`New feud: ${fName(f)} (${f.why}).`,'fd');return f}
 function potFeud(ps,why,heat){ps=ps.map(p=>p.slice());if(!okSides(ps)||feudOf(ps)||feudOf(ps,'pot'))return;const cs=new Set(ps.flat().map(id=>W(id).co));if(cs.size!==1||cs.has(null))return;const c0=[...cs][0];
   if(FE().filter(f=>f.st==='pot'&&f.co===c0).length>=8)return;
   FE().push({id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),p:ps,g:ps.map(p=>teamOf(p)?.id||null),why,heat:heat||Math.round(feudStartHeat(ps)*.7),co:c0,st:'pot',d0:G.date,w0:G.week,lw:G.week,m:0,sg:0,best:0,src:'game'})}
-function endFeud(f,why){f.st='past';f.d1=G.date;f.w1=G.week;f.endWhy=why;if(f.co===G.me&&why!=='Dismissed')news(`Feud over: ${fName(f)} (${why}).`,'fd')}
+function endFeud(f,why){f.st='past';f.d1=G.date;f.w1=G.week;f.endWhy=why;rivalCheck(f);if(f.co===G.me&&why!=='Dismissed')news(`Feud over: ${fName(f)} (${why}).`,'fd')}
 /* outcomes from feuds and segments */
 const OUTS={none:'Just end it',team:'They join forces',injury:'Injury',timeoff:'Time off',turn:'Face / heel turn',leave:'Leaves town',shot:'Earns a title shot',split:'Their group splits up',recruit:'Recruited into a faction'};
 /* to add a new resolution: add it to OUTS, handle it in applyOutcome, and add its hint in dResolve */
@@ -419,7 +439,15 @@ function aiCycScore(c){if(c.evh==null)c.evh=evHabit();const sz={Local:0,Regional
   return sz+(c.pop||30)/60+(c.cash>150000?.5:c.cash<0?-1:c.cash<20000?-.4:0)+(n&&n<10?-.6:0)+c.evh}
 function aiCyc(c){const v=aiCycScore(c);return v>=2.6?1:v>=1.3?2:3}
 function aiArena(){Object.values(G.cos).forEach(c=>{if(!c.active||c.owner!=='ai')return;const A=ARENA[c.size];if(A&&A.next&&fansOf(c)>=A.need*1.2&&c.cash>A.up*1.5){c.cash-=A.up;c.size=A.next;news(`${c.short} moved up to ${A.next} arenas.`,'')}})}
-function aiCycReview(){aiArena();Object.values(G.cos).forEach(c=>{if(!c.active||c.owner!=='ai'||c.cycFix)return;const n=aiCyc(c);if(n!==c.cyc&&wkLeft(c)>1){c.cyc=n;news(`${c.short} will now hold a Major Event ${CYC[n].split(' (')[0].toLowerCase()}.`,'')}});syncSched()}
+/* AI slumps (§5): twice a year each rival has a small chance of a bad stretch (26 weeks of smaller crowds and higher costs).
+   Strong companies ride it out; weak ones can go under. TODO(ASK OWNER) */
+const SLUMP_CH=.05;
+const DEEP_CH=.35; // TODO(ASK OWNER) chance a slump hits a below-average rival hard
+function aiSlumps(){const A=Object.values(G.cos).filter(c=>c.active&&c.owner==='ai');const avg=A.reduce((t,c)=>t+c.pop,0)/Math.max(1,A.length);
+  A.forEach(c=>{if(c.slump>G.week)return;c.deep=0;if(Math.random()<SLUMP_CH){c.slump=G.week+26;c.deep=c.pop<avg&&Math.random()<DEEP_CH?1:0;if(c.deep)c.cash=Math.min(c.cash*.35,c.cash-40000);news(c.deep?`${c.short} is in serious trouble: crowds are shrinking and debts are piling up.`:`${c.short} is going through a rough patch: smaller crowds and rising costs.`,'co')}})}
+const slumpF=c=>c.owner==='ai'&&c.slump>G.week;
+const slumpCrowd=c=>slumpF(c)?(c.deep?.45:.7):1, slumpCost=c=>slumpF(c)?(c.deep?1.5:1.25):1;
+function aiCycReview(){aiArena();aiSlumps();Object.values(G.cos).forEach(c=>{if(!c.active||c.owner!=='ai'||c.cycFix)return;const n=aiCyc(c);if(n!==c.cyc&&wkLeft(c)>1){c.cyc=n;news(`${c.short} will now hold a Major Event ${CYC[n].split(' (')[0].toLowerCase()}.`,'')}});syncSched()}
 /* uploaded images: logos for companies and groups, optional wrestler photos. Shrunk to 200px and stored as data URLs in the save. */
 const IMG_MAX=200;
 const logo=(x,px=36,alt='')=>x&&x.logo?`<img class="logo" src="${x.logo}" alt="${esc(alt||x.name||'')}" style="width:${px}px;height:${px}px">`:'';
@@ -457,7 +485,7 @@ const coName=c=>c.name;
 const pr=(w,k)=>(({he:{he:'he',him:'him',his:'his'},she:{he:'she',him:'her',his:'her'}})[pronK(w)]||{he:'they',him:'them',his:'their'})[k];
 const cap=t=>t[0].toUpperCase()+t.slice(1);
 
-function signW(w,cid,wage,len){if(w.co&&w.co!==cid)vacateFor(w,'left the company');w.co=cid;w.wage=wage;w.left=len;w.next=null;G.offers=G.offers.filter(o=>o.w!==w.id)}
+function signW(w,cid,wage,len){if(G.cos[cid]&&!G.cos[cid].active){freeW(w);return}if(w.co&&w.co!==cid)vacateFor(w,'left the company');w.co=cid;w.wage=wage;w.left=len;w.next=null;G.offers=G.offers.filter(o=>o.w!==w.id)}
 function freeW(w){if(w.co)vacateFor(w,w.status==='retired'?'retired':'left the company');w.co=null;w.wage=0;w.left=0;w.next=null;G.offers=G.offers.filter(o=>o.w!==w.id)}
 
 function newGame(scen,start,choice,opts){
@@ -574,7 +602,7 @@ function timeline(from,to){
   }
   if(D(to).getUTCFullYear()!==D(from).getUTCFullYear()){awards(D(from).getUTCFullYear());yearly()}
 }
-function closeCo(c,why){c.active=false;c.closed=true;roster(c.id).forEach(freeW);news(`${c.name} ${why}. Its wrestlers go to the Indies.`,'co')}
+function closeCo(c,why){c.active=false;c.closed=true;roster(c.id).forEach(freeW);Object.values(G.ws).forEach(w=>{if(w.next&&w.next.co===c.id)w.next=null;if(w.co===c.id)freeW(w)});G.offers=(G.offers||[]).filter(o=>o.co!==c.id);G.rogue=(G.rogue||[]).filter(r=>r.co!==c.id);news(`${c.name} ${why}. Its wrestlers go to the Indies.`,'co')}
 const FAREWELL_WK=8;const pr2=w=>pr(w,'him');
 function retireW(w){delete w.farewell;const mine=w.co===G.me;freeW(w);w.status='retired';news(`${w.name} has left the business${mine?' (was on your roster)':''}. Career record ${(w.rec||{w:0}).w}-${(w.rec||{l:0}).l}-${(w.rec||{d:0}).d}.`,'rt')}
 function awards(y){
@@ -583,7 +611,12 @@ function awards(y){
   const soty=sh.filter(x=>x.mj||x.p).sort((a,b)=>b.r-a.r||b.cr-a.cr)[0];
   const yt=G.yt||{};let woty=null;Object.entries(yt).forEach(([id,t])=>{const w=G.ws[id];if(!w)return;const sc=t.w*2-t.l+t.mm*6+w.pop/5+(w.pop-t.p0)/2;if(!woty||sc>woty.sc)woty={sc,name:w.name,co:w.co?co(w.co).short:'Free agent',w:t.w,l:t.l,d:t.d}});
   const coty=Object.values(G.cos).filter(c=>c.active).sort((a,b)=>b.pop-a.pop)[0];
-  const a={y,moty,soty:soty&&{n:soty.n,co:soty.s,r:soty.r,cr:soty.cr},woty,coty:coty&&{short:coty.short,name:coty.name,pop:Math.round(coty.pop)}};
+  let roty=null;Object.entries(yt).forEach(([id,t])=>{const w=G.ws[id];if(!w)return;const a0=age(w),rk=(w.debut&&w.debut.slice(0,4)>=String(y-1))||(a0!=null&&a0<=23);if(!rk)return;const sc=t.w*2-t.l+(w.pop-t.p0);if(!roty||sc>roty.sc)roty={sc,id,name:w.name,co:w.co?co(w.co).short:'Free agent'}});
+  const fy=FE().filter(f=>f.st!=='pot'&&f.st!=='gone'&&(f.d0||'').slice(0,4)<=yr&&(f.st==='cur'||(f.d1||G.date).slice(0,4)>=yr)).sort((a,b)=>(b.pk||b.heat)-(a.pk||a.heat))[0];
+  const foty=fy&&{name:fName(fy),heat:Math.round(fy.pk||fy.heat)};
+  const ttm=TM().filter(t=>t.kind==='tag'&&t.st!=='past'&&t.rec).sort((a,b)=>(b.rec.w-b.rec.l)-(a.rec.w-a.rec.l))[0];const ttoy=ttm&&{name:ttm.name,co:co(ttm.co)?.short||'',w:ttm.rec.w,l:ttm.rec.l};
+  if(woty){const w=Object.values(G.ws).find(x=>x.name===woty.name);if(w){gainPop(w,3);mom(w,8)}}if(roty){gainPop(G.ws[roty.id],2);mom(G.ws[roty.id],8)}
+  const a={y,moty,soty:soty&&{n:soty.n,co:soty.s,r:soty.r,cr:soty.cr},woty,roty:roty&&{name:roty.name,co:roty.co},foty,ttoy,coty:coty&&{short:coty.short,name:coty.name,pop:Math.round(coty.pop)}};
   G.awards.unshift(a);G.yt={};
   if(woty)news(`${y} Wrestler of the Year: ${woty.name} (${woty.co}), ${woty.w}-${woty.l}-${woty.d}.`,'aw');
   if(moty)news(`${y} Match of the Year: ${moty.txt} at ${moty.ev} (${moty.co}), ${stars(moty.st)}.`,'aw');
@@ -750,13 +783,18 @@ function coHofBox(){const cos=Object.values(G.cos).filter(c=>c.active||(c.hof||[
    ${L.length?`<table class="stack"><thead><tr><th>Wrestler</th><th>Inducted</th><th class="n">Popularity then</th></tr></thead><tbody>${L.map(e=>`<tr><td><b>${G.ws[e.id]?`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-hw="${e.id}">${esc(e.name)}</button>`:esc(e.name)}</b></td><td data-l="Inducted">${fmtDate(e.d)}</td><td class="n" data-l="Popularity">${e.fame.toLocaleString('en-US')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nobody yet.</div>'}</div>`}
 function gainPop(w,d){const f=fameOf(w);if(d>0){d*=(1+(w.mom-50)/100)*(.6+w.cha/250)*fameSat(f);if(w.co&&G.cos[w.co])d*=1+.3*styFit(w,G.cos[w.co])*styleBoom(G.cos[w.co]);{const m=w.mgBy&&G.ws[w.mgBy];if(m&&m.co===w.co)d*=1+Math.max(0,m.cha-50)/250}}else d*=ASC_LOSS[ascOf(w)];setFame(w,f+d*10)}
 const mom=(w,d)=>{w.mom=clamp(w.mom+d,0,100)};
+/* Creative direction (§4.47): how you plan to use a wrestler. Push: wins count more, losses hurt more, they like it.
+   Protect: losses hurt half as much, wins count a bit less. Enhancement: beating them helps opponents more, but a popular
+   wrestler gets unhappy with it. Steady is the default. TODO(ASK OWNER) */
+const CDIR={steady:{name:'Steady',win:1,loss:1,hint:'No special plan.'},push:{name:'Push',win:1.3,loss:1.2,hint:'Wins count more, losses hurt more. They enjoy the spotlight.'},protect:{name:'Protect',win:.9,loss:.5,hint:'Losses barely hurt them. Wins count a little less.'},enhance:{name:'Enhancement',win:1,loss:1,give:1.25,hint:'Opponents get more out of beating them. Popular wrestlers dislike it.'}};
+const cdir=w=>CDIR[w.dir]||CDIR.steady;
 function applyMatch(m,st,c,isMain,major){
   const coF=.7+c.pop/200,slot=(isMain?1.5:1)*(major?1.5:1),q=(st-2.5)*.6,all=m.sides.flat().map(W);
   if(m.win!=null){
     const Wn=m.sides[m.win].map(W),L=opp(m,m.win).map(W),wp=avg(Wn.map(w=>w.pop)),lp=avg(L.map(w=>w.pop));
     const ff=FWIN[m.fin.t]??1,lf=FLOSE[m.fin.t]??1;
-    Wn.forEach(w=>{grpsOf(w.id,'faction').forEach(g=>g.m.filter(id=>id!==w.id&&!Wn.includes(W(id))&&W(id).co===w.co).forEach(id=>gainPop(W(id),.12*coF)));gainPop(w,(clamp(1+(lp-wp)/25,.5,4)*ff+q)*slot*coF);if(w.align==='H'&&['Ref missed it','Interference','Screwjob'].includes(m.fin.t))gainPop(w,.5);mom(w,8)});
-    L.forEach(w=>{gainPop(w,(-.6*lf+q*.6)*slot*coF);mom(w,-6*lf)});
+    Wn.forEach(w=>{grpsOf(w.id,'faction').forEach(g=>g.m.filter(id=>id!==w.id&&!Wn.includes(W(id))&&W(id).co===w.co).forEach(id=>gainPop(W(id),.12*coF)));gainPop(w,(clamp(1+(lp-wp)/25,.5,4)*ff+q)*slot*coF*cdir(w).win*(L.some(x=>x.dir==='enhance')?CDIR.enhance.give:1));if(w.align==='H'&&['Ref missed it','Interference','Screwjob'].includes(m.fin.t))gainPop(w,.5);mom(w,8)});
+    L.forEach(w=>{const dl=(-.6*lf+q*.6)*slot*coF;gainPop(w,dl<0?dl*cdir(w).loss:dl);mom(w,-6*lf)});
   }else all.forEach(w=>gainPop(w,q*slot*coF*.7));
   all.forEach(w=>{if(st>=3.5)mom(w,4);if(st<2)mom(w,-4);w.last=G.week;if(st>=3)w.gm=1});
     m.sides.forEach((sd,si)=>sd.forEach(id=>{const w=W(id);w.rec=w.rec||{w:0,l:0,d:0};const r=m.win==null?'d':m.win===si?'w':'l';w.rec[r]++;
@@ -776,6 +814,7 @@ function applyMatch(m,st,c,isMain,major){
       c.pop=clamp(c.pop+big*(st>=3?1.2:.3),1,100);endFeud(f,`Blowoff at ${major?c.majorName:wkName(c)}${m.win!=null?`, ${nm(m.sides[m.win])} won`:''}`);const wi=m.win==null?null:f.p.findIndex(p=>p.some(id=>m.sides[m.win].includes(id)));f.wi=wi;if(f.co===G.me)(G.resQ=G.resQ||[]).push(f.id);else aiResolve(f,wi)}
     else if(major&&f.co!==G.me&&f.m>=3&&m.win!=null&&!dirty&&Math.random()<.4){endFeud(f,`Settled at ${c.majorName}`);aiResolve(f,f.p.findIndex(p=>p.some(id=>m.sides[m.win].includes(id))))}}
   else if(dirty&&m.sides.length===2)startFeud(m.sides,m.sides[0].length>1?'Tag team rivalry':'Dirty finish',0);
+  if(!f)rivalSpark(m.sides,'In the ring');
   else if(m.win==null&&m.sides.length===2)potFeud(m.sides,'Unfinished business');
   /* gimmick effects: fatigue, injuries, stakes */
   all.forEach(w=>{w.fat=clamp((w.fat||0)+gm.fat*fatMul(w),0,100);const ic=((gm.inj||0)+INJ_BASE*(1+fatOf(w)/30))*(st>=4?1.2:1)*injMul(w)*injSet();if(ic&&Math.random()<ic)applyOutcome({k:'injury',t:w.id,wk:ri(1,gm.inj>=.08?6:4)},gm.k?`a ${gm.name}`:fatOf(w)>=50?'wrestling while worn down':'a match')});
@@ -800,6 +839,7 @@ function applySeg(g,st,c,major){
   if(g.oc){const src=`a ${g.t} segment`;if(g.oc==='turn')applyOutcome({k:'turn',t:g.who[0]},src);else if(g.oc==='tween')applyOutcome({k:'turn',t:g.who[0],dir:'T'},src);else if(g.oc==='injure'&&g.who[1])applyOutcome({k:'injury',t:g.who[1],wk:ri(2,6)},src);else if(g.oc==='shot')applyOutcome({k:'shot',t:g.who[0]},src);
     else if(g.oc==='team'){const sd=segSides(g.who);applyOutcome({k:'team',ids:g.who.slice(),groups:sd.some(x=>x.g)||g.who.length>4},src)}else if(g.oc==='split'){const gs=g.who.flatMap(id=>grpsOf(id));if(gs[0])applyOutcome({k:'split',g:gs[0].id},src)}}
   if(g.t==='Attack'&&ws[0]){if(ws[0].align==='H')gainPop(ws[0],.6);if(ws[1]){gainPop(ws[1],.4);mom(ws[1],3)}}
+  {const sd0=segSides(g.who);if(sd0.length===2)rivalSpark(sd0.map(x=>x.p),'On the mic')}
   const ssd=segSides(g.who);if(ssd.length>=2&&ssd.length<=4&&['Challenge','Attack','Contract signing'].includes(g.t)&&!feudInSeg(g.who))startFeud(ssd.map(x=>x.p),{Challenge:'Called out',Attack:'Ambush','Contract signing':'Contract signed'}[g.t],clamp(Math.round(20+(st-2)*8),10,50),'game',ssd.map(x=>x.g));
   if(g.t==='Challenge')c.hype=clamp(c.hype+4,0,100);
   if(g.t==='Contract signing')c.hype=clamp(c.hype+6,0,100);
@@ -930,7 +970,7 @@ const DIFF={relaxed:{name:'Relaxed',inc:1.1,cost:.9,broke:10,hint:'More money in
   standard:{name:'Standard',inc:1,cost:1,broke:6,hint:'Balanced. 6 weeks in the red before you fold.'},
   tough:{name:'Tough',inc:.85,cost:1.2,broke:4,hint:'Tighter margins, pricier spending, and only 4 weeks in the red before you fold.'}};
 const dif=()=>DIFF[G?.opts?.diff]||DIFF.relaxed;
-const difC=(cid)=>cid===G.me?dif():DIFF.standard;
+const difC=(cid)=>{if(cid!==G.me)return DIFF.standard;const d=dif(),c=G.cos[cid];return d===DIFF.tough&&c&&c.pop<45?{...d,cost:1}:d}; // TODO(ASK OWNER)
 /* Staff and store (§4.34). Staff: one person per role, paid every show. Announcer and General Manager can also be a
    wrestler on your roster (like managers; no extra pay). Store: one-time big purchases with one clear effect each.
    Only your company uses these. TODO(ASK OWNER): all numbers. */
@@ -959,7 +999,8 @@ const stfW=(k,w)=>k==='gm'?Math.round((w.cha*2+pst(w,'psy'))/3):w.cha;
 function stfOf(c,k){if(!c||c.id!==G.me)return null;const S=c.staff||{},x=S[k];if(!x)return null;if(x.w){const w=W(x.w);if(!w||w.co!==c.id||w.status!=='active'){delete S[k];return null}return {name:w.name,sk:stfW(k,w),pay:0,w:w.id}}return x}
 const stf=(c,k)=>{const x=stfOf(c,k);return x?x.sk/100:0};
 const crewOf=(c,k)=>(c.crew=c.crew||{prod:[],road:[]})[k]||(c.crew[k]=[]);
-const staffPay=c=>c&&c.id===G.me?Object.keys(STAFF).reduce((t,k)=>t+(stfOf(c,k)?.pay||0),0)+Object.keys(CREW).reduce((t,k)=>t+crewOf(c,k).reduce((a,x)=>a+x.pay,0),0):0;
+const STAFF_SIZE={Local:.6,Regional:.8,National:1.2,International:1.6};
+const staffPay=c=>c&&c.id===G.me?(STAFF_SIZE[c.size]||1)*(Object.keys(STAFF).reduce((t,k)=>t+(stfOf(c,k)?.pay||0),0)+Object.keys(CREW).reduce((t,k)=>t+crewOf(c,k).reduce((a,x)=>a+x.pay,0),0)):0;
 const crewB=(c,x)=>{if(!c||c.id!==G.me||x.cr==null)return 0;const p=crewOf(c,x.t==='m'?'road':'prod')[x.cr];return p?p.sk/100*.35:0};
 const own=(c,k)=>!!(c&&c.id===G.me&&(c.items||{})[k]);
 const stfMy=k=>G&&stf(G.cos[G.me],k);
@@ -967,7 +1008,7 @@ function runShow(cid,card,isPlayer){
   const c=co(cid),major=c.weeklyLeft===0,evName=major?c.majorName:wkName(c);c._r0={...repOf(c)};
   card=card.filter(x=>x.t==='a'||(x.t==='m'?x.sides.flat():x.who).every(id=>W(id).co===cid&&W(id).status==='active'));
   const lastM=card.map(x=>x.t).lastIndexOf('m'),firstM=card.findIndex(x=>x.t==='m');
-  const crowd=Math.round(crowdFor(c,card,major)*rnd(.92,1.08));let gate=crowd*price(major,c);
+  const crowd=Math.round(crowdFor(c,card,major)*rnd(.92,1.08)*wev(c,'crowd')*slumpCrowd(c));let gate=crowd*price(major,c);
   const items=[],finCount={},tpend=[];let hot=0,bonus=0,ads=0,nAds=0,nSeg=0,nM=0;
   card.forEach((x,i)=>{
     if(x.t==='m'){nM++;
@@ -984,7 +1025,7 @@ function runShow(cid,card,isPlayer){
   const rated=items.filter(x=>x.st!=null);
   let rating=rated.length?rated.reduce((t,x)=>t+x.st*x.w,0)/rated.reduce((t,x)=>t+x.w,0):.25;
   rating-=nAds*.15;if(nSeg>nM)rating-=.25;rating=clampQ(rating);showShare(card,rating,major,firstM,lastM,c);
-  const DF=difC(cid);gate=gate*DF.inc;ads=ads*DF.inc;const buys=major?buysFor(c,rating):0,buyInc=buys*BUY_PRICE*DF.inc,viewers=viewersFor(c,rating,major),viewInc=viewers*VIEW_PAY*DF.inc;gate+=buyInc;ads+=viewInc;c.lastViewers=viewers;fansWeek(c,rating);const wages=wageBill(cid)*DF.cost,cost=(showCost(c,major)+cardCost(card)+staffPay(c))*DF.cost,profit=gate+ads+bonus-wages-cost;
+  const DF=difC(cid);gate=gate*DF.inc;ads=ads*DF.inc;const buys=major?buysFor(c,rating):0,buyInc=buys*BUY_PRICE*DF.inc,viewers=Math.round(viewersFor(c,rating,major)*wev(c,'view')),viewInc=viewers*VIEW_PAY*DF.inc;gate+=buyInc;ads+=viewInc;c.lastViewers=viewers;fansWeek(c,rating);const wages=wageBill(cid)*DF.cost,cost=(showCost(c,major)+cardCost(card)+staffPay(c))*DF.cost*wev(c,'cost')*slumpCost(c),profit=gate+ads+bonus-wages-cost;
   c.cash+=profit;
   if(stf(c,'gm'))c.hype=clamp((c.hype||0)+stf(c,'gm')*1.2,0,100);
   const popBefore=c.pop;
@@ -1175,7 +1216,7 @@ function backstage(){if(Math.random()>BACKSTAGE_CH)return;const R=roster(G.me).f
   const lead=R.filter(w=>perOf(w)==='leader'&&morOf(w)>=60),young=R.filter(w=>w.pop<45);if(lead.length&&young.length)ev.push(()=>{const a=pick(lead),b=pick(young);gainPop(b,1.5);mom(b,5);b.mor=clamp(morOf(b)+5,0,100);news(`Backstage: ${a.name} has been vouching for ${b.name}. ${b.name} has a little more momentum.`,'me')});
   const sour=R.filter(w=>perOf(w)==='leader'&&morOf(w)<35);if(sour.length)ev.push(()=>{const a=pick(sour);R.forEach(x=>{if(x.id!==a.id)x.mor=clamp(morOf(x)-2,0,100)});news(`Backstage: ${a.name} is unhappy, and the whole locker room can feel it. Morale is down.`,'me')});
   const champ=R.find(w=>holds(w).some(t=>t.tier===1)),jeal=champ&&R.filter(w=>w.id!==champ.id&&w.pop>champ.pop&&morOf(w)<50);if(jeal&&jeal.length)ev.push(()=>{const a=pick(jeal);{const ef=feudIn([a.id],[champ.id]);if(ef){feudHeat(ef,5);ef.lw=G.week}else potFeud([[a.id],[champ.id]],'Jealousy',30)}addDispute(a,champ,'Jealous of the champion');news(`Backstage: ${a.name} thinks they should be champion instead of ${champ.name}. It could turn into a feud.`,'me')});
-  const pals=R.filter(w=>morOf(w)>=70),pp=[];pals.forEach((x,i)=>pals.slice(i+1).forEach(y=>{if(!feudIn([x.id],[y.id]))pp.push([x,y])}));if(pp.length)ev.push(()=>{const [a,b]=pick(pp);[a,b].forEach(x=>x.mor=clamp(morOf(x)+3,0,100));news(`Backstage: ${a.name} and ${b.name} have become good friends. They might make a good team.`,'me')});
+  const pals=R.filter(w=>morOf(w)>=70),pp=[];pals.forEach((x,i)=>pals.slice(i+1).forEach(y=>{if(!feudIn([x.id],[y.id]))pp.push([x,y])}));if(pp.length)ev.push(()=>{const [a,b]=pick(pp);[a,b].forEach(x=>x.mor=clamp(morOf(x)+3,0,100));(G.pals=G.pals||[]).push([a.id,b.id]);news(`Backstage: ${a.name} and ${b.name} have become good friends. They might make a good team.`,'me')});
   const rg=R.filter(w=>w.pop>=40&&w.left>2&&!w.next&&!w.mgonly&&(morOf(w)<45||perOf(w)==='greedy')&&!(G.rogue||[]).some(x=>x.w===w.id)),rc=Object.values(G.cos).filter(c=>c.active&&c.owner==='ai'&&c.cash>50000);
   if(rg.length&&rc.length&&Math.random()<ROGUE_CH)ev.push(()=>{const w=pick(rg),c=pick(rc);(G.rogue=G.rogue||[]).push({w:w.id,co:c.id,wk:G.week});gainPop(w,ROGUE_POP);w.rogueT=G.week+ROGUE_WK;mom(w,10);news(`Backstage: ${w.name} has walked out and says they're joining ${c.short}, even though their contract with you has ${w.left} Major Events left. Decide on the Dashboard.`,'me')});
   if(ev.length)pick(ev)()}
@@ -1224,6 +1265,13 @@ function dTour(){const R=roster(G.me).filter(w=>w.status==='active'&&!w.mgonly).
     if(d.x){closeD();return}if(d.ts){n=+d.ts;pickd=R.slice(0,n).map(w=>w.id)}else if(d.te){const i=pickd.indexOf(d.te);if(i>=0)pickd.splice(i,1);else if(pickd.length<n)pickd.push(d.te)}
     else if(b.id==='tgo'){const seed=pickd.map(W).sort((a,b)=>b.pop-a.pop).map(w=>w.id),order=n===8?[0,7,3,4,1,6,2,5]:[0,3,1,2];G.tour={name,alive:order.map(i=>seed[i]),wk:G.week};news(`The ${name} begins: ${n} wrestlers, one winner.`,'me');save();closeD();rerender();return}
     draw()}}
+/* World events (§4.46): now and then something outside your control hits this week's show. Player company only. TODO(ASK OWNER) */
+const WEV_CH=.05;
+const WEVS={storm:{t:'A big storm is forecast for show night. Expect a smaller crowd.',crowd:.6},blackout:{t:'A TV blackout in the area: this week\'s show earns no viewer money.',view:0},
+  festival:{t:'A local festival is in town. Expect a bigger crowd.',crowd:1.3},celeb:{t:'A celebrity is coming to the show. Hype is up.',crowd:1.1,hype:8},
+  mixup:{t:'A venue mix-up means extra costs this week.',cost:1.5},sponsor:{t:'A local sponsor paid for a banner at your show.',cash:1},heat:{t:'A heat wave: fewer people want to sit in a hot arena.',crowd:.85}};
+function wevWeek(){G.wev=null;if(Math.random()>WEV_CH)return;const k=pick(Object.keys(WEVS)),E=WEVS[k],m=me();G.wev={k,wk:G.week};if(E.hype)m.hype=clamp((m.hype||0)+E.hype,0,100);if(E.cash){const v=r10(4000+m.pop*150);m.cash+=v;news(`${E.t} (+${money(v)})`,'me');return}news(`This week: ${E.t}`,'me')}
+const wev=(c,f)=>c.id===G.me&&G.wev&&G.wev.wk===G.week?(WEVS[G.wev.k][f]??1):1;
 function aiOffers(){
   G.offers=G.offers.filter(o=>{const w=W(o.w);if(w.co===G.me&&w.left>2&&o.week!=null&&G.week-o.week>=2){news(`${co(o.co).short}'s offer for ${w.name} lapsed. ${w.name} stays under contract.`,'of');return false}return w.co===G.me});
   for(const w of roster(G.me)){
@@ -1243,12 +1291,12 @@ function advance(){
   ratingsWar();trendWeek();
   const from=G.date;G.date=addDays(G.date,7);G.week++;syncSched();if(['01','07'].includes(G.date.slice(5,7))&&+G.date.slice(8,10)<=7)aiCycReview();Object.values(G.ws).forEach(w=>{delete w.fresh});
   timeline(from,G.date);
-  for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;const pe=perOf(w);mo+=(65-mo)*(pe==='loyal'?.08:pe==='pro'?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=pe==='showboat'?3.5:pe==='pro'?1:2;if(pe==='hothead')mo+=rnd(-3,3);if(pe==='greedy'&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w);if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
+  for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;const pe=perOf(w);mo+=(65-mo)*(pe==='loyal'?.08:pe==='pro'?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=pe==='showboat'?3.5:pe==='pro'?1:2;if(pe==='hothead')mo+=rnd(-3,3);if(pe==='greedy'&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w);if(w.dir==='push'&&w.pop>=40)mo+=.4;if(w.dir==='enhance'&&w.pop>=40)mo-=1;if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
   roster(G.me).forEach(w=>{if(w.farewell&&G.week>=w.farewell){news(`${w.name}'s farewell tour is over. Thank you, ${w.name}.`,'me');retireW(w)}});
-  aiSign(false);aiOffers();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();
+  aiSign(false);aiOffers();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();
 
   for(const c of Object.values(G.cos)){if(!c.active)continue;
-    c.pop+=((own(c,'museum')?60:50)-c.pop)*.02;if(c.owner==='ai'&&c.cash>100000)c.cash-=(c.cash-100000)*.03;
+    c.pop+=((own(c,'museum')?60:50)-c.pop)*.02;if(c.owner==='ai'&&c.cash>100000&&!(c.deep&&slumpF(c)))c.cash-=(c.cash-100000)*.03;
     if(c.cash<0)c.broke++;else c.broke=0;
     if(c.owner==='ai'&&c.broke>=10)closeCo(c,'has gone out of business');
   }
@@ -1260,7 +1308,7 @@ function advance(){
 }
 /* Save slots (§4.41): 3 slots. The game you're playing lives in localStorage (ro_save) as before; every slot is also
    kept in IndexedDB (big games fit there), with a small summary in ro_slots for the menus. */
-const SLOTS=3; // Slots 4 and 5 may come later as a paid extra (owner, 26 Nov)let _slotT=null;
+const SLOTS=3;let _slotT=null; /* slots 4 and 5 may come later as a paid extra (owner, 26 Nov) */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('ringside',1);r.onupgradeneeded=()=>r.result.createObjectStore('slots');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
 const idbDo=(mode,f)=>idb().then(db=>new Promise((ok,no)=>{const t=db.transaction('slots',mode),st=t.objectStore('slots'),q=f(st);t.oncomplete=()=>ok(q&&q.result);t.onerror=()=>no(t.error)}));
 const idbPut=(k,v)=>idbDo('readwrite',st=>st.put(v,k)),idbGet=k=>idbDo('readonly',st=>st.get(k)),idbDel=k=>idbDo('readwrite',st=>st.delete(k));
@@ -1280,7 +1328,7 @@ const NAVG=()=>[
   ['Book',[['book','Book the show','Build and run this week\'s card']]],
   ['Roster',[['roster/mine','My roster','Contracts, filters and champions'],['superstars','Superstar profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag teams and factions','Link wrestlers into groups'],['roster/fa','Indies','Unsigned talent'],['roster/other','Rival rosters','Who works where'],['roster/off',`Offers to decide (${G.offers.length})`,'Rival owners want your talent']]],
   ['Company',[['company','Company overview','Type, money, roster, titles and schedule'],['titles','Championships','Every title, champion and prestige'],['events','Events','Upcoming and past Major Events'],['business','Staff and store','Hire staff, buy big upgrades'],['calendar','Calendar and news','Your shows and the latest news'],['war','Ratings war','Who won each week'],['companies','Companies','Rival owners and their stats'],['edit',G.opts.sandbox?'Edit game (Sandbox)':'Edit game','Change this game\'s copy']]],
-  ['History',[['history/ev','Events','Every Major Event, card by card'],['history/tt','Titles','Lineages, reigns and records'],['history/yr','Year by year','Every company\'s shows by date'],['history/shows','All shows'],['history/cos','Companies and titles'],['history/wl','Win-loss'],['history/time','Timeline'],['history/rec','Records'],['history/st','Stats','Matches, pairings, finishes, gimmicks'],['history/hof','Hall of Fame','Everyone who reached 2,300'],['history/aw','Awards']]],
+  ['History',[['history/ev','Events','Every Major Event, card by card'],['history/rk','Rankings','Top 25 across the business'],['history/tt','Titles','Lineages, reigns and records'],['history/yr','Year by year','Every company\'s shows by date'],['history/shows','All shows'],['history/cos','Companies and titles'],['history/wl','Win-loss'],['history/time','Timeline'],['history/rec','Records'],['history/st','Stats','Matches, pairings, finishes, gimmicks'],['history/hof','Hall of Fame','Everyone who reached 2,300'],['history/aw','Awards']]],
   ['Menu',[['home','Main menu','Save is kept'],['new','New game'],['editor','Scenario editor']]]];
 function applySub(){const[h,sub]=location.hash.slice(1).split('/');if(!sub||!G)return;if(h==='roster'&&['mine','fa','other','off'].includes(sub))rview=sub;if(h==='history')hview=sub}
 function navHtml(){
@@ -1321,6 +1369,7 @@ function vBook(){
   if(G.over){$('#app').innerHTML=`<div class="hero"><h2>Game over</h2><p>${esc(me().name)} ran out of money. Start a new game to try again.</p></div><a href="#new"><button class="go">New game</button></a>`;return}
   const m=me(),major=m.weeklyLeft===0,card=G.card,lastM=card.map(x=>x.t).lastIndexOf('m');
   const DF=dif(),crowd=crowdFor(m,card,major),gate=crowd*price(major,m)*DF.inc,ads=card.filter(x=>x.t==='a').length*adPay(m)*DF.inc,wages=wageBill(G.me)*DF.cost,gcost=cardCost(card)*DF.cost,cost=showCost(m,major)*DF.cost,tvx=viewersFor(m,3,major)*VIEW_PAY*DF.inc,bx=major?buysFor(m,3)*BUY_PRICE*DF.inc:0,pr=gate+ads+tvx+bx-wages-cost-gcost;
+  const wevB=G.wev&&G.wev.wk===G.week?`<div class="msg" style="margin-bottom:12px">🌩 This week: ${esc(WEVS[G.wev.k].t)}</div>`:'';
   const row=(x,i)=>{
     const ctl=`<div class="ctl"><button class="sm" data-up="${i}" aria-label="Move up" ${i?'':'disabled'}>↑</button><button class="sm" data-dn="${i}" aria-label="Move down" ${i<card.length-1?'':'disabled'}>↓</button>${x.t==='m'&&titleOpts(G.me,x,card).length?`<button class="sm${x.title?' go':''}" data-tt="${i}" title="Put a title on the line">${x.title?'Title on the line':'Non-title'}</button>`:''}${x.t==='m'&&mFeud(x.sides)?`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`:''}${x.t==='m'?`<button class="sm" data-fin="${i}">Finish</button>`:''}${(x.t==='m'||x.t==='s')&&crewOf(me(),x.t==='m'?'road':'prod').length?(()=>{const L=crewOf(me(),x.t==='m'?'road':'prod'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a ${x.t==='m'?'road agent':'producer'}">${p?esc(p.name.split(' ').pop())+' +':x.t==='m'?'Road agent':'Producer'}</button>`})():''}<button class="sm" data-rm="${i}" aria-label="Remove">✕</button></div>`;
     if(x.t==='m'){const tagT=x.fin?`<span class="tag${NOWIN.includes(x.fin.t)?' ns':''}">${esc(x.fin.t)}${x.fin.c?': '+esc(x.fin.c):''}</span>`:x.win!=null?'<span class="tag">Clean win</span>':'<span class="tag sim">Sim decides</span>';
@@ -1331,7 +1380,7 @@ function vBook(){
   };
   const r=roster(G.me);
   $('#app').innerHTML=`<div class="head"><div><h2>${major?esc(m.majorName)+' (Major Event)':esc(wkName(m))+', '+fmtDate(G.date)}</h2><p>Click a name to set a clean winner. Use Finish for anything special. The last match is the main event.</p></div>
-  <div class="btns"><button id="addm" ${r.length<2?'disabled':''}>Add match</button><button id="adds" ${r.length?'':'disabled'}>Add segment</button><button id="adda">Add ad</button><button id="auto" ${r.length<2?'disabled':''}>Auto-fill</button>${G.tour?(G.card.some(x=>x.tour)?'':`<button id="tround" class="bl">Add ${esc(G.tour.name)} ${tourLabel(G.tour.alive.length).toLowerCase()}</button>`):`<button id="tnew">Tournament</button>`}<button id="skip" title="No show this week">Skip week</button><button class="go" id="run">Run the show</button></div></div>
+  ${wevB}<div class="btns"><button id="addm" ${r.length<2?'disabled':''}>Add match</button><button id="adds" ${r.length?'':'disabled'}>Add segment</button><button id="adda">Add ad</button><button id="auto" ${r.length<2?'disabled':''}>Auto-fill</button>${G.tour?(G.card.some(x=>x.tour)?'':`<button id="tround" class="bl">Add ${esc(G.tour.name)} ${tourLabel(G.tour.alive.length).toLowerCase()}</button>`):`<button id="tnew">Tournament</button>`}<button id="skip" title="No show this week">Skip week</button><button class="go" id="run">Run the show</button></div></div>
   <div class="grid"><div class="panel">${card.length?card.map(row).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign free agents on the Roster screen.':'The card is empty. Add matches and segments, or use Auto-fill.'}</div>`}</div>
   <aside class="panel">${(()=>{const L=G.war||[],x=L[L.length-1];if(!x)return '';const mine=x.rows.find(r=>r.c===G.me);return `<div class="kv" style="margin-bottom:10px"><span>Last week's ratings war</span><b>${mine?`${ord(mine.rk)} of ${x.rows.length}`:'Sat out'}</b></div>`})()}${feudCards()?`<h3>Your feuds</h3><p class="sub" style="margin:0">Click a feud to add it to the card. Staleness counts their matches in the last 6 weeks; too many cools the feud.</p>${feudCards()}`:''}<h3>Show outlook</h3>
   <div class="kv"><span>Expected crowd</span><b>${crowd.toLocaleString('en-US')}</b></div>
@@ -1482,7 +1531,7 @@ function vRoster(){
    ${rview==='off'?`<div class="panel">${offTbl}</div>`:`${champBox}<div class="panel">${rview==='mine'?`<div class="kv" style="margin:0 0 8px"><span>Roster size</span><b class="${roster(G.me).length>target(me())+2?'neg':'pos'}">${roster(G.me).length} / ${target(me())} suggested</b></div>`:''}<div class="chipf" role="group" aria-label="Filter">${RFL.map(([k,l])=>`<button class="${rfil===k?'on':''}" data-rf="${k}">${l} <small>${rcount[k]}</small></button>`).join('')}</div><div class="btns" style="margin:0 0 10px;align-items:end"><input id="rq" placeholder="Search wrestlers" value="${esc(rq)}" style="max-width:280px;margin:0">
    ${['mine','other'].includes(rview)?`<label style="min-width:220px">Company<select id="rco">${[['me',`${esc(me().short)} (you) · ${roster(G.me).length} wrestlers`],...Object.values(G.cos).filter(c=>c.active&&c.id!==G.me).sort((a,b)=>b.pop-a.pop).map(c=>[c.id,`${esc(c.short)} · ${roster(c.id).length} wrestlers`]),['all','All other companies']].map(([id,l])=>`<option value="${id}" ${(rview==='mine'?'me':rco)===id?'selected':''}>${l}</option>`).join('')}</select></label>`:''}
    <label style="min-width:160px">Sort by<select id="rsort">${[['pop','Popularity'],['cha','Charisma'],['wrk','Workrate'],['worth','Worth'],['age','Age'],['name','Name']].map(([k,l])=>`<option value="${k}" ${rsort===k?'selected':''}>${l}</option>`).join('')}</select></label></div><table class="stack"><thead><tr><th>Wrestler</th><th class="n">Cha</th><th class="n">Wrk</th><th class="n">Pop</th><th class="n">Worth</th><th>${rview==='mine'?'Contract':'Status'}</th><th></th></tr></thead><tbody>
-   ${list.map(w=>`<tr><td>${headImg(w)}<b>${esc(w.name)}</b> ${lgTxt(w)}${chTxt(w)}<button class="ed" data-star="${w.id}" aria-label="Edit ${esc(w.name)}" title="Open profile and edit">✎</button><div class="sub">${isOut(w)?`<span class="k" style="background:var(--red);color:#fff">${w.outWhy==='lawsuit'?'Sitting out (lawsuit) until their deal ends':`${w.outWhy==='injury'?'Injured':'Away'}, back in ${w.out-G.week} wk`}</span>`:''}${w.shot?'<span class="k of">Title shot</span>':''}${w.mgr?'<span class="k">Manager</span>':''}${feudsOf(w.id).length?`<span class="k" style="color:${heatCol(feudsOf(w.id)[0].heat)}">Feud</span>`:''}${age(w)!=null?age(w)+' · ':''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?' · '+esc(w.gim):''} · ${momTxt(w)}${w.rec?` · ${w.rec.w}-${w.rec.l}-${w.rec.d}`:''}${(w.streak||0)>=3?` · <span class="hot">W${w.streak}</span>`:(w.lstreak||0)>=3?` · <span class="cold">L${w.lstreak}</span>`:''}</div></td><td class="n">${w.cha}</td><td class="n">${w.wrk}</td><td class="n">${pd(w)}</td><td class="n">${money(worth(w))}</td><td>${status(w)}</td><td>${act(w)}</td></tr>`).join('')||`<tr><td colspan="7" class="empty">Nobody here.</td></tr>`}
+   ${list.map(w=>`<tr><td>${headImg(w)}<b>${esc(w.name)}</b> ${lgTxt(w)}${chTxt(w)}<button class="ed" data-star="${w.id}" aria-label="Edit ${esc(w.name)}" title="Open profile and edit">✎</button><div class="sub">${isOut(w)?`<span class="k" style="background:var(--red);color:#fff">${w.outWhy==='lawsuit'?'Sitting out (lawsuit) until their deal ends':`${w.outWhy==='injury'?'Injured':'Away'}, back in ${w.out-G.week} wk`}</span>`:''}${w.shot?'<span class="k of">Title shot</span>':''}${w.dir&&w.dir!=='steady'?`<span class="k">${cdir(w).name}</span>`:''}${w.mgr?'<span class="k">Manager</span>':''}${feudsOf(w.id).length?`<span class="k" style="color:${heatCol(feudsOf(w.id)[0].heat)}">Feud</span>`:''}${age(w)!=null?age(w)+' · ':''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?' · '+esc(w.gim):''} · ${momTxt(w)}${w.rec?` · ${w.rec.w}-${w.rec.l}-${w.rec.d}`:''}${(w.streak||0)>=3?` · <span class="hot">W${w.streak}</span>`:(w.lstreak||0)>=3?` · <span class="cold">L${w.lstreak}</span>`:''}</div></td><td class="n">${w.cha}</td><td class="n">${w.wrk}</td><td class="n">${pd(w)}</td><td class="n">${money(worth(w))}</td><td>${status(w)}</td><td>${act(w)}</td></tr>`).join('')||`<tr><td colspan="7" class="empty">Nobody here.</td></tr>`}
    </tbody></table></div>`}`;
   const rc=$('#rco');if(rc)rc.onchange=()=>{if(rc.value==='me')rview='mine';else{rview='other';rco=rc.value}vRoster()};const rs=$('#rsort');if(rs)rs.onchange=()=>{rsort=rs.value;vRoster()};
   const i=$('#rq');if(i)i.oninput=()=>{rq=i.value;const p=i.selectionStart;vRoster();const j=$('#rq');j.focus();j.setSelectionRange(p,p)};
@@ -1650,7 +1699,7 @@ let hev=null,htl=null,hyv=null,hywk=false,hevmj=true,htco='all',hc=null,hsort='w
 function vHist(){
   const shows=(G.shows||[]).slice().reverse(),yrs=[...new Set(shows.map(x=>x.d.slice(0,4)))];
   const cos=Object.values(G.cos).filter(c=>shows.some(x=>x.c===c.id)).sort((a,b)=>a.short.localeCompare(b.short));
-  const tabs=[['ev','Events'],['tt','Titles'],['yr','Year by year'],['shows','All shows'],['cos','Companies'],['wl','Win-loss'],['time','Timeline'],['rec','Records'],['st','Stats'],['hof','Hall of Fame'],['aw','Awards']].map(([k,l])=>`<button data-hv="${k}" class="${hview===k?'go':''}">${l}</button>`).join('');
+  const tabs=[['ev','Events'],['tt','Titles'],['yr','Year by year'],['shows','All shows'],['cos','Companies'],['wl','Win-loss'],['time','Timeline'],['rec','Records'],['st','Stats'],['rk','Rankings'],['hof','Hall of Fame'],['aw','Awards']].map(([k,l])=>`<button data-hv="${k}" class="${hview===k?'go':''}">${l}</button>`).join('');
   const stl=st=>st!=null?stars(st):'';
   let body='';
   if(hview==='shows'){const q=hq.toLowerCase();
@@ -1688,6 +1737,11 @@ function vHist(){
   else if(hview==='time'){const L=G.log||[];body=`<p class="hint" style="margin-top:0">Every big moment so far: company changes, debuts, signings, great matches, milestones, awards and retirements.</p><ul class="tl">${L.slice(0,600).map(n=>`<li><time style="font-size:14px">${fmtDate(n.date)}</time><div><span class="k ${esc(n.kind)}">${{co:'Company',db:'Debut',mt:'Match',sg:'Signing',ms:'Milestone',aw:'Award',rt:'Retired',tt:'Title',fd:'Feud'}[n.kind]||''}</span>${esc(n.text)}</div></li>`).join('')||'<div class="empty">Nothing yet.</div>'}</ul>`}
   else if(hview==='st'){body=statsPage()}
   else if(hview==='hof'){body=hofPage()}
+  else if(hview==='rk'){const sc=w=>{const h=(w.hist||[]).slice(0,10);return Math.round(fameOf(w)+h.filter(x=>x.r==='w').length*25-h.filter(x=>x.r==='l').length*10+holds(w).reduce((t,x)=>t+({1:150,2:80,3:40}[x.tier||1]||40),0))};
+    const L=Object.values(G.ws).filter(w=>w.status==='active'&&w.co&&!w.mgonly).map(w=>({w,s:sc(w)})).sort((a,b)=>b.s-a.s).slice(0,25);
+    const T=TM().filter(t=>t.kind==='tag'&&t.st!=='past').map(t=>({t,s:(t.rec?.w||0)*2-(t.rec?.l||0)+avg(t.m.map(id=>W(id).pop))})).sort((a,b)=>b.s-a.s).slice(0,10);
+    body=`<p class="hint" style="margin-top:0">Live rankings across every company: popularity, recent results (last 10 matches) and titles held.</p><div class="grid2"><div class="panel"><h3>Top 25 wrestlers</h3><table class="stack"><thead><tr><th class="n">#</th><th>Wrestler</th><th>Company</th><th class="n">Score</th></tr></thead><tbody>${L.map((x,i)=>`<tr${x.w.co===G.me?' style="background:var(--bluebg)"':''}><td class="n">${i+1}</td><td>${headImg(x.w,22)}<button class="ed" style="border:0;padding:0;font-weight:700" data-star="${x.w.id}">${esc(x.w.name)}</button>${holds(x.w).length?' 🏆':''}</td><td>${esc(co(x.w.co).short)}</td><td class="n">${x.s}</td></tr>`).join('')}</tbody></table></div>
+     <div class="panel"><h3>Top 10 tag teams</h3>${T.length?`<table class="stack"><thead><tr><th class="n">#</th><th>Team</th><th>Company</th><th class="n">Record</th></tr></thead><tbody>${T.map((x,i)=>`<tr><td class="n">${i+1}</td><td><b>${esc(x.t.name)}</b></td><td>${esc(co(x.t.co)?.short||'')}</td><td class="n">${x.t.rec?.w||0}-${x.t.rec?.l||0}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No tag teams yet.</div>'}</div></div>`}
   else if(hview==='rec'){
     const all=[];(G.shows||[]).forEach(x=>x.m.forEach(m=>{if(m[4]!=null)all.push({m,x})}));all.sort((a,b)=>b.m[4]-a.m[4]);
     const ws=Object.values(G.ws).filter(w=>w.rec);const n=w=>w.rec.w+w.rec.l+w.rec.d;
@@ -1706,6 +1760,9 @@ function vHist(){
     <div class="kv"><span>Wrestler of the Year</span><b>${a.woty?`${esc(a.woty.name)} (${esc(a.woty.co)}) ${a.woty.w}-${a.woty.l}-${a.woty.d}`:'–'}</b></div>
     <div class="kv"><span>Match of the Year</span><b>${a.moty?`${esc(a.moty.txt)} ${stars(a.moty.st)}`:'–'}</b></div>${a.moty?`<div class="sub" style="text-align:right">${esc(a.moty.ev)} (${esc(a.moty.co)})</div>`:''}
     <div class="kv"><span>Show of the Year</span><b>${a.soty?`${esc(a.soty.n)} (${esc(a.soty.co)}) ${stars(a.soty.r)}`:'–'}</b></div>
+    <div class="kv"><span>Rookie of the Year</span><b>${a.roty?`${esc(a.roty.name)} (${esc(a.roty.co)})`:'–'}</b></div>
+    <div class="kv"><span>Feud of the Year</span><b>${a.foty?`${esc(a.foty.name)} · peak heat ${a.foty.heat}`:'–'}</b></div>
+    <div class="kv"><span>Tag Team of the Year</span><b>${a.ttoy?`${esc(a.ttoy.name)} (${esc(a.ttoy.co)}) ${a.ttoy.w}-${a.ttoy.l}`:'–'}</b></div>
     <div class="kv"><span>Company of the Year</span><b>${a.coty?`${esc(a.coty.short)} · popularity ${a.coty.pop}`:'–'}</b></div></div>`).join(''):'<div class="panel"><div class="empty">Awards are handed out at the end of each year.</div></div>'}
   $('#app').innerHTML=`<div class="head"><div><h2>History</h2><p>Everything that has happened in this game so far.</p></div><div class="btns">${tabs}</div></div>${['shows','time','wl','cos'].includes(hview)?`<div class="panel">${body}</div>`:body}`;
   const on=(id,ev,f)=>{const e=$('#'+id);if(e)e[ev]=f};
@@ -1972,6 +2029,9 @@ function profSheet(w){
    ${kv('Personality',`${PERS[perOf(w)].name} <span class="sub">${PERS[perOf(w)].hint}</span>`)}
    ${kv('Specialties',specOf(w).map(k=>`${SPECS[k].name} <span class="sub">(${PSTATS.find(x=>x.k===SPECS[k].stat).name} ${pst(w,SPECS[k].stat)})</span>`).join(', '))}
    <div class="kv" style="grid-column:1/-1;display:block"><span>Physical stats</span><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 14px;margin-top:4px">${XSTATS.map(x=>`<div title="${esc(x.hint)}" style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span class="sub" style="margin:0">${x.name}</span><b>${met(pst(w,x.k),'var(--blue)')} ${pst(w,x.k)}</b></div>`).join('')}</div></div>
+   ${(()=>{const opp={};FE().filter(f=>f.st==='past'||f.st==='cur').forEach(f=>{if(!f.p.some(p=>p.includes(w.id)))return;f.p.filter(p=>!p.includes(w.id)).flat().forEach(id=>{const o=opp[id]=opp[id]||{n:0,pk:0,m:0};o.n++;o.pk=Math.max(o.pk,Math.round(f.pk||f.heat));o.m+=f.m||0})});
+     const L=Object.entries(opp).filter(([id,o])=>isRival(w.id,id)||o.n>=2||o.pk>=60).sort((a,b)=>(isRival(w.id,b[0])-isRival(w.id,a[0]))||b[1].n-a[1].n||b[1].pk-a[1].pk).slice(0,8);
+     return L.length?`<div class="kv" style="grid-column:1/-1;display:block"><span>Rivals and long feuds</span><div style="margin-top:4px">${L.map(([id,o])=>`<div class="kv" style="border:0;padding:2px 0"><span><button class="ed" style="border:0;padding:0;font-weight:800;color:${isRival(w.id,id)?'var(--heel)':'var(--ink)'}" data-star="${id}">${esc(W(id)?.name||'?')}</button>${isRival(w.id,id)?' <span class="k" style="background:var(--heel);color:#fff">Rival</span>':''}</span><b>${o.n} feud${o.n===1?'':'s'} · peak heat ${o.pk} · ${o.m} match${o.m===1?'':'es'}</b></div>`).join('')}</div></div>`:''})()}
    ${kv('Faction',grpsOf(w.id,'faction').map(g=>`<button class="ed" style="border:0;padding:0;font-weight:800;font-size:15px;color:var(--blue)" data-tgo="${g.id}">${esc(g.name)}</button>`).join(', ')||'<span class="sub">None</span>')}
    ${kv('Tag team',grpsOf(w.id,'tag').map(g=>`<button class="ed" style="border:0;padding:0;font-weight:800;font-size:15px;color:var(--blue)" data-tgo="${g.id}">${esc(g.name)}</button>${g.rec?` <span class="sub">${g.rec.w}-${g.rec.l}-${g.rec.d}</span>`:''}`).join(', ')||'<span class="sub">None</span>')}
    ${kv('Tournament wins',w.tw||0)}
@@ -2094,10 +2154,10 @@ const STF_ACT={ann:[['hype','Hype a feud'],['over','Put over a wrestler']],gm:[[
 function stfRec(m,k){return (m.staff||{})[k]}
 function dStfAct(k,a){const m=me(),x=stfOf(m,k),sk=x.sk/100,R=roster(G.me).filter(w=>w.status==='active');let L=[],sub=w=>'',hint='';
   const fz=FE().filter(f=>f.st==='cur'&&f.co===G.me);
-  if(a==='hype'){L=fz.map(f=>({id:f.id,t:feudName(f),s:`Heat ${Math.round(f.heat)}`}));hint=`Adds about ${Math.round(3+sk*5)} heat.`}
+  if(a==='hype'){L=fz.map(f=>({id:f.id,t:fName(f),s:`Heat ${Math.round(f.heat)}`}));hint=`Adds about ${Math.round(3+sk*5)} heat.`}
   if(a==='over'){L=R.filter(w=>w.id!==x.w).map(w=>({id:w.id,t:w.name,s:pd(w)}));hint='A small popularity and momentum boost.'}
   if(a==='shot'){L=R.filter(w=>!holds(w).length&&!w.shot&&!w.mgonly).map(w=>({id:w.id,t:w.name,s:pd(w)}));hint='They get a title shot, the same as winning one in a feud.'}
-  if(a==='match'){L=fz.filter(f=>f.p.flat().every(id=>canWork(W(id)))&&!G.card.some(y=>y.t==='m'&&mFeud(y.sides)===f)).map(f=>({id:f.id,t:feudName(f),s:`Heat ${Math.round(f.heat)}`}));hint="Adds their match to this week's card, with a little hype and heat."}
+  if(a==='match'){L=fz.filter(f=>f.p.flat().every(id=>canWork(W(id)))&&!G.card.some(y=>y.t==='m'&&mFeud(y.sides)===f)).map(f=>({id:f.id,t:fName(f),s:`Heat ${Math.round(f.heat)}`}));hint="Adds their match to this week's card, with a little hype and heat."}
   if(a==='heal'){L=R.filter(w=>w.out>G.week&&w.outWhy==='injury').map(w=>({id:w.id,t:w.name,s:`Out ${w.out-G.week} more wk`}));hint=`Takes ${1+Math.round(sk*2)} week${sk>=.25?'s':''} off their recovery.`}
   if(a==='fat'){L=R.filter(w=>fatOf(w)>=15).sort((a,b)=>fatOf(b)-fatOf(a)).map(w=>({id:w.id,t:w.name,s:`Fatigue ${fatOf(w)}`}));hint=`Removes about ${Math.round(20+sk*30)} fatigue.`}
   if(a==='pick')return dTrainees(x);
@@ -2106,7 +2166,7 @@ function dStfAct(k,a){const m=me(),x=stfOf(m,k),sk=x.sk/100,R=roster(G.me).filte
   if(a==='sit'){L=R.slice().sort((a,b)=>morOf(a)-morOf(b)).map(w=>({id:w.id,t:w.name,s:`${hapWord(morOf(w))} (${morOf(w)})`}));hint=`Raises their happiness by about ${Math.round(6+sk*10)}.`}
   openD(`<div class="dh b"><h3>${esc(x.name)}: ${STF_ACT[k].find(y=>y[0]===a)[1]}</h3><div>${hint} Once a week.</div></div><div class="db"><div class="chips">${L.map(o=>`<button data-sa="${o.id}">${esc(o.t)}<small>${esc(o.s)}</small></button>`).join('')||'<span class="sub">Nobody fits right now.</span>'}</div><div class="dfoot"><button data-x="1">Close</button></div></div>`);
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.x){closeD();return}const id=b.dataset.sa;if(!id)return;const rec=stfRec(m,k);rec.wk=G.week;
-    if(a==='hype'||a==='match'){const f=FE().find(y=>y.id===id);if(a==='hype'){feudHeat(f,3+sk*5);f.lw=G.week;news(`${x.name} hyped up ${feudName(f)}.`,'me')}else{G.card.push({t:'m',sides:f.p.map(p=>p.slice()),win:null,fin:null});m.hype=clamp((m.hype||0)+2+sk*3,0,100);feudHeat(f,3);news(`${x.name} made it official: ${feudName(f)} is on this week's show.`,'me')}}
+    if(a==='hype'||a==='match'){const f=FE().find(y=>y.id===id);if(a==='hype'){feudHeat(f,3+sk*5);f.lw=G.week;news(`${x.name} hyped up ${fName(f)}.`,'me')}else{G.card.push({t:'m',sides:f.p.map(p=>p.slice()),win:null,fin:null});m.hype=clamp((m.hype||0)+2+sk*3,0,100);feudHeat(f,3);news(`${x.name} made it official: ${fName(f)} is on this week's show.`,'me')}}
     else{const w=W(id);
       if(a==='over'){gainPop(w,.5+sk*1.5);mom(w,4);news(`${x.name} put over ${w.name} on commentary.`,'me')}
       if(a==='shot')applyOutcome({k:'shot',t:w.id},'the General Manager');
@@ -2146,7 +2206,7 @@ function profActs(w){
   const mine=w.co===G.me&&w.status==='active',edit=mine||G.opts.sandbox&&w.status!=='retired';
   const B=(c,k,l,dis)=>`<button class="sm ${c}" data-pa="${k}" ${dis?`disabled title="${dis}"`:''}>${l}</button>`;
   return `<div class="actbar">
-   ${edit?`<div class="grp"><span>Change</span>${B('ab','gim','Gimmick')}${B('ab','look','Look (character editor)')}${B('ab','name','Name')}${B('ab','al','Alignment')}${B('ab','pron','Pronouns')}${B('ab','brand','Brand')}</div>`:''}
+   ${edit?`<div class="grp"><span>Change</span>${B('ab','gim','Gimmick')}${B('ab','look','Look (character editor)')}${B('ab','dir','Direction: '+cdir(w).name)}${B('ab','name','Name')}${B('ab','al','Alignment')}${B('ab','pron','Pronouns')}${B('ab','brand','Brand')}</div>`:''}
    ${mine?`<div class="grp"><span>Develop</span>${B('ag','train','Train',w.tr===G.week?'Already trained this week':'')}${w.mgonly?'':B('ag','mgp',mgrOf(w)?'Manager: '+esc(mgrOf(w).name):'Give a manager')}${w.mgonly?'':B('ag','promo',w.promo?'Promoted ('+w.promo.left+' wk)':'Promote',w.promo?'Already being promoted':'')}${B('ag','coach','Coaching',w.cw&&G.week-w.cw<4?'Coached recently (once every 4 weeks)':'')}${B('ag','reas','Reassure',w.rs===G.week?'Already reassured this week':'')}${w.mgonly?'':B('ag','mgr',w.mgr?'Return to the ring':'Move to manager role')}</div>`:''}
    <div class="grp"><span>${mine?'Contract':'Page'}</span>${mine?B('ar','rel','Release'):''}<button class="sm" data-pa="back">← Back</button></div>
    ${edit?'':'<p class="hint" style="margin:0">Changes and training are for your own roster. Sign them first, or turn on Sandbox.</p>'}</div>`;
@@ -2157,6 +2217,7 @@ function profAct(k,id){
   const simple=(title,body,ok)=>{openD(`<div class="dh b"><h3>${title}: ${esc(w.name)}</h3></div><div class="db">${body}<div class="dfoot"><button data-x="1">Cancel</button><button class="bl" id="pok">Save</button></div></div>`);
     dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.x)closeD();else if(b.id==='pok'){if(ok()!==false){closeD();rerender()}}else if(b.dataset.pv){dlg.querySelectorAll('[data-pv]').forEach(x=>x.classList.toggle('sel',x===b))}}};
   if(k==='coach')return dCoach(w);
+  if(k==='dir')return simple('Creative direction',`<div class="chips">${Object.entries(CDIR).map(([q,v])=>`<button data-pv="${q}" class="${(w.dir||'steady')===q?'sel':''}">${v.name}<small>${v.hint}</small></button>`).join('')}</div>`,()=>{const b=dlg.querySelector('[data-pv].sel');if(b){if(b.dataset.pv==='steady')delete w.dir;else w.dir=b.dataset.pv}});
   if(k==='promo'){openD(`<div class="dh b"><h3>Promote ${esc(w.name)}</h3></div><div class="db"><div class="chips">${Object.entries(PROMOS).map(([q,v])=>`<button data-pk="${q}" ${m.cash<promoCost(q,w)?'disabled':''}>${v.name}<small>${money(promoCost(q,w))} · ${v.fx}</small></button>`).join('')}</div><div class="dfoot"><button data-x="1">Close</button></div></div>`);dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.x){closeD();return}if(b.dataset.pk)dPromo(b.dataset.pk,w)};return}
   if(k==='mgp')return dMgr(w);
   if(k==='gim')return dGimmick(id);
@@ -2194,7 +2255,7 @@ function vFeud(){
   const card=f=>{const mine=f.co===G.me||G.opts.sandbox,h=Math.round(f.heat);
     const meta=f.st==='cur'?`Running ${feudLen(f)} · ${f.m} match${f.m===1?'':'es'}, ${f.sg} segment${f.sg===1?'':'s'}${f.best?` · best ${stars(f.best)}`:''}`:f.st==='pot'?`Possible feud, spotted ${fmtDate(f.d0)}`:`Ran ${feudLen(f)} · ended ${fmtDate(f.d1)}: ${esc(f.endWhy||'')}${f.res&&f.res!==OUTS.none?` · ${esc(f.res)}`:''} · grade ${feudGrade(f).g[0]}${f.best?` · best ${stars(f.best)}`:''}`;
     const btn=!mine?'':f.st==='cur'?`<button class="sm" data-fe="${f.id}">End feud</button>`:f.st==='pot'?`<button class="sm ag" data-fs="${f.id}">Start feud</button><button class="sm" data-fx="${f.id}">Dismiss</button>`:'';
-    return `<div class="fcard" style="--hc:${f.st==='past'?'var(--mute)':heatCol(h)}"><div class="ft"><span class="fr">${esc(f.why)}</span><span class="fh" title="Heat">🔥 ${h}<small>${f.st==='past'?'final':heatName(h)}</small></span></div>
+    return `<div class="fcard" style="--hc:${f.st==='past'?'var(--mute)':heatCol(h)}"><div class="ft"><span class="fr">${esc(f.why)}</span><span class="fh" title="Heat">🔥 ${h}<small>${f.st==='past'?'final':heatName(h)}</small></span></div>${(f.hist||[]).length?`<div class="sub">History: ${f.hist.map(x=>`${esc(x[0])} +${x[1]}`).join(' · ')}</div>`:''}
      <div class="fn">${f.p.map((p,i)=>{const g=f.g?.[i]&&grp(f.g[i])||teamOf(p);return g?`<span>${esc(g.name)} <span class="sub" style="font-weight:500">(${p.map(id=>`<button data-fw="${id}">${esc(W(id).name)}</button>`).join(', ')})</span></span>`:`<button data-fw="${p[0]}">${esc(W(p[0]).name)}</button>`}).join(' <span class="sub">vs</span> ')}</div>
      ${f.st!=='past'?`<div class="meter" style="margin:0"><i style="width:${h}%;background:${heatCol(h)}"></i></div>`:''}
      <div class="sub">${meta}${cid==='all'&&f.co?` · ${esc(co(f.co)?.short||'')}`:''}</div>${btn?`<div class="btns">${btn}</div>`:''}</div>`};
@@ -2225,7 +2286,7 @@ function dFeudAdd(pre){
    ${sd.length<4?`<button class="sm" id="fside" style="margin-top:10px">+ Add a side</button>`:''}
    <label style="margin-top:12px">Reason</label><div class="chips">${REASONS.map(x=>`<button data-fr="${x}" class="${why===x&&!cust?'sel':''}">${x}</button>`).join('')}</div>
    <label>Or write your own<input id="fcu" maxlength="40" value="${esc(cust)}" placeholder="e.g. Stole the spotlight at the reunion show"></label>
-   ${h!=null?`<div class="kv" style="margin-top:10px"><span>Starting heat</span><b style="color:${heatCol(h)}">🔥 ${h} (${heatName(h)})</b></div><p class="hint" style="margin-top:2px">Based on popularity, how far apart their alignments are, and how many sides there are.</p>`:''}
+   ${h!=null?(()=>{const hs=feudHist(ps,cust.trim()||why),hh=clamp(h+histPts(hs),0,90);return `<div class="kv" style="margin-top:10px"><span>Starting heat</span><b style="color:${heatCol(hh)}">🔥 ${hh} (${heatName(hh)})</b></div>${hs.length?`<div class="sub">History: ${hs.map(x=>`${esc(x[0])} +${x[1]}`).join(' · ')}</div>`:''}<p class="hint" style="margin-top:2px">Based on popularity, alignments, number of sides, and their history together. History also makes the heat grow faster.</p>`})():''}
    ${dup?`<div class="msg bad">A wrestler is on more than one side.</div>`:''}${ex?`<div class="msg bad">This feud already exists. Starting it again adds a little heat.</div>`:''}
    <p class="hint">Tag teams and factions count as one side: their segments and matches together build the feud. Make groups under Roster, Tag teams and factions.</p>
    <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="fok" ${ok?'':'disabled'}>Start feud</button></div></div>`)};
@@ -2242,7 +2303,7 @@ if(/[?&]sim\b/.test(location.search)){
   /* Plays your company the way a simple player would, using every system: contracts, offers, signings, managers, coaching,
      disputes (pay or promise a main event, then keep the promise), feud blowoffs, gimmicks and titles (from the card builder), arena moves. */
   const CN=()=>G.cnt=G.cnt||{};const inc=(k,n=1)=>{CN()[k]=(CN()[k]||0)+n};
-  const RX=[['backstage',/^Backstage/],['asc',/has ascended/],['hof',/Hall of Fame/],['boom',/booming|on the rise/i],['miser',/is miserable/],['offerIn',/made an offer for/],['arenaAI',/moved up to .* arenas\./],['closed',/out of business|closed/i],['styleNews',/now known for|known as a/i],['injury',/injured/i],['promiseKept',/as promised/],['promiseBroken',/never gave/],['grudge',/settled into a grudge/]];
+  const RX=[['backstage',/^Backstage/],['asc',/has ascended/],['hof',/Hall of Fame/],['boom',/booming|on the rise/i],['miser',/is miserable/],['offerIn',/made an offer for/],['arenaAI',/moved up to .* arenas\./],['closed',/closes its doors|out of business/i],['bust',/gone out of business/],['slump',/rough patch|serious trouble/],['deep',/serious trouble/],['styleNews',/now known for|known as a/i],['injury',/injured/i],['promiseKept',/as promised/],['promiseBroken',/never gave/],['grudge',/settled into a grudge/]];
   const _n=news;news=function(t,k){if(G&&typeof t==='string')RX.forEach(([key,r])=>{if(r.test(t))inc(key)});return _n.apply(this,arguments)};
   window.__ro={G:()=>G,run:src=>eval(src),week(){const m=me();if(m.owner!=='player')m.owner='player';const D=dif();
     (G.resQ||[]).forEach(id=>{const f=FE().find(x=>x.id===id);if(f&&f.st==='cur'){aiResolve(f);inc('blowoff')}});G.resQ=[];
@@ -2267,6 +2328,8 @@ if(/[?&]sim\b/.test(location.search)){
         if(kind==='sty'){const S=styW(w);S[top]=clamp(S[top]+rnd(3,6)*(1-S[top]/130),1,100)}else{const k=Object.keys(SPECS).find(k=>!hasSpec(w,k)&&SPECS[k].ok(w));if(k&&Math.random()<.5){const sp=specOf(w).slice(0,1);sp.push(k);w.spec=sp;inc('coachSpec')}}}}}
     // arena
     const A=ARENA[m.size];if(A&&A.next&&fansOf(m)>=A.need&&m.cash>r10(A.up*D.cost)*1.3){m.cash-=r10(A.up*D.cost);m.size=A.next;inc('arenaMe');(G.cnt.arenaLog=G.cnt.arenaLog||[]).push(G.date.slice(0,4)+' '+A.next)}
+    if(m.cash<30000){const L=roster(G.me).filter(w=>w.status==='active'&&!w.mgonly&&!holds(w).length).sort((a,b)=>(a.pop/(a.wage||1))-(b.pop/(b.wage||1)));if(roster(G.me).length>Math.max(6,target(m)-2)&&L[0]&&m.cash>L[0].wage*2){m.cash-=L[0].wage*2;freeW(L[0]);inc('release')}
+      if(m.cash<0){for(const k in (m.staff||{}))if(m.staff[k]&&!m.staff[k].w){delete m.staff[k];inc('fire');break}for(const k in CREW)if(crewOf(m,k).length){crewOf(m,k).pop();inc('fire');break}}}
     // staff and store: hire when comfortable, buy upgrades when rich, decide walkouts
     m.staff=m.staff||{};if(m.cash>150000){for(const k in STAFF)if(!stfOf(m,k)&&Math.random()<.1){const p=staffPool(k)[2];m.staff[k]={name:p.name,sk:p.sk,pay:p.pay};inc('hire')}
       for(const k in CREW){const L=crewOf(m,k);if(L.length<2&&Math.random()<.1){const p=staffPool(k)[L.length+1];if(!L.some(y=>y.name===p.name)){L.push({name:p.name,sk:p.sk,pay:p.pay});inc('hire')}}}}
@@ -2277,13 +2340,35 @@ if(/[?&]sim\b/.test(location.search)){
     if(stfOf(m,'doc')){const w=R.filter(w=>fatOf(w)>=40).sort((a,b)=>fatOf(b)-fatOf(a))[0];if(w){w.fat=Math.max(0,fatOf(w)-(20+stf(m,'doc')*30));inc('act')}}
     if(m.cash>300000&&Math.random()<.15){const w=R.filter(x=>!x.promo&&!x.mgonly)[0];if(w){const k=pick(Object.keys(PROMOS)),c=promoCost(k,w);m.cash-=c;w.promo={k,left:PROMOS[k].wk,per:PROMOS[k].per};inc('promo')}}
     if(stfOf(m,'trainer'))R.filter(w=>!w.mgonly).slice(0,4).forEach(w=>w.trn=1);
+    // extra features (exercise everything)
+    if(window.__full){const rnd01=Math.random;
+      if(G.week===3&&R.length>=4){m.brands=['Brand A','Brand B'];const B=m.brands,L=R.filter(w=>!w.mgonly).sort((a,b)=>b.pop-a.pop);L.forEach((w,i)=>w.brand=B[i%2]);inc('draft')}
+      if(G.week===40){m.brands=[];R.forEach(w=>delete w.brand);inc('unbrand')}
+      if(!G.tour&&rnd01()<.04&&R.filter(w=>!w.mgonly).length>=4){const S=R.filter(w=>!w.mgonly).sort((a,b)=>b.pop-a.pop).slice(0,4).map(w=>w.id);G.tour={name:'Test Cup',alive:[S[0],S[3],S[1],S[2]],wk:G.week};inc('tourStart')}
+      for(const k of Object.keys(STF_ACT)){const x=stfOf(m,k);if(!x||stfRec(m,k).wk===G.week||rnd01()>.3)continue;const sk=x.sk/100,rec=stfRec(m,k);rec.wk=G.week;inc('act_'+k);
+        const fz=FE().filter(f=>f.st==='cur'&&f.co===G.me);
+        if(k==='ann'){if(fz.length)feudHeat(pick(fz),3+sk*5);else{const w=pick(R);gainPop(w,.5)}}
+        if(k==='gm'){const w=R.find(w=>!holds(w).length&&!w.shot&&!w.mgonly);if(w)applyOutcome({k:'shot',t:w.id},'the General Manager')}
+        if(k==='doc'){const w=R.find(w=>w.out>G.week&&w.outWhy==='injury');if(w)w.out=Math.max(G.week+1,w.out-(1+Math.round(sk*2)))}
+        if(k==='agent'){const w=freeAgents().filter(w=>!w.mgonly&&w.refused!==G.week).sort((a,b)=>b.pop-a.pop)[0];if(w&&roster(G.me).length<target(m)+2){if(rnd01()<.45+sk*.45)signW(w,G.me,r10(worth(w)*(1-sk*.1)),6);else w.refused=G.week}}
+        if(k==='scout')scoutFind(sk)}
+      if(rnd01()<.05){const L=R.filter(w=>!w.mgonly);if(L.length>=2){const a=pick(L),b=pick(L.filter(x=>x!==a));if(!feudIn([a.id],[b.id])){startFeud([[a.id],[b.id]],pick(REASONS),0,'you');inc('feudYou')}}}
+      if(rnd01()<.03){const L=R.filter(w=>!w.mgonly&&!grpsOf(w.id).length);if(L.length>=3){applyOutcome({k:'team',ids:L.slice(0,3).map(w=>w.id),kind:'faction'},'test');inc('faction')}}
+      if(rnd01()<.05){const w=pick(R);w.dir=pick(Object.keys(CDIR));inc('dir')}
+      if(rnd01()<.05){const w=pick(R);const L=WL.random();w.px=WL.normalize(L);inc('look')}
+      if(rnd01()<.02){const w=pick(R.filter(w=>!w.mgonly));if(w&&stfOf(m,'ann')?.w==null&&rnd01()<.5){m.staff.ann={w:w.id};inc('wrestlerAnn')}}
+    }
     // the show: built like a rival's card, then promised main events are honored
-    const card=aiCard(m);const pr=(G.disp||[]).find(d=>d.st==='promise'&&[d.a,d.b].every(id=>canWork(W(id))&&W(id).co===G.me));
+    const card=aiCard(m);
+    if(window.__full){if(G.tour){const ok=tourRound().filter(p=>p.every(id=>canWork(W(id))&&W(id).co===G.me));const ids=ok.flat();for(let i=card.length-1;i>=0;i--){const x=card[i];if((x.t==='m'?x.sides.flat():x.who||[]).some(id=>ids.includes(id)))card.splice(i,1)}ok.forEach(p=>card.unshift({t:'m',sides:[[p[0]],[p[1]]],win:null,fin:null,tour:1}));if(ok.length)inc('tourRound')}}const pr=(G.disp||[]).find(d=>d.st==='promise'&&[d.a,d.b].every(id=>canWork(W(id))&&W(id).co===G.me));
     if(pr&&card.length){for(let i=card.length-1;i>=0;i--){const x=card[i];if((x.t==='m'?x.sides.flat():x.who||[]).some(id=>id===pr.a||id===pr.b))card.splice(i,1)}card.push({t:'m',sides:[[pr.a],[pr.b]],win:null,fin:null})}
     {const used={m:0,s:0};card.forEach(x=>{const k=x.t==='m'?'road':x.t==='s'?'prod':null;if(k&&used[x.t]<crewOf(m,k).length)x.cr=used[x.t]++})}
     card.forEach(x=>{if(x.t==='m'){if(x.gm)inc('gimmick');if(x.title)inc('titleMatch');if(feudIn(x.sides[0],x.sides[1]))inc('feudMatch')}});
     if(card.some(x=>x.t==='m')){runShow(G.me,card,true);inc('shows')}else{m.cash-=showCost(m,false)*.3;inc('skipped')}
-    G.card=[];advance();(G.disp||[]).forEach(d=>{if(d.st==='open')inc('dispOpenWk')})}}}
+    G.card=[];advance();(G.disp||[]).forEach(d=>{if(d.st==='open')inc('dispOpenWk')});
+    if(window.__full){const bad=[];Object.values(G.cos).forEach(c=>{if(!isFinite(c.cash))bad.push(c.short+' cash '+c.cash);if(!isFinite(c.pop))bad.push(c.short+' pop');if(c.hype!=null&&!isFinite(c.hype))bad.push(c.short+' hype')});
+      Object.values(G.ws).forEach(w=>{if(!isFinite(w.pop)||!isFinite(w.mom))bad.push(w.name+' pop/mom');if(w.fame!=null&&!isFinite(w.fame))bad.push(w.name+' fame');if(w.mor!=null&&!isFinite(w.mor))bad.push(w.name+' mor');if(w.co&&!G.cos[w.co])bad.push(w.name+' bad co');if(w.status==='active'&&w.co&&!G.cos[w.co].active)bad.push(w.name+' on closed co');if(w.wage!=null&&!isFinite(w.wage))bad.push(w.name+' wage')});
+      FE().forEach(f=>{if(!isFinite(f.heat))bad.push('feud heat NaN')});if(bad.length){G.cnt.bad=(G.cnt.bad||[]).concat(bad.slice(0,3)).slice(-20)}}}}}
 function nextRes(){const q=G.resQ||[];while(q.length){const f=FE().find(x=>x.id===q[0]);q.shift();if(f){dResolve(f);return}}}
 function dResolve(f){
   const gr=feudGrade(f),ids=f.p.flat().filter(id=>W(id).status==='active'),win=f.wi!=null&&f.wi>=0?f.wi:null,lose=win!=null?f.p.filter((p,i)=>i!==win).flat():[];
