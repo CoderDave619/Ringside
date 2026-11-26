@@ -1,0 +1,17 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
+await p.route('https://**',r=>r.abort());const U='file:///home/user/game/index.html';
+await p.goto(U+'#new');await p.waitForTimeout(300);await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(500);
+await p.goto(U+'#home');await p.waitForTimeout(300);
+await p.click('[data-slot-new="2"]');await p.waitForTimeout(200);await p.click('input[value=c1]');await p.waitForTimeout(100);
+console.log('slot sel',await p.$eval('[data-nslot].sel',e=>e.textContent));
+await p.click('#nstartbtn');await p.waitForTimeout(600);
+console.log('playing',await p.evaluate(()=>{const g=JSON.parse(localStorage.ro_save);return g.slot+' '+g.cos[g.me].short}),await p.evaluate(()=>localStorage.ro_slots));
+await p.goto(U+'#home');await p.waitForTimeout(300);await p.screenshot({path:'/tmp/slots.png',fullPage:true});
+await p.click('[data-slot-play="1"]');await p.waitForTimeout(700);
+console.log('after load 1',await p.evaluate(()=>{const g=JSON.parse(localStorage.ro_save);return g.slot+' '+g.cos[g.me].short}));
+await p.goto(U+'#home');await p.waitForTimeout(300);await p.click('[data-slot-play="2"]');await p.waitForTimeout(700);
+console.log('after load 2',await p.evaluate(()=>{const g=JSON.parse(localStorage.ro_save);return g.slot+' '+g.cos[g.me].short}));
+await p.goto(U+'#home');await p.waitForTimeout(300);await p.click('[data-slot-del="1"]');await p.waitForTimeout(500);
+console.log('meta',await p.evaluate(()=>localStorage.ro_slots));
+console.log('ERRS',errs);await b.close()})();

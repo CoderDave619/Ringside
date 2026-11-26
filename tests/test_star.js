@@ -1,0 +1,33 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async () => {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+  const errs = [];
+  p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
+  await p.route('https://**', r => r.abort());
+  await p.goto('file:///home/user/game/index.html#new');
+  await p.waitForTimeout(300);
+  await p.click('input[value=c0]'); await p.click('#nstartbtn'); await p.waitForTimeout(200);
+  for (let i = 0; i < 3; i++) { await p.click('#auto'); await p.click('#run'); await p.click('#cont'); await p.waitForTimeout(50); }
+  await p.goto('file:///home/user/game/index.html#roster'); await p.waitForTimeout(200);
+  await p.screenshot({ path: '/tmp/shot_roster2.png' });
+  await p.click('[data-star]'); await p.waitForTimeout(200);
+  console.log('hash', await p.evaluate(() => location.hash));
+  console.log('locked', await p.isDisabled('[data-g=cha]'));
+  await p.check('#gsb'); await p.waitForTimeout(80);
+  await p.fill('[data-g=cha]', '91'); await p.waitForTimeout(50);
+  await p.goto('file:///home/user/game/index.html#edit'); await p.waitForTimeout(100);
+  await p.click('#gadd'); await p.waitForTimeout(80);
+  await p.uncheck('#gsb'); await p.waitForTimeout(80);
+  console.log('fresh editable', !(await p.isDisabled('[data-g=cha]')));
+  await p.click('#gdone'); await p.waitForTimeout(80);
+  console.log('after done locked', await p.isDisabled('[data-g=cha]'));
+  await p.goto('file:///home/user/game/index.html#superstars'); await p.waitForTimeout(100);
+  await p.click('.list [data-ss]:nth-child(2)'); await p.waitForTimeout(100);
+  await p.click('.list [data-ss]:nth-child(1)'); await p.waitForTimeout(100);
+  console.log('cha kept', await p.inputValue('[data-g=cha]'));
+  await p.click('[data-sgm]'); await p.click('[data-g=Monster]'); await p.click('#gok'); await p.waitForTimeout(100);
+  await p.screenshot({ path: '/tmp/shot_star.png', fullPage: true });
+  console.log('ERRS', errs);
+  await b.close();
+})();

@@ -1,0 +1,72 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+p.on('dialog',d=>d.accept());
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html#new');await p.waitForTimeout(300);
+await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(200);
+for(let i=0;i<12;i++){await p.click('#auto');await p.click('#run');await p.click('#cont');await p.waitForTimeout(30)}
+await p.screenshot({path:'/tmp/f_nav0.png'});
+await p.click('[data-ng=Roster]');await p.waitForTimeout(100);await p.screenshot({path:'/tmp/f_nav.png'});
+await p.click('#nav a[href="#feuds"]');await p.waitForTimeout(150);
+console.log('FEUDS',await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);const F=G.feuds||[];return {cur:F.filter(f=>f.st==='cur').length,pot:F.filter(f=>f.st==='pot').length,past:F.filter(f=>f.st==='past').length,mine:F.filter(f=>f.co===G.me).map(f=>f.st+':'+f.why+':'+Math.round(f.heat))}}));
+await p.click('#fco');await p.selectOption('#fco','all');await p.waitForTimeout(100);
+await p.screenshot({path:'/tmp/f_feuds.png',fullPage:true});
+await p.selectOption('#fco','me');
+await p.click('#fadd');await p.waitForTimeout(100);
+const ids=await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).filter(w=>w.co===G.me&&w.status==='active').map(w=>w.id)});console.log('ROSTER',ids.length);
+await p.selectOption('[data-sd="0"]','w:'+ids[0]);await p.waitForTimeout(50);await p.selectOption('[data-sd="1"]','w:'+ids[1]);await p.waitForTimeout(50);
+await p.click('[data-fr="Jealousy"]');await p.screenshot({path:'/tmp/f_add.png'});await p.click('#fok');await p.waitForTimeout(150);
+console.log('ADDED',await p.evaluate(a=>{const G=JSON.parse(localStorage.ro_save);return G.feuds.filter(f=>f.st==='cur'&&f.p.flat().includes(a[0])&&f.p.flat().includes(a[1])).map(f=>f.why+' '+f.heat)},ids));
+await p.goto('file:///home/user/game/index.html#book');await p.waitForTimeout(100);
+await p.evaluate(()=>{});while(await p.locator('[data-rm]').count()){await p.click('[data-rm]');await p.waitForTimeout(30)}if(await p.locator('aside [data-fm]').count())await p.click('aside [data-fm]');await p.waitForTimeout(60);
+const hasBo=await p.locator('[data-bo]').count();console.log('BO buttons',hasBo);
+if(hasBo){await p.click('[data-bo]');await p.waitForTimeout(60);await p.screenshot({path:'/tmp/f_bo.png'});await p.click('#run');await p.waitForTimeout(100);await p.click('#cont');await p.waitForTimeout(100);
+await p.waitForTimeout(150);const rv=await p.locator('#rok').count();console.log('RESOLVE shown',rv);
+if(rv){await p.screenshot({path:'/tmp/f_res.png'});await p.click('[data-ok=team]');await p.fill('#rn','Unlikely Allies');await p.click('#rok');await p.waitForTimeout(100)}
+console.log('RES team',await p.evaluate(()=>JSON.parse(localStorage.ro_save).teams.map(t=>t.name)));
+console.log('AFTER BO',await p.evaluate(a=>{const G=JSON.parse(localStorage.ro_save);return G.feuds.filter(f=>f.p.flat().includes(a[0])&&f.p.flat().includes(a[1])&&f.st!=='cur'||f.endWhy&&f.endWhy.startsWith('Blowoff')).map(f=>f.st+' '+f.endWhy)},ids))}
+await p.goto('file:///home/user/game/index.html#teams');await p.waitForTimeout(100);
+await p.click('#tnew');await p.fill('#tn','Night Shift');await p.click(`[data-mm="${ids[2]}"]`);await p.click(`[data-mm="${ids[3]}"]`);await p.click('#tok');await p.waitForTimeout(80);
+await p.click('#tnew');await p.fill('#tn','Old Guard');await p.click(`[data-mm="${ids[0]}"]`);await p.click(`[data-mm="${ids[4]}"]`);await p.click('#tok');await p.waitForTimeout(80);
+await p.click('#tnewf');await p.fill('#tn','The Syndicate');await p.click('[data-at]');await p.click(`[data-mm="${ids[3]}"]`);await p.click('#tok');await p.waitForTimeout(80);
+await p.screenshot({path:'/tmp/f_teams.png',fullPage:true});
+const T=await p.evaluate(()=>JSON.parse(localStorage.ro_save).teams.map(t=>t.kind+':'+t.name+':'+t.m.length));console.log('TEAMS',T);
+await p.goto('file:///home/user/game/index.html#feuds');await p.waitForTimeout(80);await p.click('#fadd');
+const tg=await p.evaluate(()=>JSON.parse(localStorage.ro_save).teams.filter(t=>['Night Shift','Old Guard'].includes(t.name)).map(t=>t.id));
+await p.selectOption('[data-sd="0"]','g:'+tg[0]);await p.selectOption('[data-sd="1"]','g:'+tg[1]);await p.click('#fside');await p.waitForTimeout(40);
+await p.selectOption('[data-sd="2"]','w:'+(ids[6]||ids[1]));await p.click('[data-fr="Tag team rivalry"]');await p.screenshot({path:'/tmp/f_add3.png'});await p.click('#fok');await p.waitForTimeout(80);
+console.log('MULTI',await p.evaluate(()=>JSON.parse(localStorage.ro_save).feuds.filter(f=>f.p.length>2||f.p[0].length>1).map(f=>f.st+' '+f.why+' '+f.p.map(x=>x.length).join('/'))));
+await p.goto('file:///home/user/game/index.html#book');await p.waitForTimeout(80);
+await p.click('#addm');await p.click('[data-ty=tag]');await p.click('[data-tm]');await p.waitForTimeout(40);
+const tms=await p.locator('[data-tm]:not([disabled])').count();if(tms)await p.click('[data-tm]:not([disabled])');await p.waitForTimeout(40);
+await p.screenshot({path:'/tmp/f_tagpick.png'});
+if(!(await p.isDisabled('#mok'))){await p.click('#mok')}else{await p.click('[data-x]')}
+await p.waitForTimeout(60);await p.screenshot({path:'/tmp/f_tagcard.png'});
+console.log('TAG BO',await p.locator('[data-bo]').count());
+await p.click('[data-rm]');await p.waitForTimeout(50);
+const fcs=await p.locator('aside [data-fm]').count();console.log('BOOK feud cards',fcs);
+if(fcs){await p.click('aside [data-fm]');await p.waitForTimeout(60);console.log('card matches',await p.locator('.match').count());await p.screenshot({path:'/tmp/f_bookcards.png'})}
+await p.goto('file:///home/user/game/index.html#feuds');await p.waitForTimeout(80);
+await p.click('[data-fe]');await p.waitForTimeout(80);await p.click('[data-ok=injury]');await p.click('#rok');await p.waitForTimeout(80);
+console.log('INJURED',await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).filter(w=>w.out>G.week).map(w=>w.name+' '+(w.out-G.week))}));
+await p.goto('file:///home/user/game/index.html#roster/mine');await p.waitForTimeout(150);
+await p.screenshot({path:'/tmp/f_roster.png',fullPage:true});
+await p.click('[data-rf=F]');await p.waitForTimeout(80);console.log('FACE rows',await p.locator('tbody tr').count());
+await p.click('[data-rf=all]');
+await p.click('tbody [data-star]');await p.waitForTimeout(150);
+await p.evaluate(()=>window.scrollTo(0,700));await p.screenshot({path:'/tmp/f_prof.png'});console.log('GRID',await p.evaluate(()=>{const g=document.querySelector('.grid.side');return [innerWidth,[...g.children].map(c=>JSON.stringify(c.getBoundingClientRect()))]}));
+const wid=await p.getAttribute('[data-pfa]','data-pfa');
+await p.click('[data-pa=reas]');await p.waitForTimeout(80);
+await p.click('[data-pa=pron]');await p.click('[data-pv=they]');await p.click('#pok');await p.waitForTimeout(80);
+await p.click('[data-pa=train]');await p.click('#tok');await p.waitForTimeout(80);await p.click('[data-x]');await p.waitForTimeout(80);
+await p.click('[data-pa=name]');await p.fill('#pn','Renamed Guy');await p.click('#pok');await p.waitForTimeout(80);
+await p.click('[data-pa=brand]');await p.fill('#pbr','Saturday Night');await p.click('#pok');await p.waitForTimeout(80);
+await p.click('[data-pa=mgr]');await p.waitForTimeout(80);
+console.log('PROF',await p.evaluate(id=>{const w=JSON.parse(localStorage.ro_save).ws[id];return {name:w.name,pron:w.pron,mor:w.mor,fat:w.fat,tr:w.tr,mgr:w.mgr,brand:w.brand}},wid));
+await p.click('[data-pa=back]');await p.waitForTimeout(100);console.log('BACK',await p.evaluate(()=>location.hash));
+await p.goto('file:///home/user/game/index.html#book');await p.waitForTimeout(100);
+for(let i=0;i<6;i++){await p.click('#auto');await p.click('#run');await p.waitForTimeout(30);if(await p.locator('#cont').count())await p.click('#cont');else{await p.click('[data-x]');await p.click('#skip')}await p.waitForTimeout(30);if(await p.locator('#rok').count())await p.click('#rok')}
+console.log('MGR not booked',await p.evaluate(id=>{const G=JSON.parse(localStorage.ro_save);return {mgr:G.ws[id].mgr,booked:G.ws[id].hist[0]&&G.ws[id].hist[0].date,date:G.date}},wid));//x=>x.t==='m'&&x.sides.flat().includes(id)),wid));
+await p.setViewportSize({width:390,height:844});await p.goto('file:///home/user/game/index.html#feuds');await p.waitForTimeout(150);
+await p.click('[data-ng=History]');await p.waitForTimeout(80);await p.screenshot({path:'/tmp/f_mobile.png'});
+console.log('SCROLLX',await p.evaluate(()=>document.documentElement.scrollWidth));
+console.log('ERRS',errs);await b.close()})();
