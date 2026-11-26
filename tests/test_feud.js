@@ -1,6 +1,6 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));
-p.on('dialog',d=>d.accept());
+p.on('dialog',d=>d.accept());await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
 await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html#new');await p.waitForTimeout(300);
 await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(200);
 for(let i=0;i<12;i++){await p.click('#auto');await p.click('#run');await p.click('#cont');await p.waitForTimeout(30)}

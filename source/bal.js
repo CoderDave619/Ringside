@@ -1,7 +1,7 @@
 // Balance runs: node bal.js <diff> <years> <companyRadio>
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 (async()=>{const diff=process.argv[2]||'relaxed',years=+(process.argv[3]||5),pick=process.argv[4]||'c0';
-const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
+const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
 await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
 await p.click(`input[value=${pick}]`);await p.click(`[data-ndf=${diff}]`);await p.waitForTimeout(80);await p.click('#nstartbtn');await p.waitForTimeout(200);
 const snap=()=>p.evaluate(()=>{const G=__ro.G();const m=G.cos[G.me];const R=Object.values(G.ws).filter(w=>w.co===G.me&&w.status==='active');

@@ -1,0 +1,14 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();for(const vw of [[1280,900],[390,800]]){const p=await b.newPage({viewport:{width:vw[0],height:vw[1]}});await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&!window.__noauto)d.querySelector('[data-y]').click()},40)});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+await p.click('input[value=c3]');await p.click('#nstartbtn');await p.waitForTimeout(300);
+await p.evaluate(()=>{location.hash='titles'});await p.waitForTimeout(300);await p.screenshot({path:`/tmp/belt_titles_${vw[0]}.png`});
+const tid=await p.evaluate(()=>{const G=__ro.G();return Object.values(G.titles).find(t=>t.co===G.me&&t.active).id});
+await p.click(`[data-ctl="${tid}"]`);await p.waitForTimeout(300);await p.screenshot({path:`/tmp/belt_page_${vw[0]}.png`});
+await p.click(`[data-belt="${tid}"]`);await p.waitForTimeout(200);
+await p.click('[data-pre="Big eagle"]');await p.click('[data-tab="Strap"]');await p.click('[data-gal="strapTexture"]');await p.waitForTimeout(100);
+await p.fill('#btop','MIDNIGHT');await p.screenshot({path:`/tmp/belt_ed_${vw[0]}.png`});
+await p.click('#blok');await p.waitForTimeout(200);
+const saved=await p.evaluate(t=>{const x=__ro.G().titles[t];return x.belt&&[x.belt.topText,x.belt.topper]},tid);
+const sx=await p.evaluate(()=>document.documentElement.scrollWidth);
+console.log(vw[0],'saved',saved,'scrollX',sx,'ERRS',errs);await p.close()}await b.close()})();

@@ -1,7 +1,7 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 (async () => {
   const b = await chromium.launch();
-  const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+  const p = await b.newPage({ viewport: { width: 1280, height: 900 } });await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&!window.__noauto)d.querySelector('[data-y]').click()},40)});
   const errs = [];
   p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
   await p.route('https://**', r => r.abort());

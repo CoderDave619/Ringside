@@ -1,0 +1,25 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();for(const vw of [[1280,900],[390,800]]){const p=await b.newPage({viewport:{width:vw[0],height:vw[1]}});await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&/^Start a new game/.test(d.textContent))d.querySelector('[data-y]').click()},40)});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+await p.click('input[value=c3]');await p.click('#nstartbtn');await p.waitForTimeout(300);
+await p.evaluate(()=>__ro.run('me().cash=5000000;save()'));
+await p.evaluate(()=>{location.hash='companies'});await p.waitForTimeout(300);
+await p.screenshot({path:`/tmp/deals_${vw[0]}.png`,fullPage:true});
+await p.click('[data-trade]');await p.waitForTimeout(200);
+await p.evaluate(()=>{const s=document.getElementById('tcash');s.value=200000;s.dispatchEvent(new Event('input',{bubbles:true}));s.dispatchEvent(new Event('change',{bubbles:true}))});await p.waitForTimeout(100);
+await p.click('#tgo');await p.waitForTimeout(150);await p.click('#cfm [data-y]');await p.waitForTimeout(200);
+const tr=await p.evaluate(()=>document.querySelector('.offres')?.innerText);console.log('TRADE',tr);await p.screenshot({path:`/tmp/trade_${vw[0]}.png`});
+await p.keyboard.press('Escape');await p.waitForTimeout(150);
+await p.evaluate(()=>{location.hash='companies'});await p.waitForTimeout(200);
+await p.click('[data-sab$=":rum"]');await p.waitForTimeout(150);await p.click('#cfm [data-y]');await p.waitForTimeout(250);
+console.log('SAB',await p.evaluate(()=>document.getElementById('cfm')?.innerText));await p.click('#cfm [data-y]').catch(()=>{});
+// merger offer on the dashboard
+await p.evaluate(()=>__ro.run(`mergeOffer(Object.values(G.cos).find(c=>c.active&&c.owner==='ai'),.6,'business is bad and they want out');save()`));
+await p.evaluate(()=>{location.hash='dash'});await p.waitForTimeout(300);await p.screenshot({path:`/tmp/merge_${vw[0]}.png`});
+const n0=await p.evaluate(()=>__ro.run('roster(G.me).length'));
+await p.click('[data-mrg=yes]');await p.waitForTimeout(150);await p.click('#cfm [data-y]');await p.waitForTimeout(250);
+console.log('MERGED roster',n0,'->',await p.evaluate(()=>__ro.run('roster(G.me).length')));
+await p.evaluate(()=>{location.hash='companies'});await p.waitForTimeout(200);
+await p.click('[data-buyco]');await p.waitForTimeout(150);console.log('BUY ASK',await p.evaluate(()=>document.getElementById('cfm')?.innerText.slice(0,120)));await p.click('#cfm [data-y]');await p.waitForTimeout(250);
+console.log('cash after',await p.evaluate(()=>__ro.run('Math.round(me().cash)')),'scrollX',await p.evaluate(()=>document.documentElement.scrollWidth));
+console.log('ERRS',errs);await p.close()}await b.close()})();

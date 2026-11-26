@@ -1,7 +1,6 @@
-# Builds the playable game: injects data.json into src.html and writes ../index.html
-import os
-here = os.path.dirname(os.path.abspath(__file__))
-s = open(os.path.join(here, 'src.html')).read()
-d = open(os.path.join(here, 'data.json')).read()
-open(os.path.join(here, '..', 'index.html'), 'w').write(s.replace('__DATA__', d))
-print('built index.html')
+import re
+s=open('/home/user/game/src.html').read()
+d=open('/home/user/scripts/data.json').read();o=s.replace('__DATA__',d).replace('__LOOKJS__',open('/home/user/game/wrestler-look.js').read()).replace('__BELTJS__',open('/home/user/game/belt-look.js').read())
+open('/home/user/game/index.html','w').write(o)
+open('/tmp/g.js','w').write(max(re.findall(r'<script>(.*?)</script>',o,re.S),key=len))
+print('built')

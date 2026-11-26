@@ -84,6 +84,20 @@
     bgColor: ['Backdrop colour', 'bg', PAL.bg[1]]
   };
 
+  // Ringside Owner additions (26 Nov). random() uses RO/RP, the original lists, so seeded looks don't change.
+  const RO = JSON.parse(JSON.stringify(OPTIONS)), RP = JSON.parse(JSON.stringify(PAL));
+  PAL.hair.push('#e05a1b', '#f6efc9', '#17b3b3', '#5a1a6b');
+  PAL.eye.push('#9b30e0', '#d7263d', '#e8e8f0');
+  PAL.gear.push('#c9a227', '#c8ccd4', '#7c1f24', '#1d2a52', '#8bd450', '#e8e3da', '#3c4752', '#ff3b3b');
+  PAL.ink.push('#8a1c1c', '#1d5e2e', '#4b2a7a', '#5a3a1a');
+  PAL.bg.push('#2a2a30', '#8bd450', '#c9a227');
+  const ADD = { hair: ['sidepart', 'flattop', 'fauxhawk', 'fringe', 'topknot', 'braids', 'wavy', 'shavedside'],
+    facial: ['vandyke', 'mutton', 'pencil'], eyes: ['closed', 'crazy'], mouth: ['fangs', 'guard', 'pout'],
+    mask: ['gas', 'muzzle', 'jaw'], maskPattern: ['chevron', 'lace', 'sun'], headwear: ['halo', 'helmet', 'flowers'],
+    eyewear: ['heartshades', 'sport'], extra: ['lei', 'dogtags'], paint: ['demon', 'mime', 'glitter'] };
+  for (const k in ADD) OPTIONS[k][1].push(...ADD[k]);
+  const LATE_MASK = ['gas', 'muzzle', 'jaw'];
+
   const HEX = /^#[0-9a-f]{6}$/i;
   // Fields that belong to an outfit. A look carries three outfits (slots A, B, C);
   // the flat fields always show the active one, outfits[] keeps all three.
@@ -138,47 +152,47 @@
     const odds = (p, vals) => r() < p ? 'none' : pick(vals.filter(v => v !== 'none'));
     const o = defaults();
     o.frame = r() < 0.35 ? 'feminine' : 'masculine';
-    o.build = pick(OPTIONS.build[1]);
-    o.skin = pick(PAL.skin);
-    o.head = pick(OPTIONS.head[1]);
-    o.eyes = pick(OPTIONS.eyes[1]);
-    o.eyeColor = pick(PAL.eye);
-    o.brows = pick(OPTIONS.brows[1]);
-    o.nose = pick(OPTIONS.nose[1]);
-    o.mouth = pick(OPTIONS.mouth[1]);
-    o.hair = pick(OPTIONS.hair[1]);
-    o.hairColor = r() < 0.75 ? pick(PAL.hair.slice(0, 7)) : pick(PAL.hair.slice(7));
-    o.facial = o.frame === 'feminine' ? 'none' : odds(0.5, OPTIONS.facial[1]);
+    o.build = pick(RO.build[1]);
+    o.skin = pick(RP.skin);
+    o.head = pick(RO.head[1]);
+    o.eyes = pick(RO.eyes[1]);
+    o.eyeColor = pick(RP.eye);
+    o.brows = pick(RO.brows[1]);
+    o.nose = pick(RO.nose[1]);
+    o.mouth = pick(RO.mouth[1]);
+    o.hair = pick(RO.hair[1]);
+    o.hairColor = r() < 0.75 ? pick(RP.hair.slice(0, 7)) : pick(RP.hair.slice(7));
+    o.facial = o.frame === 'feminine' ? 'none' : odds(0.5, RO.facial[1]);
     if (o.frame !== 'feminine' && o.mouth === 'lipstick') o.mouth = 'neutral';
-    o.facialColor = r() < 0.8 ? o.hairColor : pick(PAL.hair.slice(0, 7));
-    o.top = o.frame === 'feminine' ? pick(['singlet', 'crop', 'crop', 'tank', 'tee', 'vest', 'jacket', 'robe', 'leotard', 'leotard', 'oneshoulder', 'hoodie', 'leather', 'jersey', 'trenchcoat']) : pick(OPTIONS.top[1].filter(v => !['crop', 'leotard', 'oneshoulder'].includes(v)));
-    o.bottoms = pick(OPTIONS.bottoms[1]);
+    o.facialColor = r() < 0.8 ? o.hairColor : pick(RP.hair.slice(0, 7));
+    o.top = o.frame === 'feminine' ? pick(['singlet', 'crop', 'crop', 'tank', 'tee', 'vest', 'jacket', 'robe', 'leotard', 'leotard', 'oneshoulder', 'hoodie', 'leather', 'jersey', 'trenchcoat']) : pick(RO.top[1].filter(v => !['crop', 'leotard', 'oneshoulder'].includes(v)));
+    o.bottoms = pick(RO.bottoms[1]);
     o.boots = pick(['barefoot', 'boots', 'boots', 'tall', 'tall', 'sneakers']);
-    o.pads = pick(OPTIONS.pads[1]);
-    o.wrists = odds(0.5, OPTIONS.wrists[1]);
-    o.gear1 = pick(PAL.gear);
-    do { o.gear2 = pick(PAL.gear); } while (o.gear2 === o.gear1);
-    o.gear3 = r() < 0.6 ? o.gear1 : pick(PAL.gear);
-    o.gear4 = r() < 0.5 ? o.gear2 : pick(PAL.gear);
-    o.headwear = odds(0.72, OPTIONS.headwear[1]);
+    o.pads = pick(RO.pads[1]);
+    o.wrists = odds(0.5, RO.wrists[1]);
+    o.gear1 = pick(RP.gear);
+    do { o.gear2 = pick(RP.gear); } while (o.gear2 === o.gear1);
+    o.gear3 = r() < 0.6 ? o.gear1 : pick(RP.gear);
+    o.gear4 = r() < 0.5 ? o.gear2 : pick(RP.gear);
+    o.headwear = odds(0.72, RO.headwear[1]);
     if (o.headwear === 'tiara' && o.frame !== 'feminine') o.headwear = 'crown';
-    o.eyewear = odds(0.82, OPTIONS.eyewear[1]);
-    o.extra = odds(0.7, OPTIONS.extra[1]);
+    o.eyewear = odds(0.82, RO.eyewear[1]);
+    o.extra = odds(0.7, RO.extra[1]);
     const m = r();
     o.mask = m < 0.72 ? 'none' : m < 0.86 ? 'full' : m < 0.93 ? 'half' : 'domino';
-    o.maskPattern = pick(OPTIONS.maskPattern[1]);
-    o.mask1 = r() < 0.6 ? o.gear1 : pick(PAL.gear);
-    do { o.mask2 = pick(PAL.gear); } while (o.mask2 === o.mask1);
-    o.paint = o.mask === 'full' ? 'none' : odds(0.68, OPTIONS.paint[1]);
-    o.paintColor = pick(PAL.gear);
-    o.tattoo = odds(0.55, OPTIONS.tattoo[1]);
-    o.ink = pick(PAL.ink);
-    o.tattoo2 = o.tattoo === 'none' ? 'none' : odds(0.6, TATS); o.ink2 = r() < 0.7 ? o.ink : pick(PAL.ink);
+    o.maskPattern = pick(RO.maskPattern[1]);
+    o.mask1 = r() < 0.6 ? o.gear1 : pick(RP.gear);
+    do { o.mask2 = pick(RP.gear); } while (o.mask2 === o.mask1);
+    o.paint = o.mask === 'full' ? 'none' : odds(0.68, RO.paint[1]);
+    o.paintColor = pick(RP.gear);
+    o.tattoo = odds(0.55, RO.tattoo[1]);
+    o.ink = pick(RP.ink);
+    o.tattoo2 = o.tattoo === 'none' ? 'none' : odds(0.6, TATS); o.ink2 = r() < 0.7 ? o.ink : pick(RP.ink);
     o.tattoo3 = o.tattoo2 === 'none' ? 'none' : odds(0.7, TATS); o.ink3 = o.ink2;
-    o.bodyPaint = odds(0.85, OPTIONS.bodyPaint[1]); o.bodyColor = pick(PAL.gear);
+    o.bodyPaint = odds(0.85, RO.bodyPaint[1]); o.bodyColor = pick(RP.gear);
     random.arts(r, o);
-    o.bg = pick(OPTIONS.bg[1]);
-    o.bgColor = pick(PAL.bg);
+    o.bg = pick(RO.bg[1]);
+    o.bgColor = pick(RP.bg);
     o.outfits = [pickOutfit(o)];
     for (let i = 1; i < 3; i++) {
       const alt = random.attire(r, o);
@@ -189,19 +203,19 @@
 
   random.arts = function (r, o) {
     const pick = a => a[Math.floor(r() * a.length)];
-    ['top', 'bot', 'boot', 'pad'].forEach(p => { o[p + 'Art'] = r() < 0.6 ? 'none' : pick(ART); o[p + 'ArtColor'] = r() < 0.5 ? o.gear2 : pick(PAL.gear); });
-    o.headColor = r() < 0.6 ? o.gear1 : pick(PAL.gear); o.padColor = r() < 0.6 ? o.gear4 : pick(PAL.gear);
-    o.wristColor = r() < 0.6 ? o.gear2 : pick(PAL.gear); o.extraColor = r() < 0.5 ? o.gear2 : pick(PAL.gear);
+    ['top', 'bot', 'boot', 'pad'].forEach(p => { o[p + 'Art'] = r() < 0.6 ? 'none' : pick(ART); o[p + 'ArtColor'] = r() < 0.5 ? o.gear2 : pick(RP.gear); });
+    o.headColor = r() < 0.6 ? o.gear1 : pick(RP.gear); o.padColor = r() < 0.6 ? o.gear4 : pick(RP.gear);
+    o.wristColor = r() < 0.6 ? o.gear2 : pick(RP.gear); o.extraColor = r() < 0.5 ? o.gear2 : pick(RP.gear);
   };
   // A random outfit that keeps the wrestler's colours most of the time.
   random.attire = function (r, base) {
     const pick = a => a[Math.floor(r() * a.length)];
     const o = pickOutfit(base);
-    o.top = pick(OPTIONS.top[1]); o.bottoms = pick(OPTIONS.bottoms[1]); o.boots = pick(OPTIONS.boots[1]);
-    o.pads = pick(OPTIONS.pads[1]); o.wrists = pick(OPTIONS.wrists[1]);
-    o.headwear = r() < 0.7 ? 'none' : pick(OPTIONS.headwear[1]); o.eyewear = r() < 0.8 ? 'none' : pick(OPTIONS.eyewear[1]);
-    o.extra = r() < 0.6 ? 'none' : pick(OPTIONS.extra[1]);
-    if (r() < 0.5) { o.gear1 = pick(PAL.gear); o.gear3 = r() < 0.6 ? o.gear1 : pick(PAL.gear); }
+    o.top = pick(RO.top[1]); o.bottoms = pick(RO.bottoms[1]); o.boots = pick(RO.boots[1]);
+    o.pads = pick(RO.pads[1]); o.wrists = pick(RO.wrists[1]);
+    o.headwear = r() < 0.7 ? 'none' : pick(RO.headwear[1]); o.eyewear = r() < 0.8 ? 'none' : pick(RO.eyewear[1]);
+    o.extra = r() < 0.6 ? 'none' : pick(RO.extra[1]);
+    if (r() < 0.5) { o.gear1 = pick(RP.gear); o.gear3 = r() < 0.6 ? o.gear1 : pick(RP.gear); }
     random.arts(r, o);
     return o;
   };
@@ -546,6 +560,12 @@
       rect(W - armL, 41, 2, 6, '#2a2a2e'); rect(W - armL, 38, 3, 3, '#9aa0a8'); set(W - armL + 1, 39, '#6e747c');
     } else if (L.extra === 'medal') {
       [[13, 25], [13, 26], [14, 27], [14, 28]].forEach(p => mset(p[0], p[1], g2)); rect(15, 29, 2, 2, '#f2c230'); set(16, 30, '#b8860b');
+    } else if (L.extra === 'lei') {
+      const fl = ['#ff5fa2', '#f4c20d', '#ffffff'];
+      for (let x = 16 - n - 2; x <= 15 + n + 2; x++) set(x, 24, fl[(x + 30) % 3]);
+      [[12, 25], [13, 26], [14, 27], [15, 28]].forEach((p, i) => mset(p[0], p[1], fl[i % 3]));
+    } else if (L.extra === 'dogtags') {
+      [[12, 23], [13, 24], [13, 25], [14, 26], [14, 27]].forEach(p => mset(p[0], p[1], '#9aa0a8')); rect(15, 28, 2, 3, '#c8ccd4'); set(16, 29, '#9aa0a8');
     } else if (L.extra === 'waistbelt') {
       brect(armL + 1, 42, W - 2 * (armL + 1), 3, '#3b2a1f'); rect(12, 41, 8, 5, '#f2c230'); rect(12, 41, 8, 1, '#fff1a8'); rect(12, 45, 8, 1, '#b8860b'); rect(15, 42, 2, 2, '#1f6feb');
     }
@@ -562,6 +582,9 @@
       if (hair === 'ponytail') { rect(W - lx0, 12, 2, 13, hc); rect(W - lx0, 12, 2, 1, hD); set(W - lx0 + 1, 24, hD); }
       if (hair === 'pigtails') { mrect(lx0 - 3, 12, 3, 9, hc); mrect(lx0 - 3, 12, 3, 1, hD); mset(lx0 - 3, 20, hD); }
       if (hair === 'shaggy') { rect(lx0 - 1, top, W - 2 * (lx0 - 1), 21 - top, hc); mrect(lx0 - 1, 15, 1, 6, hD); }
+      if (hair === 'braids') for (let y = 13; y <= 30; y++) { mset(lx0 - 2, y, y % 3 ? hc : hD); mset(lx0 - 1, y, y % 3 === 1 ? hD : hc); }
+      if (hair === 'wavy') { rect(lx0 - 1, top, W - 2 * (lx0 - 1), 23 - top, hc); for (let y = top + 3; y < 23; y++) mset(lx0 - 1, y, y % 3 ? hc : hD); }
+      if (hair === 'topknot') { rect(14, top - 5, 4, 4, hc); rect(15, top - 6, 2, 1, hc); rect(14, top - 1, 4, 1, hD); }
       if (hair === 'cornrows') for (let y = 14; y <= 26; y++) mset(lx0 - 1, y, y % 2 ? hc : hD);
       if (hair === 'liberty') [[6, 7], [8, 2], [12, 0], [19, 0], [23, 2], [25, 7]].forEach(([tx, ty]) => { for (let t = 0; t <= 5; t++) { const x = Math.round(tx + (15.5 - tx) * t / 7), y = Math.round(ty + (11 - ty) * t / 7); set(x, y, hc); if (t > 1) { set(x + 1, y, hc); set(x, y + 1, hc); } } });
     }
@@ -587,6 +610,9 @@
       tribal: () => { hrect(14, chin - 2, 1, 3, pc); hrect(17, chin - 2, 1, 3, pc); [[13, 10], [14, 9], [15, 8], [16, 8], [17, 9], [18, 10]].forEach(p => hrect(p[0], p[1], 1, 1, pc)); },
       cheeks: () => mhrect(11, 16, 2, 2, pc),
       jester: () => { hrect(0, 0, 16, 16, pc); hrect(16, 16, 16, H, pc); },
+      demon: () => { hrect(0, 0, W, H, pc); mhrect(11, 13, 4, 3, '#151518'); mhrect(12, top, 1, 2, '#151518'); },
+      mime: () => { hrect(0, 0, W, H, '#f4f1ea'); mhrect(12, 12, 2, 1, '#151518'); hrect(12, 16, 1, 2, '#151518'); },
+      glitter: () => { for (let y = 10; y <= 18; y++) for (let x = 0; x < W; x++) if ((x * 3 + y * 5) % 7 === 0) hrect(x, y, 1, 1, (x + y) % 2 ? pc : sh(pc, 0.45)); },
       dots: () => { [[11, 16], [10, 17], [12, 17], [11, 18]].forEach(p => mhrect(p[0], p[1], 1, 1, pc)); hrect(15, 10, 2, 1, pc); },
       none: () => 0
     })[L.paint]();
@@ -608,6 +634,9 @@
         handlebar: () => { stache(); mset(12, 18, fc); mset(11, 17, fc); },
         braided: () => { FH.full(); rect(15, chin + 3, 2, 6, fc); rect(15, chin + 5, 2, 1, g2); rect(15, chin + 8, 2, 1, g2); },
         wizard: () => { FH.full(); rect(12, chin + 1, 8, 2, fc); rect(13, chin + 3, 6, 2, fc); rect(14, chin + 5, 4, 2, fc); rect(15, chin + 7, 2, 1, sh(fc, -0.25)); },
+        vandyke: () => { stache(); rect(15, 20, 2, chin - 19, fc); rect(15, chin + 1, 2, 2, fc); set(15, chin + 3, fc); },
+        mutton: () => { FH.chops(); stache(); for (let y = 17; y <= 19; y++) mset(12, y, fc); },
+        pencil: () => rect(14, 18, 4, 1, fc),
         chinstrap: () => { for (let y = 15; y <= chin; y++) mset(lxAt(y), y, fc); rect(lxAt(chin), chin, W - 2 * lxAt(chin), 1, fc); }
       };
       FH[L.facial]();
@@ -625,7 +654,7 @@
       mrect(11, 13, 4, 3, '#17111c'); mrect(12, 14, 2, 1, sk);
       [[14, 17], [17, 17], [13, 20], [15, 20], [16, 20], [18, 20], [15, 9], [16, 9]].forEach(p => set(p[0], p[1], '#17111c'));
       mset(lxAt(12), 12, m2); mset(lxAt(16), 16, m2);
-    } else if (mask !== 'none') {
+    } else if (mask !== 'none' && !LATE_MASK.includes(mask)) {
       const m1 = L.mask1, m2 = L.mask2;
       const lim = fullMask ? H : halfMask ? 18 : 16;
       const from = mask === 'domino' ? 13 : mask === 'open' ? top + 3 : 0;
@@ -645,6 +674,9 @@
         if (pat === 'diamond') { each((x, y) => Math.abs(x - 15.5) + Math.abs(y - 9.5) <= 3.5); hrect(15, 9, 2, 1, m1); }
         if (pat === 'halves') each(x => x >= 16);
         if (pat === 'tears') { mhrect(12, 16, 1, 4, m2); mhrect(13, 17, 1, 2, m2); }
+        if (pat === 'chevron') [[11, 0], [12, 1], [13, 2], [14, 3], [15, 4]].forEach(p => mhrect(p[0], top + 2 + p[1], 1, 1, m2));
+        if (pat === 'lace') for (let y = top + 1; y <= 12; y++) hrect(15 + (y % 2), y, 1, 1, m2);
+        if (pat === 'sun') each((x, y) => Math.hypot(x - 15.5, y - (top + 4)) < 2.3);
         if (pat === 'web') each((x, y) => { const dx = Math.abs(x - 15.5), dy = Math.abs(y - 9); const r = Math.round(Math.hypot(dx, dy)); return x === 15 || x === 16 || y === 9 || Math.abs(dx - dy) < 0.6 || r === 3 || r === 6; });
         for (let y = top; y < lim; y++) { const x = W - 1 - lxAt(y); if (head[y * W + x] && y <= chin) set(x, y, sh(m1, -0.2)); }
       }
@@ -655,6 +687,8 @@
     // ---- eyes, brows, nose, mouth
     const ec = L.eyeColor, wh = '#f4f1ea', dk = '#2a1a14';
     if (L.eyes === 'narrow') mrect(12, 14, 2, 1, dk);
+    else if (L.eyes === 'closed') { mrect(11, 14, 3, 1, skDD); }
+    else if (L.eyes === 'crazy') { set(12, 14, wh); set(13, 14, dk); set(18, 14, dk); set(19, 14, wh); mrect(12, 13, 2, 1, wh); mset(11, 13, dk); }
     else if (L.eyes === 'glare') { mrect(12, 14, 2, 1, ec); set(13, 14, dk); set(18, 14, dk); }
     else { set(12, 14, wh); set(13, 14, ec); set(18, 14, ec); set(19, 14, wh); if (L.eyes === 'wide') mrect(12, 13, 2, 1, wh); }
     if (L.eyes === 'lined' && !fullMask) { mrect(11, 13, 3, 1, dk); mset(11, 14, dk); }
@@ -691,6 +725,9 @@
       frown: () => { rect(14, 19, 4, 1, lip); set(13, 20, lip); set(18, 20, lip); },
       tongue: () => { rect(14, 19, 4, 2, '#3a1212'); rect(15, 20, 2, 2, '#e0607a'); },
       gap: () => { rect(14, 19, 4, 1, wh); set(15, 19, '#3a1212'); rect(14, 20, 4, 1, lip); set(13, 18, lip); set(18, 18, lip); },
+      fangs: () => { rect(14, 19, 4, 1, lip); set(14, 20, wh); set(17, 20, wh); },
+      guard: () => { rect(14, 19, 4, 2, L.gear2); rect(14, 19, 4, 1, sh(L.gear2, 0.35)); },
+      pout: () => { rect(15, 19, 2, 1, '#b0485a'); set(14, 19, lip); set(17, 19, lip); },
       lipstick: () => { rect(14, 19, 4, 1, '#c8102e'); rect(15, 18, 2, 1, '#c8102e'); }
     })[L.mouth]();
 
@@ -719,7 +756,15 @@
       cornrows: () => { brow(); cap(4, hc); for (let y = top - 1; y < top + 4; y++) for (let x = 0; x < W; x++) if (get(x, y) === hc && x % 2) set(x, y, hD); },
       shaggy: () => { brow(); cap(4, hc); rect(11, top + 4, 10, 1, hc); [11, 14, 17, 20].forEach(x => set(x, top + 5, hc)); for (let y = top + 4; y <= 18; y++) { mset(lxAt(y), y, hc); if (y < 16) mset(lxAt(y) + 1, y, hc); } },
       bowl: () => { brow(); cap(5, hc); for (let y = top + 5; y <= 14; y++) { mset(lxAt(y), y, hc); mset(lxAt(y) + 1, y, hc); } rect(12, top - 1, 3, 1, hL); },
-      liberty: () => { brow(); cap(3, hc); }
+      liberty: () => { brow(); cap(3, hc); },
+      sidepart: () => { brow(); cap(4, hc); sides(13); set(19, top, hD); set(19, top + 1, hD); rect(11, top - 1, 6, 1, hL); },
+      flattop: () => { cap(3, hc); sides(13); const l = lxAt(top) + 1; rect(l, top - 4, W - 2 * l, 4, hc); rect(l, top - 4, W - 2 * l, 1, hL); },
+      fauxhawk: () => { cap(3, mix(sk, hc, 0.45)); sides(13, mix(sk, hc, 0.45)); rect(13, top - 3, 6, 5, hc); rect(14, top - 4, 4, 1, hc); rect(14, top - 3, 1, 4, hL); },
+      fringe: () => { brow(); cap(5, hc); sides(14); rect(lxAt(top) + 1, top + 5, 7, 2, hc); rect(lxAt(top) + 1, top + 7, 4, 1, hD); },
+      topknot: () => { brow(); cap(3, hc); sides(13); set(13, top, hL); },
+      braids: () => { brow(); cap(4, hc); sides(13); rect(15, top - 1, 2, 4, hD); },
+      wavy: () => { brow(); cap(4, hc); sides(15); for (let x = lxAt(top) + 1; x < W - lxAt(top) - 1; x += 3) set(x, top + 4, hc); rect(12, top - 1, 3, 1, hL); },
+      shavedside: () => { brow(); cap(4, hc); sides(13); for (let y = top + 1; y <= top + 4; y++) rect(lxAt(y), y, 5, 1, mix(sk, hc, 0.5)); rect(16, top - 2, 7, 1, hc); rect(17, top - 3, 4, 1, hc); }
     })[hair]();
     if (halfMask && hair === 'mohawk') fin();
 
@@ -737,6 +782,9 @@
     if (hw === 'horns') { const hm = '#8a96a3'; span(top - 1, lxAt(top) + 1, hm); for (let y = top; y <= top + 2; y++) span(y, lxAt(y), hm); span(top + 3, lxAt(top + 3) - 1, '#5d6670'); mset(12, top + 1, '#c9d0d8'); [[lx0 - 1, top], [lx0 - 2, top - 1], [lx0 - 2, top - 2], [lx0 - 2, top - 3], [lx0 - 1, top - 4]].forEach((p, i) => mset(p[0], p[1], i === 4 ? '#cbbf9f' : '#f0e6cf')); }
     if (hw === 'tiara') { rect(12, top, 8, 1, '#d9dde3'); rect(15, top - 1, 2, 1, '#d9dde3'); mset(13, top - 1, '#d9dde3'); rect(15, top - 2, 2, 1, '#ff5fa2'); }
     if (hw === 'durag') { span(top - 1, lxAt(top) + 1, g1); for (let y = top; y <= top + 3; y++) span(y, lxAt(y) - (y > top ? 1 : 0), g1); rect(15, top - 1, 2, 5, sh(g1, -0.18)); rect(lx0 - 2, top + 4, 1, 8, g1); rect(lx0 - 3, top + 6, 1, 6, g1D); }
+    if (hw === 'halo') { rect(12, top - 5, 8, 1, '#f2c230'); mset(11, top - 4, '#f2c230'); rect(12, top - 3, 8, 1, '#f7dc6f'); }
+    if (hw === 'helmet') { span(top - 1, lxAt(top) + 1, g1); for (let y = top; y <= top + 4; y++) span(y, lxAt(y) - 1, g1); rect(15, top - 1, 2, 6, L.gear2); mrect(lx0 - 1, top + 5, 1, 3, g1D); }
+    if (hw === 'flowers') [11, 13, 15, 17, 19].forEach((x, i) => { set(x, top, ['#ff5fa2', '#f4c20d', '#ffffff', '#ff5fa2', '#f4c20d'][i]); set(x + 1, top, '#2fae5c'); set(x, top - 1, sh(['#ff5fa2', '#f4c20d', '#ffffff', '#ff5fa2', '#f4c20d'][i], -0.2)); });
     if (hw === 'headset') { span(top - 1, lxAt(top) + 1, '#2a2a2e'); mrect(lx0 - 2, 12, 2, 4, '#2a2a2e'); [[lx0 - 1, 16], [11, 17], [12, 18]].forEach(p => set(p[0], p[1], '#2a2a2e')); set(13, 18, '#9aa0a8'); }
     }
     const ew = L.eyewear;
@@ -745,6 +793,12 @@
     if (ew === 'goggles') { rect(lx0 - 1, 13, W - 2 * (lx0 - 1), 2, '#1b1b1f'); mrect(11, 13, 4, 2, '#2bb3e8'); mset(11, 13, '#ffffff'); }
     if (ew === 'monocle') [[17, 13], [18, 12], [19, 12], [20, 13], [20, 14], [20, 15], [19, 16], [18, 16], [17, 15], [17, 14], [21, 17], [21, 18], [22, 19], [22, 20]].forEach(p => set(p[0], p[1], '#f2c230'));
     if (ew === 'starshades') { [[12, 12], [13, 12], [10, 13], [11, 13], [12, 13], [13, 13], [14, 13], [11, 14], [12, 14], [13, 14], [14, 14], [11, 15], [14, 15]].forEach(p => mset(p[0], p[1], g2)); rect(15, 13, 2, 1, sh(g2, -0.3)); mset(12, 13, '#ffffff'); }
+    if (ew === 'heartshades') { const hcol = '#d7263d'; mset(11, 12, hcol); mset(13, 12, hcol); mrect(11, 13, 4, 1, hcol); mrect(12, 14, 2, 1, hcol); rect(15, 13, 2, 1, hcol); mset(11, 13, '#ff8a9a'); }
+    if (ew === 'sport') { rect(lx0, 13, W - 2 * lx0, 2, '#1b1b1f'); mrect(11, 13, 4, 2, '#ff7a00'); mset(11, 13, '#ffd29a'); }
+    // lower-face masks sit over the mouth, so they are drawn last
+    if (mask === 'gas') { for (let y = 16; y <= chin; y++) for (let x = lxAt(y) + 1; x <= W - 2 - lxAt(y); x++) set(x, y, '#3a3d42'); mrect(11, 13, 4, 3, '#3a3d42'); mrect(12, 14, 2, 1, '#7fd3e6'); rect(14, chin - 1, 4, 3, '#5a5f66'); rect(15, chin, 2, 1, '#22252a'); mset(lxAt(15), 15, '#2a2a2e'); }
+    if (mask === 'muzzle') { for (let y = 17; y <= chin; y++) for (let x = 13; x <= 18; x++) if ((x + y) % 2 === 0) set(x, y, '#9aa0a8'); rect(13, 17, 6, 1, '#6e747c'); mset(lxAt(17), 17, '#2a2a2e'); mset(lxAt(17) + 1, 17, '#2a2a2e'); }
+    if (mask === 'jaw') { const m1 = L.mask1, m2 = L.mask2; for (let y = 17; y <= chin; y++) for (let x = lxAt(y) + 1; x <= W - 2 - lxAt(y); x++) set(x, y, m1); for (let x = 13; x <= 18; x++) set(x, 19, x % 2 ? m2 : '#f4f1ea'); mset(lxAt(17), 17, sh(m1, -0.25)); }
     if (L.eyewear === 'shades') { mrect(11, 13, 4, 2, '#151518'); rect(15, 13, 2, 1, '#151518'); mset(12, 13, '#6e7a8a'); }
     if (L.eyewear === 'visor') { rect(lx0, 13, W - 2 * lx0, 2, g2 === '#f5f5f5' ? '#2bb3e8' : g2); rect(lx0 + 1, 13, 3, 1, '#ffffff'); }
     if (L.eyewear === 'eyepatch') { rect(11, 13, 4, 3, '#151518'); [[10, 12], [9, 11], [15, 12], [16, 11], [17, 10], [18, 9], [19, 8]].forEach(p => set(p[0], p[1], '#151518')); }
