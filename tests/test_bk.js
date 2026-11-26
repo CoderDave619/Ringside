@@ -1,20 +1,17 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 (async()=>{const b=await chromium.launch();for(const vw of [[1280,900],[390,800]]){const p=await b.newPage({viewport:{width:vw[0],height:vw[1]}});await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open&&!window.__noauto)d.querySelector('[data-y]').click()},40)});const errs=[];p.on('pageerror',e=>errs.push(e.message));
 await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
-await p.click('input[value=c3]');await p.click('#nstartbtn');await p.waitForTimeout(300);
+await p.click('[data-nver="1"]');await p.waitForTimeout(150);await p.click('input[name=nco][value=new]');await p.fill('#nn','Test Co');await p.fill('#ns','TC');await p.click('#nstartbtn');await p.waitForTimeout(300);
 await p.evaluate(()=>__ro.run(`freeAgents().slice(0,10).forEach(w=>signW(w,G.me,100,8));const R=roster(G.me);R[3].fav=1;R[5].fav=1;R[1].out=G.week+3;R[1].outWhy='injury';R[1].injH=[{d:G.date,src:'a ladder match'}];R[2].fat=80;save()`));
 // favourite from profile
 const id=await p.evaluate(()=>__ro.run('roster(G.me)[0].id'));await p.evaluate(i=>__ro.run(`goW('${i}')`),id);await p.waitForTimeout(300);
 await p.click('[data-pa=fav]');await p.waitForTimeout(150);console.log('fav set',await p.evaluate(i=>!!__ro.G().ws[i].fav,id));
 await p.evaluate(()=>{location.hash='book'});await p.waitForTimeout(300);
-await p.evaluate(()=>__ro.run('dMatch()'));await p.waitForTimeout(150);
-const n0=await p.$$eval('[data-pk]',x=>x.length);
-await p.click('[data-bkf=fav]');await p.waitForTimeout(100);const nf=await p.$$eval('[data-pk]',x=>x.length);
+await p.evaluate(()=>__ro.run('render()'));await p.waitForTimeout(150);
+const n0=await p.$$eval('.bw',x=>x.length);
+await p.click('[data-bkf=fav]');await p.waitForTimeout(100);const nf=await p.$$eval('.bw',x=>x.length);
 await p.click('[data-bkf=all]');await p.type('#bkq','a',{delay:30});await p.type('#bkq','n',{delay:30});await p.waitForTimeout(100);
-const nq=await p.$$eval('[data-pk]',x=>x.length),qv=await p.$eval('#bkq',x=>x.value),foc=await p.evaluate(()=>document.activeElement?.id);
+const nq=await p.$$eval('.bw',x=>x.length),qv=await p.$eval('#bkq',x=>x.value),foc=await p.evaluate(()=>document.activeElement?.id);
 console.log(vw[0],'chips all',n0,'fav',nf,'search "an"',nq,'value',qv,'focus',foc);await p.screenshot({path:`/tmp/bk_${vw[0]}.png`});
-await p.keyboard.press('Escape');await p.evaluate(()=>__ro.run('dSeg()'));await p.waitForTimeout(150);console.log('seg chips with search',await p.$$eval('[data-w]',x=>x.length),await p.evaluate(()=>__ro.run('JSON.stringify(BKF)+roster(G.me).length')),await p.$eval('#bkq',x=>x.value).catch(()=>'no input'));await p.keyboard.press('Escape');
-await p.evaluate(()=>{location.hash='roster'});await p.waitForTimeout(300);await p.click('[data-rv=inj]');await p.waitForTimeout(300);
-console.log('health text',(await p.evaluate(()=>document.querySelector('#app').innerText)).slice(0,300).replace(/\n/g,' | '));
-await p.screenshot({path:`/tmp/health_${vw[0]}.png`,fullPage:true});
+await p.evaluate(()=>__ro.run('dSeg()'));await p.waitForTimeout(150);console.log('seg chips with search',await p.$$eval('[data-w]',x=>x.length),await p.evaluate(()=>__ro.run('JSON.stringify(BKF)+roster(G.me).length')),await p.$eval('#bkq',x=>x.value).catch(()=>'no input'));await p.keyboard.press('Escape');
 console.log('scrollX',await p.evaluate(()=>document.documentElement.scrollWidth),'ERRS',errs);await p.close()}await b.close()})();
