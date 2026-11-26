@@ -12,7 +12,7 @@ await p.click('#auto');await p.waitForTimeout(200);await p.click('#run');await p
 await p.screenshot({path:'/tmp/camp_toast.png'});
 const cont=await p.$('#cont');if(cont){await cont.click();await p.waitForTimeout(300)}
 console.log('camp after',(await p.evaluate(()=>document.querySelector('.camp')?.innerText||'none')).slice(0,80).replace(/\n/g,' | '));
-await p.evaluate(()=>{location.hash='history'});await p.waitForTimeout(300);await p.click('[data-hv=ach]');await p.waitForTimeout(200);
+await p.evaluate(()=>{location.hash='history'});await p.waitForTimeout(300);await p.evaluate(()=>document.querySelector('[data-hv=ach]').click());await p.waitForTimeout(200);
 console.log('ach',(await p.evaluate(()=>document.querySelector('.achs')?.parentElement.innerText||'')).slice(0,160).replace(/\n/g,' | '));
 await p.screenshot({path:'/tmp/ach.png',fullPage:false});
 console.log('size',await p.evaluate(()=>{const s=JSON.parse(localStorage.ro_save);return s.cos[s.me].size+' '+s.opts.mode}));

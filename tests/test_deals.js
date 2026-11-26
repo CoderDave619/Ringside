@@ -17,7 +17,7 @@ console.log('SAB',await p.evaluate(()=>document.getElementById('cfm')?.innerText
 await p.evaluate(()=>__ro.run(`mergeOffer(Object.values(G.cos).find(c=>c.active&&c.owner==='ai'),.6,'business is bad and they want out');save()`));
 await p.evaluate(()=>{location.hash='dash'});await p.waitForTimeout(300);await p.screenshot({path:`/tmp/merge_${vw[0]}.png`});
 const n0=await p.evaluate(()=>__ro.run('roster(G.me).length'));
-await p.click('[data-mrg=yes]');await p.waitForTimeout(150);await p.click('#cfm [data-y]');await p.waitForTimeout(250);
+await p.evaluate(()=>document.querySelectorAll('details').forEach(d=>d.open=true));await p.click('[data-mrg=yes]');await p.waitForTimeout(150);await p.click('#cfm [data-y]');await p.waitForTimeout(250);
 console.log('MERGED roster',n0,'->',await p.evaluate(()=>__ro.run('roster(G.me).length')));
 await p.evaluate(()=>{location.hash='companies'});await p.waitForTimeout(200);
 await p.click('[data-buyco]');await p.waitForTimeout(150);console.log('BUY ASK',await p.evaluate(()=>document.getElementById('cfm')?.innerText.slice(0,120)));await p.click('#cfm [data-y]');await p.waitForTimeout(250);
