@@ -16,7 +16,7 @@ await p.click(`[data-bw="${ids[1]}"]`);await p.waitForTimeout(200);
 // third tap creates a new match
 await p.click(`[data-bw="${ids[2]}"]`);await p.waitForTimeout(100);
 // change match 2 to tag team
-await p.selectOption('#bmt1','tag');await p.waitForTimeout(100);
+await p.click('.bm >> nth=1 >> [data-bmode$=":t"]');await p.waitForTimeout(100);
 for(const k of [4,5,6])await p.click(`[data-bw="${ids[k]}"]`).then(()=>p.waitForTimeout(80));
 card=await p.evaluate(()=>JSON.stringify(__ro.G().card.map(x=>({mt:x.mt,s:x.sides}))));console.log('after tag',card);
 // segment

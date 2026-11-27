@@ -363,6 +363,8 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:4
 .cogrid{columns:2 340px;column-gap:14px}.cogrid>.panel{break-inside:avoid;margin:0 0 14px;display:inline-block;width:100%}
 table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.compact td.cx.heel{color:var(--heel)}table.compact td.cx.face{color:var(--face)}table.compact td.tr{white-space:normal;min-width:140px;max-width:240px}table.compact td:first-child{white-space:nowrap}
 @media (max-width:1000px){table.compact .cx{display:none}}
+.bmode{display:inline-flex}.bmode button{min-height:32px;padding:2px 12px;font-size:13px}
+.bkpre{border:1px dashed var(--line);border-radius:12px;padding:8px 10px;margin:4px 0 12px}.bkpreh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:2px 0 6px}.bkpreh .btns{margin:0 0 0 auto}.bkpreh .sub{font-size:12px}
 </style>
 </head>
 <body>
@@ -621,6 +623,42 @@ function guestBook(w){const m=me(),fee=guestFee(w);if(w.co||w.status!=='active'|
 function guestEnd(){Object.values(G.ws).forEach(w=>{if(w.guest==null)return;delete w.guest;if(w.co===G.me){freeW(w);w.refused=0}})}
 function freeW(w){if(w.co)vacateFor(w,w.status==='retired'?'retired':'left the company');w.co=null;w.wage=0;w.left=0;w.next=null;G.offers=G.offers.filter(o=>o.w!==w.id)}
 
+/* Starting roster shuffle (owner request, 27 Nov). 'random' deals everyone out at random, 'draft' has companies pick in turns
+   (weakest company first, snake order, best available). Each company keeps its roster size and its men/women split.
+   Titles belong to the company: a champion who lands somewhere else leaves the belt vacant. */
+function shuffleRosters(mode){const C=Object.values(G.cos).filter(c=>c.active),pool={M:[],F:[]},need={};
+  C.forEach(c=>{need[c.id]={M:0,F:0}});
+  Object.values(G.ws).forEach(w=>{if(w.status!=='active'||!w.co||w.mgonly||!need[w.co])return;const g=w.gender==='F'?'F':'M';need[w.co][g]++;pool[g].push(w)});
+  const order=C.slice().sort((a,b)=>a.pop-b.pop);
+  for(const g of ['M','F']){const L=mode==='draft'?pool[g].sort((a,b)=>b.pop-a.pop):pool[g].sort(()=>Math.random()-.5);let r=0;
+    while(L.length){const seq=r%2?order.slice().reverse():order;let any=false;for(const c of seq){if(!L.length)break;if(need[c.id][g]<=0)continue;need[c.id][g]--;const w=L.shift();any=true;if(w.co!==c.id)signW(w,c.id,w.wage,w.left)}r++;if(!any)break}}
+  news(mode==='draft'?'The roster draft is done. Every company picked its new roster.':'Rosters were shuffled across the business.','co')}
+/* New-game draft (owner request, 27 Nov): everyone starts as a free agent and every title starts vacant. Companies pick in
+   turns (weakest first, snake order) until each has its usual roster size; you pick on your turn. The game starts after. */
+function draftStart(){const C=Object.values(G.cos).filter(c=>c.active),need={},women={};
+  C.forEach(c=>{const R=Object.values(G.ws).filter(w=>w.co===c.id&&w.status==='active'&&!w.mgonly);need[c.id]=R.length||Math.max(8,target(c));women[c.id]=R.length?R.filter(w=>w.gender==='F').length/R.length:WOMEN_SHARE});
+  Object.values(G.ws).forEach(w=>{if(w.co&&!w.mgonly){w.co=null;w.wage=0;w.left=0;w.next=null}});
+  Object.values(G.titles||{}).forEach(t=>{t.reigns=t.reigns.filter(r=>r.pre)});
+  const order=C.slice().sort((a,b)=>a.pop-b.pop).map(c=>c.id);G.draft={order,need,women,round:0,pos:0,log:[]}}
+const draftPool=()=>freeAgents().filter(w=>w.status==='active'&&!w.mgonly).sort((a,b)=>b.pop-a.pop);
+const draftWho=()=>{const d=G.draft;const seq=d.round%2?d.order.slice().reverse():d.order;return seq[d.pos]};
+function draftNext(){const d=G.draft;for(let guard=0;guard<500;guard++){const seq=d.order;d.pos++;if(d.pos>=seq.length){d.pos=0;d.round++}
+  if(!d.order.some(id=>d.need[id]>0)||!draftPool().length)return draftEnd();if(d.need[draftWho()]>0)return}draftEnd()}
+function draftPick(cid,w){const d=G.draft;signW(w,cid,worth(w),ri(3,8));d.need[cid]--;d.log.unshift({c:cid,w:w.id,r:d.round+1});draftNext()}
+function draftAI(cid){const P=draftPool();if(!P.length)return draftEnd();const R=roster(cid),wf=d=>R.filter(w=>w.gender==='F').length/Math.max(1,R.length);
+  const wantF=wf()<G.draft.women[cid]-.02&&P.some(w=>w.gender==='F'),L=P.filter(w=>wantF?w.gender==='F':true);draftPick(cid,(Math.random()<.8?L[0]:pick(L.slice(0,4)))||P[0])}
+function draftRun(stopAtMe){let g=0;while(G.draft&&g++<2000){const c=draftWho();if(G.draft.need[c]<=0){draftNext();continue}if(c===G.me&&stopAtMe)break;if(c===G.me){const P=draftPool();if(!P.length){draftEnd();break}draftPick(c,P[0])}else draftAI(c)}}
+function draftEnd(){if(!G.draft)return;delete G.draft;news('The draft is over. Every company has its roster, and every title is vacant until someone wins it.','co');save()}
+function vDraft(){draftRun(true);if(!G.draft){location.hash='office';return}const d=G.draft,P=draftPool();
+  const myNeed=d.need[G.me],mine=roster(G.me);
+  $('#app').innerHTML=`<div class="head"><div><h2>Draft</h2><p>Everyone is a free agent. Companies pick in turns, weakest first. The game starts when every roster is full. All titles start vacant.</p></div><div class="btns"><button id="dauto">Auto-pick for Me</button><button class="go" id="dsim">Finish the Draft</button></div></div>
+   <div class="tiles" style="margin-bottom:14px">${[['Round',d.round+1],['On the Clock',esc(me().short)+' (you)'],['Picks Left',myNeed],['Your Roster',mine.length]].map(([l,v])=>`<div class="tile"><div class="sub">${l}</div><b>${v}</b></div>`).join('')}</div>
+   <div class="grid2"><div class="panel"><h3>Available</h3><table class="compact"><thead><tr><th>Wrestler</th><th class="n">Pop</th><th class="n"></th></tr></thead><tbody>${P.slice(0,80).map(w=>`<tr><td>${headImg(w,18)} <b>${esc(w.name)}</b> <span class="sub">${w.gender==='F'?'She':'He'} · ${w.align} · ${age(w)??'–'}</span></td><td class="n">${pd(w)}</td><td class="n"><button class="sm go" data-dpick="${w.id}">Pick</button></td></tr>`).join('')}</tbody></table></div>
+   <div class="panel"><h3>Recent Picks</h3>${d.log.slice(0,25).map(x=>`<div class="kv"><span>${esc(G.cos[x.c].short)}${x.c===G.me?' (you)':''}</span><b>${esc(W(x.w).name)}</b></div>`).join('')||'<div class="empty">No picks yet.</div>'}
+   <h3 style="margin-top:12px">Your Roster</h3>${mine.map(w=>`<div class="kv"><span>${esc(w.name)}</span><b>${pd(w)}</b></div>`).join('')||'<div class="empty">Nobody yet.</div>'}</div></div>`;
+  document.querySelectorAll('[data-dpick]').forEach(b=>b.onclick=()=>{const w=W(b.dataset.dpick);if(!G.draft||draftWho()!==G.me||w.co)return;draftPick(G.me,w);save();vDraft()});
+  $('#dauto').onclick=()=>{const P=draftPool();if(P.length&&draftWho()===G.me){draftPick(G.me,P[0]);save()}vDraft()};
+  $('#dsim').onclick=()=>{draftRun(false);save();location.hash='office';render()}}
 function newGame(scen,start,choice,opts){
   G={v:1,scen:scen.name,date:start,week:1,me:null,cos:{},ws:{},news:[],offers:[],card:[],opts,over:false};
   const map={};
@@ -660,6 +698,8 @@ function newGame(scen,start,choice,opts){
   for(const c of Object.values(G.cos)){if(!c.cyc)c.cyc=c.owner==='player'?1:aiCyc(c);repOf(c)}syncSched();
   Object.values(G.ws).forEach(w=>{if(w.al==null)w.al=alDefault(w.align);w.align=alLetter(w.al)});
   setupTitles(scen,start,map);
+  if(opts.shuf==='random'&&start===scen.start)shuffleRosters('random');
+  if(opts.shuf==='draft')draftStart();
   if(start!==scen.start)for(let i=0;i<30;i++)aiSign(true);
   news(`You took charge of ${me().name}. Scenario: ${scen.name}.`,'me');
   save();
@@ -722,7 +762,7 @@ function updatePrestige(t,st){
   if(t.elite&&t.prestige<75)t.elite=false;
 }
 const CHAMP_BUFF=3,CHAMP_GROW=1.5; // TODO(ASK OWNER): exact buff size
-const TIERS={1:'Top tier',2:'Secondary',3:'Lower tier'};
+const TIERS={1:'Primary',2:'Secondary',3:'Tertiary'};
 const topTier=w=>Math.min(...holds(w).map(t=>t.tier||1),9);
 const champB=w=>{const k=topTier(w);return k>3?0:CHAMP_BUFF+1-k};  // top tier +3, secondary +2, lower +1
 const chTxt=w=>G&&G.titles&&holds(w).length?`<span class="k tt" title="${esc(holds(w).map(t=>t.name).join(', '))}">🏆 Champion</span>`:'';
@@ -765,7 +805,22 @@ function awards(y){
 /* Monthly growth (§4.60). Chances per month to gain 1 workrate / 1 charisma. Young wrestlers grow, Hard Workers keep growing,
    Lazy wrestlers slip without big matches. Free agents grow at half speed. TODO(ASK OWNER): pacing. */
 const GROW={young:[.22,.12],mid:[.07,.05],hardw:[.18,.08],lazy:.25},MENTOR_P=.05;
-function monthly(){if(featOn('earn'))earnTraits();for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
+/* Champion defection (owner idea, 27 Nov): extremely rarely, an unhappy champion tries to jump to a rival with the belt.
+   Titles belong to the company, so the belt comes back vacant; the wrestler leaves. Your champion gives you a choice first.
+   TODO(ASK OWNER): odds and cost. */
+const DEFECT_P=.004,DEFECT_MOR=40;
+function defectMonth(){if(!featOn('defect'))return;
+  for(const t of Object.values(G.titles||{})){if(!t.active||t.div==='tag')continue;const r=reignOf(t),c=G.cos[t.co];if(!r||!c||!c.active||r.h.length!==1)continue;const w=W(r.h[0]);
+    if(!w||w.co!==c.id||morOf(w)>=DEFECT_MOR||Math.random()>=DEFECT_P)continue;
+    const to=Object.values(G.cos).filter(x=>x.active&&x.id!==c.id&&x.owner!=='player').sort((a,b)=>b.cash-a.cash)[0];if(!to)continue;
+    const fee=r10(worth(w)*12*dif().cost);
+    if(c.id===G.me&&!window.__ro){G.defect={w:w.id,t:t.id,to:to.id,fee,wk:G.week};news(`${w.name} is threatening to walk out to ${to.short} with the ${t.name}. Answer in your Inbox.`,'me');return}
+    defectGo(w,t,to);return}}
+function defectGo(w,t,to){const from=G.cos[t.co];news(`${w.name} walked out of ${from.short} with the ${t.name} and showed up at ${to.short}! ${from.short} got the belt back, but it is vacant.`,'tt');signW(w,to.id,r10(worth(w)*1.3),6);w.mor=60}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-dfa]');if(!b||!G||b.disabled)return;defectAnswer(b.dataset.dfa);render()});
+function defectAnswer(k){const d=G.defect;if(!d)return;delete G.defect;const w=W(d.w),t=G.titles[d.t],to=G.cos[d.to];if(!w||!t||!to||w.co!==G.me)return;
+  if(k==='pay'&&me().cash>=d.fee){me().cash-=d.fee;w.mor=clamp(morOf(w)+30,0,100);news(`You paid ${w.name} ${money(d.fee)} to stay. The ${t.name} stays put.`,'me')}else defectGo(w,t,to);save()}
+function monthly(){defectMonth();if(featOn('earn'))earnTraits();for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
   b=a<=27?GROW.young:a<=33?GROW.mid:[0,0],pw=(b[0]+(hw&&a<=38?GROW.hardw[0]:0))*f,pc=(b[1]+(hw&&a<=38?GROW.hardw[1]:0))*f;
   if(w.wrk<95&&Math.random()<pw){w.wrk++;w.grow=(w.grow||0)+1}if(w.cha<95&&Math.random()<pc){w.cha++;w.grow=(w.grow||0)+1}
   if(hasTr(w,'lazy')&&G.week-(w.bigW??-99)>8&&Math.random()<GROW.lazy&&w.wrk>20){w.wrk--;w.grow=(w.grow||0)-1}
@@ -1147,12 +1202,12 @@ function matchNews(x,st,c,major,main){
       if(w.lstreak>=3){mom(w,-Math.min(6,w.lstreak-2)*(major?1.5:1));gainPop(w,-.15*Math.min(5,w.lstreak-2)*(major?1.5:1))}})}
 }
 /* Show rating = weighted average of match and segment stars (§4.21). TODO(ASK OWNER): weights. */
-const SHOW_W={main:3,open:1.5,title:1.5,match:1,seg:1};
-function slotW(x,i,firstM,lastM){return (i===lastM?SHOW_W.main:i===firstM?SHOW_W.open:SHOW_W.match)+(x.title?SHOW_W.title:0)}
+const SHOW_W={main:3,open:1.5,title:1.5,match:1,seg:1,pre:.4}; // TODO(ASK OWNER): pre-show weight
+function slotW(x,i,firstM,lastM){if(x.pre)return SHOW_W.pre;return (i===lastM?SHOW_W.main:i===firstM?SHOW_W.open:SHOW_W.match)+(x.title?SHOW_W.title:0)}
 /* Rewards after a show (§4.21). Every wrestler on the card gets their own roll. The main event, opener and title
    matches only nudge the chance up a little; the reward itself is the same size for everyone. TODO(ASK OWNER): numbers. */
 const SLOT_CH={main:.06,open:.03,title:.03};
-function slotB(x,i,firstM,lastM){return x.t!=='m'?0:(i===lastM?SLOT_CH.main:i===firstM?SLOT_CH.open:0)+(x.title?SLOT_CH.title:0)}
+function slotB(x,i,firstM,lastM){return x.t!=='m'||x.pre?0:(i===lastM?SLOT_CH.main:i===firstM?SLOT_CH.open:0)+(x.title?SLOT_CH.title:0)}
 function showShare(card,rating,major,firstM,lastM,c){if(c){if(c._sty==null)c._sty=coSty(c).join(',');repWeek(c);repTrend(c);repCheck(c)}const good=rating>=2.5,base=good?clamp(.25+(rating-2.5)*.2,0,.75):clamp(.15+(2.5-rating)*.2,0,.6),amt=(major?.9:.6)*(good?1:-1);
   const seen=new Set();card.forEach((x,i)=>{if(x.t==='a')return;const ids=x.t==='m'?x.sides.flat():x.who,sb=slotB(x,i,firstM,lastM);
     ids.forEach(id=>{const w=W(id);if(!w||seen.has(id))return;seen.add(id);if(Math.random()<base+(good?sb:0))gainPop(w,amt);styXP(w,c,x,rating,major,sb)})})}
@@ -1166,17 +1221,17 @@ const difC=(cid)=>{if(cid!==G.me)return DIFF.standard;const d=dif(),c=G.cos[cid]
 /* Staff and store (§4.34). Staff: one person per role, paid every show. Announcer and General Manager can also be a
    wrestler on your roster (like managers; no extra pay). Store: one-time big purchases with one clear effect each.
    Only your company uses these. TODO(ASK OWNER): all numbers. */
-const CREW={prod:{name:'Producers',one:'Producer',fx:'Each works on one segment a week and makes it better (up to +0.35 stars).',on:'s'},road:{name:'Road agents',one:'Road agent',fx:'Each works on one match a show and makes it better (up to +0.35 stars).',on:'m'}},CREW_MAX=3;
+const CREW={prod:{name:'Producers',one:'Producer',fx:'Each works on one segment a week and makes it better (up to +0.35 stars).',on:'s'},road:{name:'Road Agents',one:'Road Agent',fx:'Each works on one match a show and makes it better (up to +0.35 stars).',on:'m'}},CREW_MAX=3;
 const STAFF={ann:{name:'Announcer',fx:'Better segments and more viewers (up to +12%)',w:1},
   gm:{name:'General Manager',fx:'On-screen authority: more hype every show, and feud segments heat up more',w:1},doc:{name:'Doctor',fx:'Fewer injuries (up to -30%) and faster recovery (up to -35%)'},scout:{name:'Scout',fx:'Finds new talent for the Indies; a better scout finds better prospects'},trainer:{name:'Trainer',fx:'Works with up to 4 wrestlers you pick: their weakest skills slowly improve, and their coaching sticks more often'},
-  agent:{name:'Agent',fx:'Cheaper contracts (up to -10%) and fewer rival offers for your talent (up to -40%)'},tr:{name:'Talent relations',fx:'Happier locker room, and disputes cost less to settle (up to -40%)'}};
-const STORE={truck:{name:'Production truck',cost:250000,fx:'10% more viewers on every show.'},gym:{name:'Training facility',cost:300000,fx:'Training and coaching cost 30% less.'},
-  jet:{name:'Private jet',cost:600000,fx:'Your roster shakes off fatigue 50% faster.'},stage:{name:'Entrance stage and pyro',cost:400000,fx:'10% bigger crowds at Major Events.'},
-  museum:{name:'Company museum',cost:1000000,fx:'Your company popularity settles higher over time (around 60 instead of 50).'},
-  sbx:{name:'Sandbox key',cost:5000000,fx:'Turns this save into Sandbox mode for good: edit anything, any time, and you can never go bankrupt.'}}; // TODO(ASK OWNER): price
+  agent:{name:'Agent',fx:'Cheaper contracts (up to -10%) and fewer rival offers for your talent (up to -40%)'},tr:{name:'Talent Relations',fx:'Happier locker room, and disputes cost less to settle (up to -40%)'}};
+const STORE={truck:{name:'Production Truck',cost:250000,fx:'10% more viewers on every show.'},gym:{name:'Training Facility',cost:300000,fx:'Training and coaching cost 30% less.'},
+  jet:{name:'Private Jet',cost:600000,fx:'Your roster shakes off fatigue 50% faster.'},stage:{name:'Entrance Stage and Pyro',cost:400000,fx:'10% bigger crowds at Major Events.'},
+  museum:{name:'Company Museum',cost:1000000,fx:'Your company popularity settles higher over time (around 60 instead of 50).'},
+  sbx:{name:'Sandbox Key',cost:5000000,fx:'Turns this save into Sandbox mode for good: edit anything, any time, and you can never go bankrupt.'}}; // TODO(ASK OWNER): price
 /* Talent promotions: buy a push for one wrestler. The popularity comes in over a few weeks. One at a time per wrestler. TODO(ASK OWNER) */
-const PROMOS={talk:{name:'Talk show appearance',cost:8000,wk:1,per:1.5,mom:6,fx:'A quick bump and some momentum.'},ad:{name:'TV ad campaign',cost:15000,wk:4,per:.6,fx:'Steady popularity for 4 weeks.'},
-  merch:{name:'Merch push',cost:30000,wk:8,per:.5,fx:'Popularity for 8 weeks, and the shirts sell themselves.'},cover:{name:'Magazine cover',cost:50000,wk:2,per:2.5,mom:8,fx:'A big boost over 2 weeks.'}};
+const PROMOS={talk:{name:'Talk Show Appearance',cost:8000,wk:1,per:1.5,mom:6,fx:'A quick bump and some momentum.'},ad:{name:'TV Ad Campaign',cost:15000,wk:4,per:.6,fx:'Steady popularity for 4 weeks.'},
+  merch:{name:'Merch Push',cost:30000,wk:8,per:.5,fx:'Popularity for 8 weeks, and the shirts sell themselves.'},cover:{name:'Magazine Cover',cost:50000,wk:2,per:2.5,mom:8,fx:'A big boost over 2 weeks.'}};
 const promoCost=(k,w)=>r10(PROMOS[k].cost*(1+w.pop/100)*dif().cost);
 function promoWeek(){roster(G.me).forEach(w=>{const p=w.promo;if(!p)return;gainPop(w,p.per);if(p.k==='merch')me().cash+=r10(30*w.pop*dif().inc);if(--p.left<=0)delete w.promo})}
 function dPromo(k,w0){const m=me(),P=PROMOS[k],R=w0?[w0]:roster(G.me).filter(w=>w.status==='active'&&!w.promo).sort((a,b)=>b.pop-a.pop);
@@ -1200,20 +1255,21 @@ const stfMy=k=>G&&stf(G.cos[G.me],k);
 function runShow(cid,card,isPlayer){
   const c=co(cid),major=c.weeklyLeft===0,evName=major?c.majorName:wkName(c);c._r0={...repOf(c)};
   card=card.filter(x=>x.t==='a'||(x.t==='m'?x.sides.flat():x.who).every(id=>W(id).co===cid&&W(id).status==='active'));
-  const lastM=card.map(x=>x.t).lastIndexOf('m'),firstM=card.findIndex(x=>x.t==='m');
+  if(!major)card.forEach(x=>{delete x.pre});
+  const lastM=card.map(x=>x.t==='m'&&!x.pre).lastIndexOf(true),firstM=card.findIndex(x=>x.t==='m'&&!x.pre);
   const crowd=Math.round(crowdFor(c,card,major)*rnd(.92,1.08)*wev(c,'crowd')*slumpCrowd(c)*(c.sabT>G.week?.8:1));let gate=crowd*price(major,c);
   const e_on=featOn('earn'),items=[],finCount={},tpend=[];let hot=0,bonus=0,ads=0,nAds=0,nSeg=0,nM=0;
   card.forEach((x,i)=>{
-    if(x.t==='m'){nM++;if(x.bo&&!major&&flvTop(mHeat(x.sides)))x.bo=false;
+    if(x.t==='m'){if(!x.pre)nM++;if(x.bo&&!major&&flvTop(mHeat(x.sides)))x.bo=false;
       if(x.win==null&&!(x.fin&&NOWIN.includes(x.fin.t)))x.win=simWinner(x);
       {const gm=gimOf(x),ok=gimFins(gm);if(!x.fin)x.fin={t:gm.only?gm.only:isPlayer?'Pinfall':(Math.random()<.8?pick(CLEAN.filter(t=>ok.includes(t))):pick(['Count-out','Disqualification','Interference','Ref missed it'].filter(t=>ok.includes(t))))};if(!ok.includes(x.fin.t))x.fin={t:gm.only||'Pinfall'}}
       if(x.fin.t==='Ref missed it'&&!x.fin.c)x.fin.c=pick(CT);
       if(NOWIN.includes(x.fin.t))x.win=null;
       finCount[x.fin.t]=(finCount[x.fin.t]||0)+1;
-      x.maj=major;const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));if(e_on)x.sides.flat().forEach(id=>{const w=W(id);w.e_m=(w.e_m||0)+1;if(st>=4.25)w.e_great=(w.e_great||0)+1;if(major&&st>=4)w.e_big=(w.e_big||0)+1});const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===card.findIndex(y=>y.t==='m')&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
-      items.push({label:`${x.tour&&G.tour?G.tour.name+' '+tourLabel(G.tour.alive.length).toLowerCase()+': ':''}${x.title&&G.titles?.[x.title]?G.titles[x.title].name+': ':''}${gimOf(x).k?gimOf(x).name+': ':''}${vsTxt(x)}`,sub:x.win!=null?`${nm(x.sides[x.win])} wins (${CLEAN.includes(x.fin.t)&&gimOf(x).win?gimOf(x).win:x.fin.t})`:x.fin.t,st,w:slotW(x,i,firstM,lastM),lines:pbpMatch(x,st),bonus:pf.bonus,ups:pf.ups});
-    }else if(x.t==='s'){nSeg++;const g0=x.g;if(g0==='Custom')x.g=(SEGTONE[x.tone]||SEGTONE.hype).g;const st=Math.min(5,rateSeg(x)+crewB(c,x)+stf(c,'ann')*.1);const sr=rawR(st);hot+=hotVal(sr,x.who,major,x.who.length>1?feudInSeg(x.who)?.heat||0:0);applySeg(x,sr,c,major,st);const pf=perf(sr,crowd,x.who,'cha');bonus+=pf.bonus;const ln=pbpSeg(x,st,c);x.g=g0;if(e_on)x.who.forEach(id=>{if(st>=4)W(id).e_mic=(W(id).e_mic||0)+1});items.push({label:g0==='Custom'?`${x.txt||'Custom segment'}: ${nm(x.who)}`:`${x.g}: ${nm(x.who)}`,sub:'Segment',st,w:1,lines:ln,bonus:pf.bonus,ups:pf.ups})}
-    else{nAds++;const p=adPay(c);ads+=p;items.push({label:'Sponsor break',sub:`+${money(p)}`,st:null,w:0,lines:[]})}
+      x.maj=major;const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));if(e_on)x.sides.flat().forEach(id=>{const w=W(id);w.e_m=(w.e_m||0)+1;if(st>=4.25)w.e_great=(w.e_great||0)+1;if(major&&st>=4)w.e_big=(w.e_big||0)+1});const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===firstM&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
+      items.push({pre:x.pre,label:`${x.pre?'Pre-show: ':''}${x.tour&&G.tour?G.tour.name+' '+tourLabel(G.tour.alive.length).toLowerCase()+': ':''}${x.title&&G.titles?.[x.title]?G.titles[x.title].name+': ':''}${gimOf(x).k?gimOf(x).name+': ':''}${vsTxt(x)}`,sub:x.win!=null?`${nm(x.sides[x.win])} wins (${CLEAN.includes(x.fin.t)&&gimOf(x).win?gimOf(x).win:x.fin.t})`:x.fin.t,st,w:slotW(x,i,firstM,lastM),lines:pbpMatch(x,st),bonus:pf.bonus,ups:pf.ups});
+    }else if(x.t==='s'){if(!x.pre)nSeg++;const g0=x.g;if(g0==='Custom')x.g=(SEGTONE[x.tone]||SEGTONE.hype).g;const st=Math.min(5,rateSeg(x)+crewB(c,x)+stf(c,'ann')*.1);const sr=rawR(st);hot+=hotVal(sr,x.who,major,x.who.length>1?feudInSeg(x.who)?.heat||0:0);applySeg(x,sr,c,major,st);const pf=perf(sr,crowd,x.who,'cha');bonus+=pf.bonus;const ln=pbpSeg(x,st,c);x.g=g0;if(e_on)x.who.forEach(id=>{if(st>=4)W(id).e_mic=(W(id).e_mic||0)+1});items.push({pre:x.pre,label:(x.pre?'Pre-show: ':'')+(g0==='Custom'?`${x.txt||'Custom segment'}: ${nm(x.who)}`:`${x.g}: ${nm(x.who)}`),sub:'Segment',st,w:x.pre?SHOW_W.pre:1,lines:ln,bonus:pf.bonus,ups:pf.ups})}
+    else{if(!x.pre)nAds++;const p=adPay(c);ads+=p;items.push({pre:x.pre,label:(x.pre?'Pre-show: ':'')+'Sponsor break',sub:`+${money(p)}`,st:null,w:0,lines:[]})}
   });
   const rated=items.filter(x=>x.st!=null);
   let rating=rated.length?rated.reduce((t,x)=>t+x.st*x.w,0)/rated.reduce((t,x)=>t+x.w,0):.25;
@@ -1503,10 +1559,10 @@ function mutinyWeek(){if(!featOn('mutiny'))return;for(const c of Object.values(G
     c.mutW=0;c.mutCD=G.week+MUT_CD;c.pop=clamp(c.pop-3,1,100);if(c.id===G.me)G.mutiny={co:n.id,ids:grp.map(w=>w.id),d:G.date};
     news(`Walkout! ${lead.name} led ${grp.length} unhappy wrestlers out of ${c.short} to start ${n.name} (${n.short}): ${grp.map(w=>w.name).join(', ')}.`,c.id===G.me?'me':'co')}}}
 /* GM-mode features (§4.66, owner 26 Nov). Each can be switched off in Settings. TODO(ASK OWNER): every number here. */
-const FEATS={upstart:'New companies start up and raid rosters',mutiny:'Unhappy rosters can walk out',pcards:'Power cards in the Store',cls:'Wrestler classes and matchups',flv:'Feud levels (top level ends only at a Major Event)',prod:'Show production choices',faces:'Faces of the company',prom:'Promises to wrestlers',season:'Seasons with a yearly winner',arcs:'Multi-month storylines',earn:'Traits earned through play'};
+const FEATS={upstart:'New companies start up and raid rosters',mutiny:'Unhappy rosters can walk out',pcards:'Power cards in the Store',cls:'Wrestler classes and matchups',flv:'Feud levels (top level ends only at a Major Event)',prod:'Show production choices',faces:'Faces of the company',prom:'Promises to wrestlers',season:'Seasons with a yearly winner',arcs:'Multi-month storylines',earn:'Traits earned through play',defect:'Champions can jump ship with the belt (very rare)'};
 const featOn=k=>!(G&&G.opts&&G.opts.off&&G.opts.off[k]);
 /* Power cards: one-use boosts bought in the Store */
-const PCARDS={spot:{name:'Spotlight',cost:20000,fx:'One match on your next show rates about half a star higher. Pick the match on the Book screen.'},heal:{name:'Miracle recovery',cost:40000,fx:'One injured wrestler is back next week.'},hype:{name:'Hype machine',cost:25000,fx:'+15 hype for your next Major Event.'},party:{name:'Locker room party',cost:30000,fx:'Everyone on your roster gets +15 happiness.'},rest:{name:'Fresh legs',cost:20000,fx:'Clears fatigue for your whole roster.'},heat:{name:'Heat wave',cost:15000,fx:'+15 heat for one of your feuds.'}};
+const PCARDS={spot:{name:'Spotlight',cost:20000,fx:'One match on your next show rates about half a star higher. Pick the match on the Book screen.'},heal:{name:'Miracle Recovery',cost:40000,fx:'One injured wrestler is back next week.'},hype:{name:'Hype Machine',cost:25000,fx:'+15 hype for your next Major Event.'},party:{name:'Locker Room Party',cost:30000,fx:'Everyone on your roster gets +15 happiness.'},rest:{name:'Fresh Legs',cost:20000,fx:'Clears fatigue for your whole roster.'},heat:{name:'Heat Wave',cost:15000,fx:'+15 heat for one of your feuds.'}};
 const pcN=k=>(me().pcards||{})[k]||0;
 function pcBox(){if(!featOn('pcards'))return '';const m=me();return `<div class="panel" style="margin-top:16px"><h3>Power cards</h3><p class="sub" style="margin-top:0">One-use boosts. Buy as many as you like and use them when you need them.</p><div class="ccards" style="margin-top:10px">${Object.entries(PCARDS).map(([k,v])=>{const c=r10(v.cost*dif().cost),n=pcN(k);return `<div class="fcard" style="--hc:${n?'var(--blue)':'var(--line)'}"><b>⚡ ${v.name} <span class="sub">· you have ${n}</span></b><span class="sub">${v.fx}</span><div class="btns"><button class="sm go" data-pcb="${k}" ${m.cash<c?'disabled':''}>Buy ${money(c)}</button>${k!=='spot'?`<button class="sm" data-pcu="${k}" ${n?'':'disabled'}>Use</button>`:''}</div></div>`}).join('')}</div></div>`}
 function pcUse(k,arg){const m=me();if(!pcN(k))return;const take=()=>{m.pcards[k]--;save();render()};
@@ -1639,14 +1695,14 @@ async function slotLoad(n){await slotFlush();const g=await idbGet('slot'+n);if(!
 async function slotDelete(n){await idbDel('slot'+n).catch(()=>{});const M=slotMeta();delete M[n];store.set('ro_slots',M);if(G&&G.slot===n){G=null;localStorage.removeItem('ro_save')}}
 
 /* ---------- rendering ---------- */
-const TABS=[['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['superstars','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Edit Game'],['editor','Scenario Editor'],['new','New Game'],['home','Home']];
+const TABS=[['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['superstars','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Edit Game'],['editor','Scenario Editor'],['new','New Game'],['home','Home'],['draft','Draft']];
 const HOME=['home','new','editor'];
 let prevTab=null,navOpen=null,tselKeep=false;
 const NAVG=()=>[
   ['Office',[['office','Office','Your desk']]],
   ['Inbox',[['dash','Inbox','Messages and decisions']]],
   ['Book',[['book','Book the Show','Build and run this week\'s card']]],
-  ['Roster',[['roster/mine','My Roster','Contracts, filters and champions'],['superstars','Wrestler Profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag Teams','Pairs and trios who team up'],['factions','Factions','Bigger groups of wrestlers and teams'],['roster/fa','Indies','Pay someone for one show'],['roster/other','Rival Rosters','Who works where']]],
+  ['Roster',[['roster/mine','My Roster','Contracts, filters and champions'],['superstars','Wrestler Profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag Teams','Pairs and trios who team up'],['factions','Factions','Bigger groups of wrestlers and teams'],['roster/fa','Indies','Pay someone for one show']]],
   ['Business',[['company','Company Overview','Type, money, roster, titles and schedule'],['roster/sign','Sign Talent','Free agents to sign full time'],['titles','Championships','Every title, champion and prestige'],['events','Events','Upcoming and past Major Events'],['business','Staff and Store','Staff, wrestler promotion, upgrades'],['calendar','Calendar and News','Show names, schedule, brands, news'],['war','Ratings War','Who won each week'],['companies','Companies','Rival owners and their stats']]],
   ['History',[['history/ev','Events','Every Major Event, card by card'],['history/rk','Rankings','Top 25 across the business'],['history/tt','Titles','Lineages, reigns and records'],['history/yr','Year by Year','Every company\'s shows by date'],['history/shows','All Shows'],['history/cos','Companies and Titles'],['history/wl','Win-Loss'],['history/time','Timeline'],['history/rec','Records'],['history/st','Stats','Matches, pairings, finishes, gimmicks'],['history/hof','Hall of Fame','Everyone who reached 2,300'],['history/aw','Awards']]],
   ['Menu',[['settings','Settings','Difficulty, injuries, Hall of Fame'],['edit',G.opts.sandbox?'Edit Game (Sandbox)':'Edit Game','Change this game\'s copy'],['home','Main Menu','Save is kept'],['new','New Game'],['editor','Scenario Editor']]]];
@@ -1656,7 +1712,7 @@ function navHtml(){
   const subOn=k=>{const[t,s]=k.split('/');if(t!==tab)return false;if(!s)return true;return t==='roster'?(s==='mine'?['mine'].includes(rview):rview===s):t==='history'?hview===s:true};
   return NAVG().map(([g,items])=>{const on=items.some(i=>i[0].split('/')[0]===tab&&(tab!=='roster'||subOn(i[0])));
     if(items.length===1)return `<div class="ng"><a href="#${items[0][0]}" class="nb ${on?'on':''}">${g}</a></div>`;
-    return `<div class="ng${navOpen===g?' open':''}"><button class="nb ${on?'on':''}" data-ng="${g}" aria-expanded="${navOpen===g}">${g}<span class="car">▾</span></button><div class="dd">${items.map(i=>`<a href="#${i[0]}" class="${subOn(i[0])?'on':''}">${i[1]}${i[2]?`<small>${i[2]}</small>`:''}</a>`).join('')}</div></div>`}).join('');
+    return `<div class="ng${navOpen===g?' open':''}"><button class="nb ${on?'on':''}" data-ng="${g}" aria-expanded="${navOpen===g}">${g}<span class="car">▾</span></button><div class="dd">${items.map(i=>`<a href="#${i[0]}" class="${subOn(i[0])?'on':''}">${i[1]}</a>`).join('')}</div></div>`}).join('');
 }
 document.addEventListener('click',e=>{if(e.target.closest('#nav a[href="#teams"]'))tsel=null;const b=e.target.closest('[data-ng]');if(b){navOpen=navOpen===b.dataset.ng?null:b.dataset.ng;$('#nav').innerHTML=navHtml();return}
   if(navOpen&&!e.target.closest('.dd')){navOpen=null;$('#nav').innerHTML=navHtml()}});
@@ -1669,10 +1725,10 @@ function tabSels(){document.querySelectorAll('.tabrow').forEach(row=>{const nx=r
 new MutationObserver(()=>{if(document.querySelector('.tabrow')&&[...document.querySelectorAll('.tabrow')].some(r=>!(r.nextElementSibling&&r.nextElementSibling.classList.contains('tabsel'))))tabSels()}).observe(document.documentElement,{childList:true,subtree:true});
 function render(){
   const h=location.hash.slice(1).split('/')[0];const nt=TABS.some(t=>t[0]===h)?h:(G?'office':'home');if(nt!==tab&&(nt==='teams'||nt==='factions')&&!tselKeep)tsel=null;tselKeep=false;if(nt!==tab)prevTab=tab;tab=nt;
-  if(!G&&!HOME.includes(tab))tab='home';navOpen=null;
+  if(!G&&!HOME.includes(tab))tab='home';if(G&&G.draft&&!HOME.includes(tab)&&tab!=='draft'){tab='draft';history.replaceState(null,'','#draft')}navOpen=null;
   $('#nav').innerHTML=navHtml();setTimeout(tabSels,0);
   renderHdr();
-  ({dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
+  ({draft:vDraft,dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
   if(G&&['book','dash'].includes(tab)){const cb=campBox();if(cb)$('#app').insertAdjacentHTML('afterbegin',cb)}
 }
 function renderHdr(){
@@ -1710,6 +1766,19 @@ const wMk=w=>`${isHot(w)?'<span class="mk hot" title="Hot: high momentum" aria-l
 function bkReshape(x,k){const flat=x.sides.flat();x.mt=k;delete x.sz;if(k==='custom')x.sz=x.sides.map(sd=>Math.max(1,sd.length)).slice(0,MT_MAXSIDE);if(x.sz&&x.sz.length<2)x.sz=[1,1];
   if(k==='multi')x.sides=flat.map(id=>[id]);else{const z=mSz(x);let j=0;x.sides=z.map(n=>{const sd=flat.slice(j,j+n);j+=n;return sd})}
   x.win=null;x.fin=null;if(!GIMS.find(g=>g.k===(x.gm||'')&&gimFits(g,Math.max(k==='multi'?5:x.sides.length,2))))x.gm=undefined}
+/* Simple match setup (owner request, 27 Nov): a match is Singles unless Tag is switched on. Singles takes any number of wrestlers:
+   2 is one on one, more is a free-for-all (7+ is a battle royal). Tag makes teams of 2 to 4, with 2 or more teams. */
+const S_MT={2:'single',3:'triple',4:'four',5:'five',6:'six'};
+const mMode=x=>{const z=mSz(x);return !z||z.every(n=>n===1)?'s':'t'};
+function bkShape(x,z){const flat=x.sides.flat();x.win=null;x.fin=null;delete x.sz;
+  if(!z){x.mt='multi';x.sides=flat.map(id=>[id]);}
+  else{const key=Object.keys(MTYPES).find(k=>k!=='custom'&&MTYPES[k].s&&MTYPES[k].s.join()===z.join());if(key)x.mt=key;else{x.mt='custom';x.sz=z.slice()}
+    let j=0;x.sides=z.map(n=>{const sd=flat.slice(j,j+n);j+=n;return sd});
+    if(j<flat.length&&z.every(n=>n===1)){}}
+  const n=x.mt==='multi'?Math.max(5,x.sides.length):x.sides.length;if(!GIMS.find(g=>g.k===(x.gm||'')&&gimFits(g,Math.max(n,2))))x.gm=undefined}
+const sZ=n=>n>6?null:Array(Math.max(2,n)).fill(1);
+function bkSingles(x,n){bkShape(x,sZ(n??x.sides.flat().length))}
+function bkTag(x,per,teams){bkShape(x,Array(teams).fill(per))}
 function bkFix(x){if(x.t!=='m')return;if(x.title&&mFull(x)&&!titleOpts(G.me,x,G.card).some(t=>t.id===x.title))x.title=null;if(!mFull(x))x.title=x.title||null}
 function bkPut(id){const card=G.card,w=W(id);BK.w=id;let s=BK.sel;if(s&&!card[s.i])s=null;
   if(!s){const i=card.findIndex(x=>x.t==='m'&&!x.tour&&mNeed(x)>0);if(i>=0)s={i,s:mOpenSide(card[i])};else{card.push({t:'m',mt:'single',sides:[[],[]],win:null,fin:null});s={i:card.length-1,s:0}}}
@@ -1718,7 +1787,7 @@ function bkPut(id){const card=G.card,w=W(id);BK.w=id;let s=BK.sel;if(s&&!card[s.
   if(x.t!=='m')return;
   if(!canWork(w)){say(w.mgr?`${w.name} is a manager. Managers can be in segments, not matches.`:`${w.name} is out of action and can't wrestle this week.`);rerender();return}
   if(used().has(id)){rerender();return}
-  if(mtOf(x)==='multi'){x.sides=x.sides.filter(sd=>sd.length);x.sides.push([id]);BK.sel=s}
+  if(mMode(x)==='s'&&(mtOf(x)==='multi'||(s.s>=x.sides.length&&mFull(x)))){if(x.sides.flat().length>=MT_MAXALL){say('That match is full.');rerender();return}const fl=x.sides.flat();x.sides=[...fl.map(q=>[q]),[id]];bkSingles(x,fl.length+1);BK.sel=null}
   else{const z=mSz(x);let k=s.s;if(k<0||k>=z.length||x.sides[k].length>=z[k])k=mOpenSide(x);
     if(k<0){BK.sel=null;rerender();say('That match is full. Remove someone first, or tap an empty spot.');return}
     x.sides[k].push(id);const n=x.sides[k].length<z[k]?k:mOpenSide(x);BK.sel=n>=0?{i:s.i,s:n}:null}
@@ -1740,9 +1809,10 @@ function bkPanel(){const riv=bkRivals(BK.w),s=BK.sel,x=s&&G.card[s.i];
 function vBook(){
   if(G.over){$('#app').innerHTML=`<div class="hero"><h2>Game over</h2><p>${esc(me().name)} ran out of money. Start a new game to try again.</p></div><a href="#new"><button class="go">New game</button></a>`;return}
   const m=me(),major=m.weeklyLeft===0,card=G.card;
-  if(BK.sel){const x=card[BK.sel.i];if(!x||x.t==='a'||(x.t==='m'&&mFull(x)&&mtOf(x)!=='multi'))BK.sel=null}
+  if(BK.sel){const x=card[BK.sel.i];if(!x||x.t==='a'||(x.t==='m'&&mFull(x)&&mtOf(x)!=='multi'&&!(mMode(x)==='s'&&BK.sel.s>=x.sides.length)))BK.sel=null}
   if(BK.w&&!G.ws[BK.w])BK.w=null;
-  const okc=card.filter(mFull),lastM=card.map((x,i)=>x.t==='m'?i:-1).filter(i=>i>=0).pop();
+  if(!major)card.forEach(x=>{delete x.pre});else card.sort((a,b)=>(!!b.pre)-(!!a.pre));
+  const okc=card.filter(mFull),lastM=card.map((x,i)=>x.t==='m'&&!x.pre?i:-1).filter(i=>i>=0).pop();
   const DF=dif(),crowd=crowdFor(m,okc,major),gate=crowd*price(major,m)*DF.inc,ads=card.filter(x=>x.t==='a').length*adPay(m)*DF.inc,wages=wageBill(G.me)*DF.cost,gcost=cardCost(okc)*DF.cost,cost=(showCost(m,major)+prodExtra(m,major))*DF.cost,tvx=viewersFor(m,3,major)*VIEW_PAY*DF.inc,bx=major?buysFor(m,3)*BUY_PRICE*DF.inc:0,pr=gate+ads+tvx+bx-wages-cost-gcost;
   const wevB=G.wev&&G.wev.wk===G.week?`<div class="msg" style="margin-bottom:12px">🌩 This week: ${esc(WEVS[G.wev.k].t)}</div>`:'';
   const riv=bkRivals(BK.w);
@@ -1752,10 +1822,11 @@ function vBook(){
   const row=(x,i)=>{
     if(x.t==='m'){const k=mtOf(x),z=mSz(x),full=mFull(x),fh=full?mHeat(x.sides):0,tos=full?titleOpts(G.me,x,card):[],g=gimOf(x);
       const tagT=!full?`<span class="tag ns">Needs ${mNeed(x)} more</span>`:x.fin?`<span class="tag${NOWIN.includes(x.fin.t)?' ns':''}">${esc(x.fin.t)}${x.fin.c?': '+esc(x.fin.c):''}</span>`:x.win!=null?'<span class="tag">Clean win</span>':'<span class="tag sim">Sim decides</span>';
-      const sides=k==='multi'?`${x.sides.map((sd,si)=>sd.length?`<span class="side${x.win===si?' win':''}">${chip(sd[0],i,si,full)}</span>`:'').join('')}${empty(i,x.sides.length,mNeed(x)||1)}`
-        :x.sides.map((sd,si)=>`<span class="side${x.win===si?' win':''}">${sd.map(id=>chip(id,i,si,full)).join('<i style="align-self:center">&amp;</i>')}${sd.length<z[si]?empty(i,si,z[si]-sd.length):''}${k==='custom'?`<span class="cpm"><button class="sm" data-bcp="${i}:${si}:-1" aria-label="One fewer on side ${si+1}" ${z[si]<=1?'disabled':''}>−</button><button class="sm" data-bcp="${i}:${si}:1" aria-label="One more on side ${si+1}" ${z[si]>=MT_MAXPER?'disabled':''}>+</button></span>`:''}</span>`).join('<i>vs</i>');
-      return `<div class="bm${i===lastM?' main':''}${BK.sel&&BK.sel.i===i?' cur':''}${full?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind m">${x.tour?'Bracket':i===lastM?'Main':'Match'}</span>
-        ${x.tour?`<span class="sub">${esc(MTYPES[k]?.l||'Singles')}</span>`:`<select id="bmt${i}" aria-label="Match type">${[...new Set(Object.values(MTYPES).map(v=>v.g))].map(gr=>`<optgroup label="${gr}">${Object.entries(MTYPES).filter(([q,v])=>v.g===gr).map(([q,v])=>`<option value="${q}" ${q===k?'selected':''}>${v.l}${v.s&&q!=='custom'&&(gr==='Teams'||gr==='Handicap and uneven')?` (${v.s.join('v')})`:''}</option>`).join('')}</optgroup>`).join('')}</select>`}
+      const ffa=!x.tour&&mMode(x)==='s'&&full&&x.sides.length<MT_MAXALL?`<i>vs</i>${empty(i,x.sides.length,1)}`:'';
+      const sides=k==='multi'?`${x.sides.map((sd,si)=>sd.length?`<span class="side${x.win===si?' win':''}">${chip(sd[0],i,si,full)}</span>`:'').join('<i>vs</i>')}${mNeed(x)?empty(i,x.sides.length,mNeed(x)):''}${ffa}`
+        :x.sides.map((sd,si)=>`<span class="side${x.win===si?' win':''}">${sd.map(id=>chip(id,i,si,full)).join('<i style="align-self:center">&amp;</i>')}${sd.length<z[si]?empty(i,si,z[si]-sd.length):''}${false?`<span class="cpm"><button class="sm" data-bcp="${i}:${si}:-1" aria-label="One fewer on side ${si+1}" ${z[si]<=1?'disabled':''}>−</button><button class="sm" data-bcp="${i}:${si}:1" aria-label="One more on side ${si+1}" ${z[si]>=MT_MAXPER?'disabled':''}>+</button></span>`:''}</span>`).join('<i>vs</i>')+ffa;
+      return `<div class="bm${i===lastM?' main':''}${BK.sel&&BK.sel.i===i?' cur':''}${full?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind m">${x.tour?'Bracket':x.pre?'Pre-show':i===lastM?'Main':'Match'}</span>
+        ${x.tour?`<span class="sub">${esc(MTYPES[k]?.l||'Singles')}</span>`:(()=>{const md=mMode(x),per=md==='t'?Math.max(...z):2;return `<span class="seg2 bmode" role="group" aria-label="Match style"><button data-bmode="${i}:s" class="${md==='s'?'on':''}">Singles</button><button data-bmode="${i}:t" class="${md==='t'?'on':''}">Tag</button></span>${md==='t'?`<select id="btz${i}" aria-label="Wrestlers per team">${[2,3,4].map(n=>`<option value="${n}" ${per===n?'selected':''}>${n} per team</option>`).join('')}</select><span class="cpm"><button class="sm" data-btk="${i}:-1" aria-label="One fewer team" ${x.sides.length<=2?'disabled':''}>− Team</button><button class="sm" data-btk="${i}:1" aria-label="One more team" ${x.sides.length>=6?'disabled':''}>+ Team</button></span>`:`<span class="sub">${x.sides.filter(sd=>sd.length).length>2?'Free-for-all':'One on one'}</span>`}`})()}
         ${gimSel(x.gm||'',k==='multi'?Math.max(5,x.sides.length):x.sides.length,'bgm'+i)}
         ${tos.length?`<select id="btt${i}" aria-label="Title" class="${x.title?'gold':''}"><option value="">Non-title</option>${tos.map(t=>`<option value="${t.id}" ${x.title===t.id?'selected':''}>🏆 ${esc(t.name)}</option>`).join('')}</select>`:''}
         ${fh?`<span class="sub" style="color:${heatCol(fh)};font-weight:700" title="Feud heat">🔥 ${Math.round(fh)}${featOn('flv')?` · Lv ${flvOf(fh)}`:''}</span>`:''}${ctl(x,i)}</div>
@@ -1770,7 +1841,7 @@ function vBook(){
   const r=roster(G.me),fc=feudCards();
   $('#app').innerHTML=`<div class="head"><div><h2>${major?esc(m.majorName)+' (Major Event)':esc(wkName(m))+', '+fmtDate(G.date)}</h2><p>Tap wrestlers in the roster to fill the card. Tap a name on the card to pick the winner. The last match is the main event.</p></div>
   ${wevB}<div class="btns"><button id="addm" ${r.length<2?'disabled':''}>+ Match</button><button id="adds" ${r.length?'':'disabled'}>+ Segment</button><button id="adda">+ Ad</button><button id="auto" ${r.length<2?'disabled':''}>Auto-fill</button>${G.tour?(G.card.some(x=>x.tour)?'':`<button id="tround" class="bl">Add ${esc(G.tour.name)} ${tourLabel(G.tour.alive.length).toLowerCase()}</button>`):`<button id="tnew">Tournament</button>`}<button id="skip" title="No show this week">Skip week</button><button class="go" id="run">Run the show</button></div></div>
-  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard"><div class="nbtitle">${major?esc(m.majorName):esc(wkName(m))} <small>${fmtDate(G.date)}</small></div>${card.length?card.map(row).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
+  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard"><div class="nbtitle">${major?esc(m.majorName):esc(wkName(m))} <small>${fmtDate(G.date)}</small></div>${major?`<div class="bkpre"><div class="bkpreh"><b>Pre-show</b><span class="sub">Before the main card. Counts a little toward the rating.</span><span class="btns"><button class="sm" id="addpm">+ Match</button><button class="sm" id="addps">+ Segment</button><button class="sm" id="addpa">+ Ad</button></span></div>${card.map((x,i)=>x.pre?row(x,i):'').join('')}</div><div class="bkpreh"><b>Main card</b></div>`:''}${card.some(x=>!x.pre)?card.map((x,i)=>x.pre?'':row(x,i)).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
   ${fc?`<details class="panel bkfe" ${G.bkFeudsShut?'':'open'}><summary><b>Your feuds</b> <span class="sub">tap one to book it</span></summary><p class="sub" style="margin:4px 0 0">Staleness counts their matches in the last 6 weeks; too many cools the feud.</p>${fc}</details>`:''}
   ${featOn('prod')?`<div class="panel bkprod"><b>Production</b>${Object.entries(PROD).map(([g,o])=>`<select id="bpr${g}" aria-label="Production">${Object.entries(o).map(([k,v])=>`<option value="${k}" ${prodOf(m)[g]===k?'selected':''}>${v.l}${v.cost&&g!=='v'?` · ${money(v.cost*(major?2:1))}`:''}</option>`).join('')}</select>`).join('')}<span class="sub">Bigger venues and ads draw more fans; pyro adds to the show and to hype.</span></div>`:''}
   <details class="panel bkout"><summary><b>Show outlook</b> <span class="sub">expected profit</span> <b class="${pr<0?'neg':'pos'}">${money(pr)}</b></summary>${(()=>{const L=G.war||[],x=L[L.length-1];if(!x)return '';const mine=x.rows.find(r=>r.c===G.me);return `<div class="kv"><span>Last week's ratings war</span><b>${mine?`${ord(mine.rk)} of ${x.rows.length}`:'Sat out'}</b></div>`})()}
@@ -1787,8 +1858,9 @@ function vBook(){
 }
 const bkRedrawList=()=>{const l=$('#bklist');if(l)l.innerHTML=bkList()};
 document.addEventListener('input',e=>{if(tab!=='book'||!G||e.target.id!=='bkq'||!$('#app').contains(e.target))return;BKF.q=e.target.value;bkRedrawList()});
-document.addEventListener('change',e=>{if(tab!=='book'||!G)return;const t=e.target;if(!$('#app').contains(t)||!t.id)return;if(/^bpr[vpa]$/.test(t.id)){prodOf(me())[t.id[3]]=t.value;rerender();return}const mm=t.id.match(/^(bmt|bgm|btt|bsg|boc|bstn|bstx)(\d+)$/);if(!mm)return;const x=G.card[+mm[2]];if(!x)return;
+document.addEventListener('change',e=>{if(tab!=='book'||!G)return;const t=e.target;if(!$('#app').contains(t)||!t.id)return;if(/^bpr[vpa]$/.test(t.id)){prodOf(me())[t.id[3]]=t.value;rerender();return}const mm=t.id.match(/^(bmt|btz|bgm|btt|bsg|boc|bstn|bstx)(\d+)$/);if(!mm)return;const x=G.card[+mm[2]];if(!x)return;
   if(mm[1]==='bmt'){bkReshape(x,t.value);const k=mOpenSide(x);BK.sel=mFull(x)&&mtOf(x)!=='multi'?null:{i:+mm[2],s:mtOf(x)==='multi'?x.sides.length:Math.max(0,k)};bkFix(x)}
+  else if(mm[1]==='btz'){bkTag(x,+t.value,mSz(x).length);const k=mOpenSide(x);BK.sel=k>=0?{i:+mm[2],s:k}:null;bkFix(x)}
   else if(mm[1]==='bgm')x.gm=t.value||undefined;
   else if(mm[1]==='btt')x.title=t.value||null;
   else if(mm[1]==='bsg'){x.g=t.value;x.oc=''}
@@ -1800,16 +1872,18 @@ document.addEventListener('click',e=>{
   if(tab!=='book'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t)||t.disabled)return;const d=t.dataset,card=G.card;
   if(d.bw){bkPut(d.bw)}
   else if(d.bsl){const[i,s]=d.bsl.split(':').map(Number);BK.sel=BK.sel&&BK.sel.i===i&&BK.sel.s===s?null:{i,s};rerender()}
+  else if(d.bmode){const[i,md]=d.bmode.split(':');const x=card[+i];if(!x||mMode(x)===md)return;if(md==='s')bkSingles(x);else bkTag(x,2,Math.max(2,Math.ceil(x.sides.flat().length/2)));const k=mOpenSide(x);BK.sel=k>=0?{i:+i,s:k}:null;bkFix(x);rerender()}
+  else if(d.btk){const[i,dv]=d.btk.split(':').map(Number);const x=card[i],z=mSz(x),per=Math.max(...z);bkTag(x,per,clamp(z.length+dv,2,6));const k=mOpenSide(x);BK.sel=k>=0?{i,s:k}:null;bkFix(x);rerender()}
   else if(d.bsel){BK.w=BK.w===d.bsel?null:d.bsel;rerender()}
   else if(d.bkdone){BK.sel=null;rerender()}
   else if(d.bkf){BKF.f=d.bkf;rerender()}
-  else if(d.rmw){const[i,s,id]=d.rmw.split(':');const x=card[+i];if(x.t==='s'){x.who=x.who.filter(y=>y!==id);x.oc='';BK.sel={i:+i,s:0}}else{if(mtOf(x)==='multi'){x.sides=x.sides.filter(sd=>!sd.includes(id));BK.sel={i:+i,s:x.sides.length}}else{x.sides[+s]=x.sides[+s].filter(y=>y!==id);BK.sel={i:+i,s:+s}}x.win=null;x.fin=null;bkFix(x)}rerender()}
+  else if(d.rmw){const[i,s,id]=d.rmw.split(':');const x=card[+i];if(x.t==='s'){x.who=x.who.filter(y=>y!==id);x.oc='';BK.sel={i:+i,s:0}}else{if(mMode(x)==='s'&&x.sides.length>2){x.sides=x.sides.filter(sd=>!sd.includes(id));bkSingles(x,Math.max(2,x.sides.length));BK.sel=null}else{x.sides[+s]=x.sides[+s].filter(y=>y!==id);BK.sel={i:+i,s:+s}}x.win=null;x.fin=null;bkFix(x)}rerender()}
   else if(d.btm){const s=BK.sel,x=s&&card[s.i],tm=grp(d.btm);if(!x||!tm)return;x.sides[s.s]=tm.m.slice(0,mSz(x)[s.s]);const n=mOpenSide(x);BK.sel=n>=0?{i:s.i,s:n}:null;x.win=null;x.fin=null;bkFix(x);rerender()}
   else if(d.bcp){const[i,si,dv]=d.bcp.split(':').map(Number);const x=card[i],z=mSz(x);z[si]=clamp(z[si]+dv,1,MT_MAXPER);x.sides[si]=x.sides[si].slice(0,z[si]);x.win=null;x.fin=null;BK.sel=x.sides[si].length<z[si]?{i,s:si}:BK.sel;bkFix(x);rerender()}
   else if(d.bcs){const[i,dv]=d.bcs.split(':').map(Number);const x=card[i],z=mSz(x);if(dv>0&&z.length<MT_MAXSIDE){z.push(1);x.sides.push([]);BK.sel={i,s:z.length-1}}else if(dv<0&&z.length>2){z.pop();x.sides.pop()}x.win=null;x.fin=null;bkFix(x);rerender()}
   else if(d.win){const[i,s]=d.win.split(':').map(Number);const x=card[i];BK.w=x.sides[s][0];x.win=x.win===s&&!x.fin?null:s;x.fin=null;rerender()}
-  else if(d.up){const i=+d.up;[card[i-1],card[i]]=[card[i],card[i-1]];BK.sel=null;rerender()}
-  else if(d.dn){const i=+d.dn;[card[i+1],card[i]]=[card[i],card[i+1]];BK.sel=null;rerender()}
+  else if(d.up){const i=+d.up;if(!!card[i-1].pre!==!!card[i].pre)return;[card[i-1],card[i]]=[card[i],card[i-1]];BK.sel=null;rerender()}
+  else if(d.dn){const i=+d.dn;if(!!card[i+1].pre!==!!card[i].pre)return;[card[i+1],card[i]]=[card[i],card[i+1]];BK.sel=null;rerender()}
   else if(d.rm){card.splice(+d.rm,1);BK.sel=null;rerender()}
   else if(d.fin)dFinish(+d.fin);
   else if(d.fm){const f=FE().find(x=>x.id===d.fm),x=feudMatch(f),u=used();if(x.sides.flat().some(id=>u.has(id))){say('One of them is already in a match on this card.');return}card.push(x);BK.w=x.sides[0][0];rerender()}
@@ -1821,9 +1895,11 @@ document.addEventListener('click',e=>{
   else if(t.id==='addm'){card.push({t:'m',mt:'single',sides:[[],[]],win:null,fin:null});BK.sel={i:card.length-1,s:0};rerender()}
   else if(t.id==='adds'){card.push({t:'s',g:'Promo',who:[],oc:''});BK.sel={i:card.length-1,s:0};rerender()}
   else if(t.id==='adda'){if(card.filter(x=>x.t==='a').length>=3)return;card.push({t:'a'});rerender()}
+  else if(t.id==='addpm'||t.id==='addps'||t.id==='addpa'){const k=card.filter(x=>x.pre).length,it=t.id==='addpm'?{t:'m',mt:'single',sides:[[],[]],win:null,fin:null,pre:1}:t.id==='addps'?{t:'s',g:'Promo',who:[],oc:'',pre:1}:{t:'a',pre:1};
+    if(it.t==='a'&&card.filter(x=>x.t==='a').length>=3)return;card.splice(k,0,it);BK.sel=it.t==='a'?null:{i:k,s:0};rerender()}
   else if(t.id==='tnew')dTour();
   else if(t.id==='tround'){const ok=tourRound().filter(p=>p.every(id=>canWork(W(id))));if(!ok.length){say('Someone in this round is unavailable. Try next week.');return}ok.forEach(p=>G.card.push({t:'m',sides:[[p[0]],[p[1]]],win:null,fin:null,tour:1}));rerender()}
-  else if(t.id==='auto'){G.card=aiCard(me());BK.sel=null;rerender()}
+  else if(t.id==='auto'){G.card=[...card.filter(x=>x.pre),...aiCard(me())];BK.sel=null;rerender()}
   else if(t.id==='run'){const bad=card.findIndex(x=>!mFull(x));if(bad>=0){BK.sel=null;say(`${card[bad].t==='s'?'Segment':'Match'} ${bad+1} still needs ${card[bad].t==='s'?'someone in it':'wrestlers'}. Fill it or take it off the card.`);return}BK.sel=null;runPlayer()}
   else if(t.id==='skip'){const m=me();m.pop=clamp(m.pop-1,1,100);m.cash-=wageBill(G.me);news('You skipped this week. Wages were still paid and popularity slipped.','me');BK.sel=null;advance();render()}
 });
@@ -2175,7 +2251,7 @@ function nextShows(c,n){const out=[];for(let i=0;i<n;i++){const d=addDays(G.date
 function vDash(){const m=me(),R=roster(G.me),sec=(t,body,empty)=>`<div class="panel"><h3>${t}</h3>${body||`<div class="empty" style="padding:10px 0">${empty}</div>`}</div>`;
   const li=a=>a.length?`<ul style="margin:4px 0 0;padding-left:20px">${a.map(x=>`<li style="margin:4px 0">${x}</li>`).join('')}</ul>`:'';
   const wb=w=>`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-dw="${w.id}">${esc(w.name)}</button>`;
-  const alerts=[];if(G.merge&&G.cos[G.merge.co]?.active)alerts.push(`<b>${esc(G.cos[G.merge.co].short)}</b> wants to merge with you. See below.`);if((G.req||[]).some(r=>r.st==='open'))alerts.push(`<b>${G.req.filter(r=>r.st==='open').length}</b> talent request(s) waiting. See below.`);if(G.offers.length)alerts.push(`<b>${G.offers.length}</b> rival offer${G.offers.length===1?'':'s'} waiting for your answer. <a href="#roster/mine">Decide on My roster</a>`);
+  const alerts=[];if(G.defect&&W(G.defect.w)&&G.titles[G.defect.t]){const d=G.defect,w=W(d.w);alerts.push(`<b style="color:var(--red2)">${esc(w.name)}</b> is about to walk out to ${esc(G.cos[d.to].short)} with the ${esc(G.titles[d.t].name)}. <button class="sm go" data-dfa="pay" ${me().cash<d.fee?'disabled':''}>Pay ${money(d.fee)} to Keep Them</button> <button class="sm" data-dfa="go">Let Them Go</button>`)}if(G.merge&&G.cos[G.merge.co]?.active)alerts.push(`<b>${esc(G.cos[G.merge.co].short)}</b> wants to merge with you. See below.`);if((G.req||[]).some(r=>r.st==='open'))alerts.push(`<b>${pl(G.req.filter(r=>r.st==='open').length,'talent request')}</b> waiting. See below.`);if(G.offers.length)alerts.push(`<b>${G.offers.length}</b> rival offer${G.offers.length===1?'':'s'} waiting for your answer. <a href="#roster/mine">Decide on My roster</a>`);
   {const x=unrest(G.me);if(x.n>=8&&x.share>=MUT_WARN)alerts.push(`<b style="color:var(--red2)">Locker room unrest:</b> ${x.u} of ${pl(x.n,'wrestler')} are unhappy. If more than half stay unhappy for ${MUT_WEEKS} weeks, a group may walk out and start their own company. <a href="#roster/mine">Filter by Unhappy</a>`)}
   if(m.cash<0)alerts.push(`<b style="color:var(--red2)">Your bank is below zero</b> (${m.broke} of ${pl(dif().broke,'week')} before you fold).`);
   R.filter(w=>(w.unh||0)>=4).forEach(w=>alerts.push(`${wb(w)} is miserable and wants to leave.`));
@@ -2290,9 +2366,9 @@ function dBelt(t,after){if(!BL)return;let L=JSON.parse(JSON.stringify(beltOf(t))
 function dNewTitle(){const m=me();
   openD(`<div class="dh"><h3>New Championship</h3><div>It starts vacant. Put it on the line in a match to crown the first champion.</div></div><div class="db"><div class="form">
     <label>Name<input id="ntn" maxlength="60" placeholder="${esc(m.short)} Television Championship"></label>
-    <label>Division<select id="ntd"><option value="singles">Singles</option><option value="tag">Tag Team</option></select></label>
-    <label>Tier<select id="ntt"><option value="1">Top Tier</option><option value="2" selected>Secondary</option><option value="3">Lower Tier</option></select></label>
-    <label>Who can hold it<select id="ntg"><option value="">Anyone</option><option value="M">Men only</option><option value="F">Women only</option></select></label>
+    <label>Belt Type<select id="ntd"><option value="singles">Singles (one wrestler)</option><option value="tag">Tag Team (two wrestlers together)</option></select></label>
+    <label>Tier<select id="ntt"><option value="1">Primary</option><option value="2" selected>Secondary</option><option value="3">Tertiary</option></select></label>
+    <label>Who can hold it<select id="ntg"><option value="">Anyone</option><option value="M">Men Only</option><option value="F">Women Only</option></select></label>
     <p class="hint" id="nterr" role="status"></p></div></div>
     <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="ntok">Create Championship</button></div>`);
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.x){closeD();return}
@@ -2416,7 +2492,7 @@ function vHist(){
      ${yrs.map(y=>{const Y=S.filter(x=>x.d.startsWith(y));let bm=null;Y.forEach(x=>x.m.forEach(m=>{if(m[4]!=null&&(!bm||m[4]>bm[4]))bm=m}));const p0=Y[0].cp,p1=Y[Y.length-1].cp;
        return `<tr><td><b>${y}</b></td><td class="n">${Y.length}</td><td class="n">${stars(clampQ(Y.reduce((t,x)=>t+x.r,0)/Y.length))}</td><td class="n">${Y.reduce((t,x)=>t+x.cr,0).toLocaleString('en-US')}</td><td class="n">${p0!=null?`${p0} → ${p1}`:'–'}</td><td>${bm?`${esc(bm[2]!=null?bm[bm[2]]+' beat '+bm[1-bm[2]]:bm[0]+' vs '+bm[1])} ${stars(bm[4])}`:'–'}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No shows yet.</td></tr>'}</tbody></table>
      <h3 style="margin-top:18px">Current roster</h3><p class="sub" style="margin-top:0">${ros.map(w=>`${esc(w.name)} (${pd(w)}, ${w.rec?`${w.rec.w}-${w.rec.l}-${w.rec.d}`:'0-0-0'})`).join(' · ')||'Nobody signed.'}</p>
-     <h3 style="margin-top:18px">Titles</h3>${Object.values(G.titles||{}).filter(t=>t.co===hc).sort((a,b)=>(a.div==='tag')-(b.div==='tag')||(a.tier||1)-(b.tier||1)).map((t,i,arr)=>{const cur=reignOf(t);return `${i===0||arr[i-1].div!==t.div?`<h4 style="margin:14px 0 4px">${t.div==='tag'?'Tag team titles':'Singles titles'}</h4>`:''}<div class="panel" style="margin:10px 0"><div class="ph"><div><b>${esc(t.name)}</b> <span class="sub">${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag team':'Singles'}</span>${t.elite?' <span class="k of">Prestigious</span>':''}<div class="sub">${cur?`Champion: <b>${esc(cur.hn)}</b> since ${fmtDate(cur.won)} (${daysBetween(cur.won,G.date)} days, ${cur.def.length} title matches)`:'Vacant'}</div></div><div style="min-width:160px"><div class="sub">Prestige ${Math.round(t.prestige)} / 100</div><div class="meter"><i style="width:${t.prestige}%"></i></div></div></div>
+     <h3 style="margin-top:18px">Titles</h3>${Object.values(G.titles||{}).filter(t=>t.co===hc).sort((a,b)=>(a.div==='tag')-(b.div==='tag')||(a.tier||1)-(b.tier||1)).map((t,i,arr)=>{const cur=reignOf(t);return `${i===0||arr[i-1].div!==t.div?`<h4 style="margin:14px 0 4px">${t.div==='tag'?'Tag team titles':'Singles titles'}</h4>`:''}<div class="panel" style="margin:10px 0"><div class="ph"><div><b>${esc(t.name)}</b> <span class="sub">${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag Team':'Singles'}</span>${t.elite?' <span class="k of">Prestigious</span>':''}<div class="sub">${cur?`Champion: <b>${esc(cur.hn)}</b> since ${fmtDate(cur.won)} (${daysBetween(cur.won,G.date)} days, ${cur.def.length} title matches)`:'Vacant'}</div></div><div style="min-width:160px"><div class="sub">Prestige ${Math.round(t.prestige)} / 100</div><div class="meter"><i style="width:${t.prestige}%"></i></div></div></div>
        ${t.reigns.slice().reverse().map(r=>`<details class="hrow"><summary><time>${r.won?fmtDate(r.won):'–'}</time><div><b>${esc(r.hn)}</b>${r.pre?' <span class="sub">before the game</span>':''}<div class="sub">${r.lost?`to ${fmtDate(r.lost)} · ${r.won?daysBetween(r.won,r.lost)+' days':''}${r.vac?' · vacated ('+esc(r.vac)+')':''}`:'Current champion'} · ${r.def.length} title match${r.def.length===1?'':'es'}${r.def.length?` · avg ${stars(clampQ(avg(r.def.map(x=>x.st))))}`:''}</div></div><b></b></summary>
         <div class="hd">${r.def.map(x=>`<div>${fmtDate(x.d)} · ${esc(x.show)} · vs ${esc(x.vs)} · <b>${esc(x.res)}</b> ${stars(x.st)}<span class="sub"> · ${(x.crowd||0).toLocaleString('en-US')} fans · gate ${money(x.gate||0)} · show profit ${money(x.profit||0)}</span></div>`).join('')||'<div class="sub">No title matches recorded.</div>'}</div></details>`).join('')}</div>`}).join('')||'<p class="sub" style="margin-top:0">This company has no titles. Add them in the Scenario editor.</p>'}`}
   else if(hview==='ev')body=histEvents(shows,cos,yrs);
@@ -2502,7 +2578,7 @@ function titlePage(t){
   const defs=r=>r.def.filter(x=>/retains/.test(x.res)).length;const mostDef=rs.slice().sort((a,b)=>defs(b)-defs(a))[0];
   const all=rs.flatMap(r=>r.def.map(x=>({...x,hn:r.hn}))).sort((a,b)=>a.d<b.d?1:-1),avgR=all.length?avg(all.map(x=>x.st)):null,best=all.slice().sort((a,b)=>b.st-a.st)[0];
   const hn=r=>r.h&&r.h.length&&r.h.every(id=>G.ws[id])?r.h.map(id=>`<button class="ed" style="border:0;padding:0;font-weight:800;font-size:15px;color:var(--ink)" data-hw="${id}">${esc(W(id).name)}</button>`).join(' &amp; '):esc(r.hn);
-  return `<div class="panel"><div class="ph"><div><div class="sub">${esc(G.cos[t.co]?.name||'')} · ${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag team':'Singles'}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(t.name)}</h2>${t.elite?'<span class="k of">Prestigious</span>':''}</div>
+  return `<div class="panel"><div class="ph"><div><div class="sub">${esc(G.cos[t.co]?.name||'')} · ${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag Team':'Singles'}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(t.name)}</h2>${t.elite?'<span class="k of">Prestigious</span>':''}</div>
    <div style="min-width:180px"><div class="sub">Prestige</div><b style="font:28px Anton,sans-serif">${Math.round(t.prestige??0)}</b><div class="meter" style="margin:4px 0 0"><i style="width:${clamp(t.prestige??0,0,100)}%;background:var(--gold)"></i></div></div></div>
    <div class="beltshow">${beltImg(t,528,null,true)}${BL&&(t.co===G.me||G.opts.sandbox)?`<div class="btns" style="justify-content:center;margin-top:8px"><button data-belt="${t.id}">Design this belt</button></div>`:''}</div>
    ${titleRulesBox(t)}<div class="msg" style="background:var(--goldbg);color:var(--gold)">${cur?`Champion: <b>${hn(cur)}</b> since ${fmtDate(cur.won)}${cur.wonAt?` (${esc(cur.wonAt)})`:''} · ${pl(days(cur),'day')} · ${defs(cur)} successful defence${defs(cur)===1?'':'s'}`:'Vacant'}</div>
@@ -3414,6 +3490,7 @@ function vNew(){
   <div class="scards">${scs.map(([k,l],i)=>{const v=scenFrom(k);return `<button class="scard${k===NG.src?' sel':''}" data-nsrc="${esc(k)}" aria-pressed="${k===NG.src}"><div class="ban" style="--c:${BANC[i%BANC.length]}"><b>${esc((v.start||'').slice(0,4))}</b>${topOf(v)}</div><div class="bd"><b>${esc(l)}</b><span>${v.desc?esc(v.desc):`${v.companies.length} companies · ${v.wrestlers.length} wrestlers`}</span></div></button>`}).join('')}</div>
   <div class="panel" style="margin-top:12px">${VS.length>1?`<label>${NG.src==='builtin'?'Start year':'Version'}</label><div class="chips" style="margin:6px 0 12px">${VS.map(x=>`<button data-nver="${x.v}" class="${x.v===curV?'sel':''}" aria-pressed="${x.v===curV}">${esc(x.label||'Version '+x.v)}<small>${fmtDate(x.data.start)}${x.date&&NG.src!=='builtin'?` · published ${fmtDate(x.date)}`:''}</small></button>`).join('')}</div>`:''}<div class="form"><label>Start date<input type="date" id="nstart" value="${NG.start}"></label></div>
    <p class="hint">Starting on the scenario's own date (${fmtDate(sc.start)}) uses its home companies. Any other date starts everyone as a free agent, and rival owners sign talent before week 1.</p>
+   ${NG.start===sc.start?`<label style="margin-top:8px">Starting Rosters</label><div class="chips" style="margin:6px 0 4px">${[['','As in History'],['random','Random Shuffle'],['draft','Draft']].map(([k,l])=>`<button data-nshuf="${k}" class="${(NG.shuf||'')===k?'sel':''}" aria-pressed="${(NG.shuf||'')===k}">${l}</button>`).join('')}</div><p class="hint" style="margin:0">${NG.shuf==='draft'?'Everyone starts as a free agent and every title starts vacant. Companies pick in turns, weakest first, and you make your own picks. The game starts once rosters are full.':NG.shuf==='random'?'Everyone is dealt out at random. Each company keeps its roster size. Titles stay with their company.':'Everyone starts where they really were.'}</p>`:''}
    <label style="margin-top:8px"><input type="checkbox" id="nret" ${NG.retire?'checked':''}>Retirements and deaths happen during play, based on age and gameplay</label>
    <label style="margin-top:8px"><input type="checkbox" id="ngen" ${NG.gen?'checked':''}>Add made-up wrestlers to the free agent pool (more when more companies are open)</label></div>
   <div class="steph">2. Choose your company</div>
@@ -3432,14 +3509,14 @@ function vNew(){
   document.querySelectorAll('[data-nver]').forEach(b=>b.onclick=()=>{NG.ver=+b.dataset.nver;NG.start=scenFrom(NG.src,NG.ver).start;NG.choice=null;vNew()});
   $('#nback').onclick=()=>{location.hash='home'};
   $('#nstart').onchange=e=>{if(e.target.value){NG.start=e.target.value;NG.choice=null;vNew()}};
-  $('#nret').onchange=e=>NG.retire=e.target.checked;document.querySelectorAll('[data-ndf]').forEach(b=>b.onclick=()=>{NG.diff=b.dataset.ndf;vNew()});document.querySelectorAll('[data-ninj]').forEach(b=>b.onclick=()=>{NG.inj=b.dataset.ninj;vNew()});document.querySelectorAll('[data-nslot]').forEach(b=>b.onclick=()=>{NG.slot=+b.dataset.nslot;vNew()});$('#ngen').onchange=e=>NG.gen=e.target.checked;
+  $('#nret').onchange=e=>NG.retire=e.target.checked;document.querySelectorAll('[data-nshuf]').forEach(b=>b.onclick=()=>{NG.shuf=b.dataset.nshuf;vNew()});document.querySelectorAll('[data-ndf]').forEach(b=>b.onclick=()=>{NG.diff=b.dataset.ndf;vNew()});document.querySelectorAll('[data-ninj]').forEach(b=>b.onclick=()=>{NG.inj=b.dataset.ninj;vNew()});document.querySelectorAll('[data-nslot]').forEach(b=>b.onclick=()=>{NG.slot=+b.dataset.nslot;vNew()});$('#ngen').onchange=e=>NG.gen=e.target.checked;
   document.querySelectorAll('[name=nco]').forEach(r=>r.onchange=()=>{NG.choice=r.value;vNew()});document.querySelectorAll('[name=nmode]').forEach(r=>r.onchange=()=>{NG.mode=r.value;if(r.value==='story'&&!NG.choice)NG.choice='new';vNew()});{const z=$('#nsz');if(z)z.onchange=()=>NG.nsz=z.value;const cc=$('#ncol');if(cc)cc.oninput=()=>NG.ncol=cc.value}
   ['nn','ns','np'].forEach(k=>{const x=$('#'+k);if(x)x.oninput=()=>NG[k]=x.value});
   const c=$('#cont');if(c)c.onclick=()=>{G=saved;location.hash='office';render()};
   $('#nstartbtn').onclick=()=>{const M0=slotMeta(),sl=NG.slot||1,cn=NG.choice==='new'?(NG.nn.trim()||'My Promotion'):(()=>{const c=sc.companies[+String(NG.choice).slice(1)];return c?nameAt(c)[1]:'the company'})();
     if(!cfm(`Start a new game as ${cn}? ${sc.name}${VS.length>1?` (${scenVer(NG.src,NG.ver).label||'version '+curV})`:''}, starting ${fmtDate(NG.start)}. ${{career:'Career',story:'Story campaign',sandbox:'Sandbox'}[NG.mode||'career']}, ${DIFF[NG.diff].name} money, save slot ${sl}.${M0[sl]?` This replaces the save in slot ${sl} (${M0[sl].name}, ${fmtDate(M0[sl].date)}).`:''}`,'Start the game'))return;
     const ch=NG.choice==='new'?{type:'new',name:NG.nn.trim()||'My Promotion',short:NG.ns.trim()||'MINE',pop:clamp(+NG.np||30,1,100),cash:60000,size:NG.nsz||'Regional',col:NG.ncol||''}:{type:'existing',id:NG.choice};
-    const slot=NG.slot||1;const go=()=>{newGame(clone(sc),NG.start,ch,{retire:NG.retire,gen:NG.gen,diff:NG.diff,inj:NG.inj,slot,mode:NG.mode||'career',sandbox:NG.mode==='sandbox'});G.slot=slot;G.scenName=sc.name+(VS.length>1?` · ${scenVer(NG.src,NG.ver).label||'version '+curV}`:'');NG.slot=null;save();tab='office';rview='mine';if(location.hash==='#office')render();else location.hash='office'};
+    const slot=NG.slot||1;const go=()=>{newGame(clone(sc),NG.start,ch,{shuf:NG.shuf||'',retire:NG.retire,gen:NG.gen,diff:NG.diff,inj:NG.inj,slot,mode:NG.mode||'career',sandbox:NG.mode==='sandbox'});G.slot=slot;G.scenName=sc.name+(VS.length>1?` · ${scenVer(NG.src,NG.ver).label||'version '+curV}`:'');NG.slot=null;save();tab='office';rview='mine';if(location.hash==='#office')render();else location.hash='office'};
     if(!G&&store.get('ro_save'))G=store.get('ro_save');(G?slotFlush():Promise.resolve()).then(go)};
 }
 
