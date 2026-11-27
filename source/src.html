@@ -167,6 +167,29 @@ dialog.wide{width:min(980px,96vw)}
 .hd img{width:100%;height:100%}
 .pport{float:left;margin:0 16px 6px 0;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bluebg)}
 .pport img{display:block;width:96px;height:auto}
+.lkh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}.lkh h3{margin:0}.lkh .btns{margin:0}
+.lk2{display:grid;gap:12px;max-width:1100px;margin:0 auto}
+.lk2 .pv{display:flex;gap:14px;justify-content:center;align-items:flex-end;position:sticky;top:0;z-index:2;background:var(--panel);padding:6px 0 10px;border-bottom:1px solid var(--line)}
+.lk2 .pv .chips{flex-direction:column}
+.lk2 .pv canvas{image-rendering:pixelated;border-radius:12px;border:1px solid var(--line)}
+.lkcats{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}.lkcats .lktray{grid-column:1/-1}
+.dh.lkh{background:var(--panel);border-bottom:1px solid var(--line)}.dh.lkh h3{color:var(--ink)}
+@media (max-width:1000px){.lkcats{grid-template-columns:repeat(6,1fr)}}
+@media (max-width:700px){.lkh .btns{gap:4px}.lkh .btns button{padding:6px 9px;min-height:36px;font-size:13px}}
+.lkt{display:grid;justify-items:center;gap:1px;padding:5px 3px;min-height:0;border-radius:10px;font-size:11px;line-height:1.2;text-align:center}
+.lkt img{width:36px;height:36px;object-fit:cover;object-position:top;image-rendering:pixelated}
+.lkt b{font-size:11px;color:var(--mute);font-weight:600}.lkt span{font-weight:700;font-size:12px;overflow-wrap:anywhere}
+.lkt i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:4px;vertical-align:-1px;border:1px solid #0008}
+.lkt.on{border-color:var(--blue);background:var(--bluebg)}
+.lktray{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}.lktray h4{margin:0 0 8px;font-size:16px}
+.lktray .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px}
+.lktray .gal button{padding:4px;min-height:0;display:grid;justify-items:center;gap:2px;font-size:11px}
+.lktray .gal button.sel{border-color:var(--blue);background:var(--bluebg)}
+.lktray .gal img{width:48px;height:auto;image-rendering:pixelated}
+.lktray .pal{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.lktray .sw{width:32px;height:32px;min-height:32px;padding:0;border-radius:8px;background:var(--c);border:2px solid var(--line)}.lktray .sw.sel{outline:3px solid var(--blue);outline-offset:1px}
+.lktray input[type=color]{width:52px;min-height:32px;padding:0}
+@media (max-width:700px){.lkcats{grid-template-columns:repeat(4,1fr)}.lkt img{width:28px;height:28px}.lk2 .pv .chips{flex-direction:column}}
 .lk{display:grid;grid-template-columns:minmax(170px,230px) 1fr;gap:18px;align-items:start}
 .lk .pv{position:sticky;top:0;display:grid;gap:10px;justify-items:center}
 .lk .pv canvas{width:100%;max-width:216px;height:auto;image-rendering:pixelated;border-radius:14px;border:1px solid var(--line)}
@@ -3096,8 +3119,14 @@ function dCoach(w){const m=me();let kind='spec',pick1=Object.keys(SPECS).find(k=
    Every wrestler gets a look generated from their id, so it never changes on its own and costs nothing to save.
    Only a look you edit is stored, in w.px. */
 const WL=window.WrestlerLook,_pxc=new Map();
-function pxSeed(w){const L=WL.random('ro:'+w.id);const fem=w.gender==='F';L.frame=fem?'feminine':'masculine';if(fem){L.facial='none'}else if(L.mouth==='lipstick')L.mouth='neutral';if(L.mask!=='none'&&[...w.id].reduce((a,c)=>a+c.charCodeAt(0),0)%10>2)L.mask='none';return WL.normalize(L)}
-function pxOf(w){if(!WL||!w)return null;if(w.px)return w.px;const k=w.id+'|'+(w.gender||'');if(!_pxc.has(k))_pxc.set(k,pxSeed(w));return _pxc.get(k)}
+function pxSeed(w){const L=WL.random('ro:'+w.id);const fem=w.gender==='F';L.frame=fem?'feminine':'masculine';const wt=+w.wt||0;if(wt)L.build=wt<=180?'skinny':wt<=205?'lean':wt<=230?(L.build==='muscular'?'muscular':'athletic'):wt<=275?(['muscular','bodybuilder','stocky'][[...w.id].reduce((a,c)=>a+c.charCodeAt(0),0)%3]):wt<=330?(['heavy','belly'][wt%2]):'giant';if(fem){L.facial='none'}else if(L.mouth==='lipstick')L.mouth='neutral';if(L.mask!=='none'&&[...w.id].reduce((a,c)=>a+c.charCodeAt(0),0)%10>2)L.mask='none';return WL.normalize(L)}
+function pxRaw(w){if(!WL||!w)return null;if(w.px)return w.px;const k=w.id+'|'+(w.gender||'');if(!_pxc.has(k))_pxc.set(k,pxSeed(w));return _pxc.get(k)}
+// Backdrop is separate from the wrestler: it follows alignment or faction colour unless the look says 'own'. TODO(ASK OWNER): alignment colours.
+const AL_BG={F:'#1e4fa0',H:'#8a1c2b',T:'#5a2f86'},_bgc=new WeakMap();
+function bgCol(w,mode){if(mode==='own')return null;if(mode==='faction'&&typeof G!=='undefined'&&G&&G.teams){const t=grpsOf(w.id,'faction')[0]||grpsOf(w.id)[0];if(t)return t.col||(t.kind==='tag'?'#1546d1':'#7a5600')}
+  const a=w.al!=null?alLetter(w.al):(w.align||'F');return AL_BG[a]||AL_BG.F}
+function withBg(w,L){if(!L)return L;const c=bgCol(w,L.bgMode||'alignment');if(!c||c===L.bgColor)return L;const m=_bgc.get(L);if(m&&m.c===c)return m.o;const o=Object.assign({},L,{bgColor:c});_bgc.set(L,{c,o});return o}
+function pxOf(w){return withBg(w,pxRaw(w))}
 const headImg=(w,size=26)=>WL&&w?`<span class="hd" aria-hidden="true">${WL.img(pxOf(w),{crop:'head',size})}</span>`:'';
 const bodyImg=w=>WL&&w?`<div class="pport" aria-hidden="true">${WL.img(pxOf(w),{size:96})}</div>`:'';
 const LK_GROUPS=[
@@ -3107,6 +3136,9 @@ const LK_GROUPS=[
   ['Gear',[['Top','top','gear1'],['Top design','topArt','topArtColor'],['Trim',null,'gear2'],['Bottoms','bottoms','gear3'],['Bottoms design','botArt','botArtColor'],['Footwear','boots','gear4'],['Boot design','bootArt','bootArtColor'],['Pads','pads','padColor'],['Wrists','wrists','wristColor']]],
   ['Extras',[['Mask','mask','mask1'],['Mask pattern','maskPattern','mask2'],['Headwear','headwear','headColor'],['Eyewear','eyewear'],['Extra','extra','extraColor']]],
   ['Backdrop',[['Backdrop','bg','bgColor']]]];
+const LK_CATS=[['Frame','frame',null,'bust'],['Build','build',null,'bust'],['Height','height',null,null],['Skin',null,'skin','head'],['Head','head',null,'head'],['Eyes','eyes','eyeColor','head'],['Brows','brows',null,'head'],['Nose','nose',null,'head'],['Mouth','mouth',null,'head'],['Hair','hair','hairColor','head'],['Facial Hair','facial','facialColor','head'],['Face Paint','paint','paintColor','head'],
+  ['Top','top','gear1','bust'],['Top Design','topArt','topArtColor','bust'],['Trim',null,'gear2','bust'],['Bottoms','bottoms','gear3','legs'],['Bottoms Design','botArt','botArtColor','legs'],['Footwear','boots','gear4','legs'],['Boot Design','bootArt','bootArtColor','legs'],['Pads','pads','padColor','legs'],['Pad Design','padArt','padArtColor','legs'],['Wrists','wrists','wristColor','bust'],
+  ['Mask','mask','mask1','head'],['Mask Design','maskPattern','mask2','head'],['Headwear','headwear','headColor','head'],['Eyewear','eyewear',null,'head'],['Extra','extra','extraColor','bust'],['Tattoo','tattoo','ink','bust'],['Tattoo 2','tattoo2','ink2','bust'],['Tattoo 3','tattoo3','ink3','bust'],['Body Paint','bodyPaint','bodyColor','bust'],['Backdrop','bg',null,'head'],['Backdrop Colour','bgMode','bgColor','head']];
 const LK_PRESETS={Classic:{top:'none',bottoms:'trunks',boots:'boots',pads:'knee',wrists:'none',headwear:'none',eyewear:'none',extra:'none',mask:'none',paint:'none'},
   Masked:{top:'none',bottoms:'tights',boots:'tall',pads:'none',wrists:'tape',headwear:'none',eyewear:'none',extra:'none',mask:'full',maskPattern:'wings',paint:'none'},
   Brawler:{top:'tank',bottoms:'pants',boots:'boots',pads:'none',wrists:'tape',headwear:'none',eyewear:'none',extra:'none',mask:'none',paint:'eyeblack'},
@@ -3147,30 +3179,30 @@ async function phBuild(cur){const im=PH.img,k=Math.min(1,768/Math.max(im.width,i
     return {L:phLook(j,cur),msg:(typeof j.summary==='string'?j.summary.slice(0,200)+' ':'')+'Their outfit is in all three outfit slots. Change anything you like, then save.'}}
   catch(e){if(e&&e.code==='rate_limited')return {L:null,msg:'Too many photo reads right now. Try again in a minute.'};return {L:phQuick(cur),msg:'Claude could not read that photo, so this is a quick colour match. Their current styles were kept.'}}}
 
-function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxOf(w)))),tab='Body',pal=null,gal=null;const hist=[];let desc=typeof w.look==='string'?w.look:'',col=w.col||'#c8102e';
+function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxRaw(w)))),cat='hair',pal=null;const hist=[];let desc=typeof w.look==='string'?w.look:'',col=w.col||'#c8102e';
   const set=(k,v)=>{hist.push(JSON.stringify(L));if(hist.length>40)hist.shift();L[k]=v;L=WL.normalize(L)};
-  const row=([lab,k,ck])=>{const vals=k?WL.OPTIONS[k][1]:null,i=k?vals.indexOf(L[k]):0;
-    return `<div class="row"><span>${lab}</span>${k?`<div class="step"><button data-st="-1" data-k="${k}" aria-label="Previous ${lab}">‹</button><button data-gal="${k}" style="border:0;background:none;min-height:44px" aria-label="Show all ${lab} options"><b>${lkLab(L[k])}</b><small>${i+1} of ${vals.length} · all</small></button><button data-st="1" data-k="${k}" aria-label="Next ${lab}">›</button></div>`:'<span></span>'}
-      ${ck?`<button class="sw" style="--c:${L[ck]}" data-pal="${ck}" aria-label="${lab} colour"></button>`:'<span></span>'}
-      ${gal===k&&k?`<div class="gal">${vals.map(v=>`<button data-k="${k}" data-v="${v}" class="${L[k]===v?'sel':''}"><img src="${WL.toDataURL(Object.assign({},L,{[k]:v}),{scale:1,bg:k==='bg',crop:LK_CROP[k]})}" alt="">${lkLab(v)}</button>`).join('')}</div>`:''}
-      ${pal===ck&&ck?`<div class="pal">${[...new Set([...WL.PAL[WL.OPTIONS[ck][1]],...WL.PAL.gear])].map(c=>`<button class="sw${L[ck]===c?' sel':''}" style="--c:${c}" data-k="${ck}" data-v="${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-k="${ck}" value="${L[ck]}" aria-label="Any colour" style="width:60px;min-height:34px;padding:0"></div>`:''}</div>`};
-  const draw=()=>{openDF(`<div class="dh b"><h3>Character Editor: ${esc(w.name)}</h3><div>Their look shows on the profile, roster and cards. Only looks: it doesn't change any stats.</div></div><div class="db"><div class="lk">
-     <div class="pv"><canvas id="lkc" aria-label="Portrait preview"></canvas>
-      <div class="chips" role="group" aria-label="Outfit">${'ABC'.split('').map((c,i)=>`<button data-slot="${i}" class="${L.outfit===i?'sel':''}">Outfit ${c}</button>`).join('')}</div>
-      <div class="btns"><button data-rnd="1">🎲 Random look</button><button data-undo="1" ${hist.length?'':'disabled'}>Undo</button></div></div>
-     <div><div class="tabs" role="tablist">${[...LK_GROUPS.map(g=>g[0]),'Photo',...(noNotes?[]:['Notes'])].map(t=>`<button data-tab="${t}" class="${tab===t?'on':''}" role="tab" aria-selected="${tab===t}">${t}</button>`).join('')}</div>
-      ${tab==='Gear'?`<div class="chips" style="margin-bottom:6px">${Object.keys(LK_PRESETS).map(p=>`<button data-pre="${p}" class="sm">${p}</button>`).join('')}</div>`:''}
-      ${tab==='Photo'?`<div class="phb"><p class="sub" style="margin:0 0 8px">Start from a photo. Claude picks the closest body, skin, hair, face and outfit from this editor's own options, so it stays a pixel wrestler in our style. It never tries to say who the person is.</p>
+  const cats=()=>LK_CATS.filter(c=>!c[1]||WL.OPTIONS[c[1]]);
+  const colours=ck=>[...new Set([...WL.PAL[WL.OPTIONS[ck][1]],...WL.PAL.gear])];
+  const tile=([lab,k,ck,cr])=>{const id=k||ck;return `<button class="lkt${cat===id?' on':''}" data-cat="${id}" aria-pressed="${cat===id}"><img src="${WL.toDataURL(withBg(w,L),{scale:1,bg:k==='bg'||k==='bgMode',crop:cr||'bust'})}" alt=""><b>${lab}</b><span>${k?lkLab(L[k]):''}${ck?`<i style="background:${L[ck]}"></i>`:''}</span></button>`};
+  const tray=()=>{if(cat==='styles')return `<h4>Start From A Style</h4><p class="sub" style="margin:0 0 8px">Swaps the gear only. Body, face and hair stay.</p><div class="chips">${Object.keys(LK_PRESETS).map(p=>`<button data-pre="${p}" class="sm">${p}</button>`).join('')}</div>`;
+    if(cat==='photo')return `<h4>Photo</h4><p class="sub" style="margin:0 0 8px">Start from a photo. Claude picks the closest body, skin, hair, face and outfit from this editor's own options, so it stays a pixel wrestler in our style. It never tries to say who the person is.</p>
         <label class="btn sm" style="display:inline-flex;cursor:pointer">Choose a photo<input type="file" id="lkf" accept="image/*" hidden></label>
         ${PH.url?`<div class="phprev"><img src="${PH.url}" alt="Your photo"></div>`:'<div class="phprev empty">No photo yet. A clear, full-body shot works best.</div>'}
-        <div class="btns"><button class="go" data-phb="1" ${PH.img&&!PH.busy?'':'disabled'}>${PH.busy?'Looking at the photo…':'Build look from photo'}</button></div>${PH.msg?`<p class="hint" role="status">${esc(PH.msg)}</p>`:''}</div>`:tab==='Notes'?`<label>Description<textarea id="plk" rows="3" maxlength="200" placeholder="Ring gear, entrance, anything else">${esc(desc)}</textarea></label><div class="form" style="margin-top:10px">${imgField('w:'+w.id,w.logo,'Photo (optional)','Replaces the pixel portrait on the profile when set.')}</div><label style="margin-top:10px">Colour<input type="color" id="pcol" value="${esc(col)}" style="max-width:120px"></label>`:
-       tab==='Photo'?'':(LK_GROUPS.find(g=>g[0]===tab)||LK_GROUPS[0])[1].map(row).join('')}</div></div>
-     <div class="dfoot"><button data-x="1">Cancel</button>${w.px?'<button data-gen="1">Back to their original look</button>':''}<button class="bl" id="lkok">Save look</button></div></div>`,'wide');WL.draw($('#lkc'),L,{scale:6})};
+        <div class="btns"><button class="go" data-phb="1" ${PH.img&&!PH.busy?'':'disabled'}>${PH.busy?'Looking at the photo…':'Build look from photo'}</button></div>${PH.msg?`<p class="hint" role="status">${esc(PH.msg)}</p>`:''}`;
+    if(cat==='notes')return `<h4>Notes</h4><label>Description<textarea id="plk" rows="3" maxlength="200" placeholder="Ring gear, entrance, anything else">${esc(desc)}</textarea></label><div class="form" style="margin-top:10px">${imgField('w:'+w.id,w.logo,'Photo (optional)','Replaces the pixel portrait on the profile when set.')}</div><label style="margin-top:10px">Colour<input type="color" id="pcol" value="${esc(col)}" style="max-width:120px"></label>`;
+    const c=cats().find(c=>(c[1]||c[2])===cat)||cats()[0],[lab,k,ck,cr]=c;
+    return `<h4>${lab}${k?` <span class="sub">${WL.OPTIONS[k][1].length} options</span>`:''}</h4>${k?`<div class="gal">${WL.OPTIONS[k][1].map(v=>`<button data-k="${k}" data-v="${v}" class="${L[k]===v?'sel':''}"><img src="${WL.toDataURL(withBg(w,Object.assign({},L,{[k]:v})),{scale:1,bg:k==='bg'||k==='bgMode',crop:cr||LK_CROP[k]||'bust'})}" alt="">${lkLab(v)}</button>`).join('')}</div>`:''}
+      ${ck?`<div class="pal"><span class="sub">${k?'Colour':''}</span>${colours(ck).map(c=>`<button class="sw${L[ck]===c?' sel':''}" style="--c:${c}" data-k="${ck}" data-v="${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-k="${ck}" value="${L[ck]}" aria-label="Any colour"></div>`:''}`};
+  const draw=()=>{const y=dlg.querySelector('.db')?.scrollTop||0;openDF(`<div class="dh lkh"><h3>Character Editor <span class="sub">${esc(w.name)}</span></h3><div class="btns"><button class="bl" id="lkok">Save Look</button><button data-undo="1" ${hist.length?'':'disabled'}>Undo</button><button data-rnd="1">🎲 Random</button>${w.px?'<button data-gen="1">Original Look</button>':''}<button data-x="1">Cancel</button></div></div><div class="db"><div class="lk2">
+     <div class="pv"><div class="chips" role="group" aria-label="Outfit">${'ABC'.split('').map((c,i)=>`<button data-slot="${i}" class="${L.outfit===i?'sel':''}">Outfit ${c}</button>`).join('')}</div><canvas id="lkc" aria-label="Full body preview"></canvas><canvas id="lkh" aria-label="Face close-up"></canvas></div>
+     <div class="lkcats">${(()=>{const T=[...cats().map(c=>[c[1]||c[2],tile(c)]),['styles',`<button class="lkt${cat==='styles'?' on':''}" data-cat="styles"><b>Styles</b><span>Gear Sets</span></button>`],['photo',`<button class="lkt${cat==='photo'?' on':''}" data-cat="photo"><b>Photo</b><span>Build From One</span></button>`],...(noNotes?[]:[['notes',`<button class="lkt${cat==='notes'?' on':''}" data-cat="notes"><b>Notes</b><span>Description</span></button>`]])];
+       const cols=innerWidth<700?4:innerWidth<1000?6:10,i=Math.max(0,T.findIndex(t=>t[0]===cat)),at=Math.min(T.length-1,Math.ceil((i+1)/cols)*cols-1);
+       return T.map((t,j)=>t[1]+(j===at?`<div class="lktray">${tray()}</div>`:'')).join('')})()}</div></div></div>`,'wide');paint();const db=dlg.querySelector('.db');if(db)db.scrollTop=y};
+  const paint=()=>{const sm=innerWidth<700,V=withBg(w,L);WL.draw($('#lkc'),V,{scale:sm?3:4});WL.draw($('#lkh'),V,{scale:sm?4:6,crop:'head'})};
   const keep=()=>{const t=$('#plk');if(t)desc=t.value;const c=$('#pcol');if(c)col=c.value};
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const d=b.dataset;keep();
     if(d.x){closeD();return}
-    if(d.tab){tab=d.tab;pal=gal=null}else if(d.st){const vals=WL.OPTIONS[d.k][1];set(d.k,vals[(vals.indexOf(L[d.k])+ +d.st+vals.length)%vals.length])}
-    else if(d.gal){gal=gal===d.gal?null:d.gal;pal=null}else if(d.pal){pal=pal===d.pal?null:d.pal;gal=null}
+    if(d.cat){cat=d.cat}
     else if(d.slot){hist.push(JSON.stringify(L));L=WL.wear(L,+d.slot)}else if(d.pre){hist.push(JSON.stringify(L));L=WL.normalize(Object.assign({},L,LK_PRESETS[d.pre]))}
     else if(d.rnd){hist.push(JSON.stringify(L));const r=WL.random();r.frame=L.frame;if(r.frame==='feminine')r.facial='none';L=WL.normalize(r)}
     else if(d.undo){if(hist.length)L=WL.normalize(JSON.parse(hist.pop()))}
@@ -3180,8 +3212,8 @@ function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxO
     else if(b.id==='lkok'){const base=JSON.stringify(pxSeed(w));w.px=JSON.stringify(L)===base?undefined:L;if(!w.px)delete w.px;if(!noNotes){w.look=desc.trim();w.col=col}save();closeD();if(after)after();else rerender();return}
     else return;
     draw()};
-  dlg.onchange=e=>{const t=e.target;if(t.id!=='lkf')return;const f=t.files[0];if(!f||!/^image\//.test(f.type)){PH.msg='That file is not an image.';draw();return}const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{PH.img=im;PH.url=url;PH.msg='';draw()};im.onerror=()=>{PH.msg='That image could not be opened.';draw()};im.src=url};
-  dlg.oninput=e=>{const t=e.target;if(t.type==='color'&&t.dataset.k){L[t.dataset.k]=t.value;L=WL.normalize(L);WL.draw($('#lkc'),L,{scale:6});const s=dlg.querySelector(`[data-pal="${t.dataset.k}"]`);if(s)s.style.setProperty('--c',t.value)}};
+  dlg.onchange=e=>{const t=e.target;if(t.type==='color'&&t.dataset.k){draw();return}if(t.id!=='lkf')return;const f=t.files[0];if(!f||!/^image\//.test(f.type)){PH.msg='That file is not an image.';draw();return}const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{PH.img=im;PH.url=url;PH.msg='';draw()};im.onerror=()=>{PH.msg='That image could not be opened.';draw()};im.src=url};
+  dlg.oninput=e=>{const t=e.target;if(t.type==='color'&&t.dataset.k){L[t.dataset.k]=t.value;L=WL.normalize(L);paint()}};
   dlg.onclose=()=>{dlg.oninput=null;dlg.onclose=null};
   draw()}
 function vBiz(){const m=me(),D=dif(),S=m.staff=m.staff||{};m.items=m.items||{};

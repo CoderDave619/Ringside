@@ -81,7 +81,8 @@
     padColor: ['Pads colour', 'gear', PAL.gear[1]],
     wristColor: ['Wrist colour', 'gear', PAL.gear[2]],
     bg: ['Backdrop', ['spotlight', 'stripes', 'ropes', 'dots', 'crowd', 'checker', 'sunburst', 'cage', 'plain'], 'spotlight'],
-    bgColor: ['Backdrop colour', 'bg', PAL.bg[1]]
+    bgColor: ['Backdrop colour', 'bg', PAL.bg[1]],
+    bgMode: ['Backdrop colour from', ['alignment', 'faction', 'own'], 'alignment']
   };
 
   // Ringside Owner additions (26 Nov). random() uses RO/RP, the original lists, so seeded looks don't change.
@@ -101,6 +102,12 @@
     headwear: ['skullCap', 'cowl'], extra: ['shoulderPads', 'feathers'], top: ['longVest'] };
   for (const k in ADD2) OPTIONS[k][1].push(...ADD2[k]);
   ART.push('hearts', 'diamonds', 'tiger', 'leaf');
+  // More options in every category (owner, 27 Nov).
+  const ADD3 = { build: ['skinny', 'stocky', 'bodybuilder', 'belly', 'giant'], head: ['narrow', 'wide', 'jaw', 'heart'], hair: ['bob', 'pixie'], facial: ['bushy'],
+    top: ['bandeau', 'tracksuit', 'mesh', 'kimono'], bottoms: ['skirt', 'jeans', 'trackpants'], boots: ['ankle', 'striped'], wrists: ['forearm', 'fingerless'],
+    headwear: ['cowboy', 'headwrap'], eyewear: ['round'], extra: ['necklace', 'bandolier'], maskPattern: ['tiger', 'skull'], paint: ['warpaint'], bg: ['lights'] };
+  for (const k in ADD3) OPTIONS[k][1].push(...ADD3[k]);
+  TATS.push('forearms', 'shoulder');
   const LATE_MASK = ['gas', 'muzzle', 'jaw'];
 
   const HEX = /^#[0-9a-f]{6}$/i;
@@ -230,12 +237,16 @@
   function mix(a, b, t) { const x = rgb(a), y = rgb(b); return hex(...x.map((v, i) => Math.round(v + (y[i] - v) * t))); }
   function sh(h, a) { return mix(h, a < 0 ? '#000000' : '#ffffff', Math.abs(a)); }
 
-  const BUILD = { lean: [12, 4], athletic: [13, 4], muscular: [14, 5], heavy: [14, 5] };
+  const BUILD = { lean: [12, 4], athletic: [13, 4], muscular: [14, 5], heavy: [14, 5], skinny: [11, 3], stocky: [14, 5], bodybuilder: [15, 6], belly: [14, 5], giant: [15, 6] };
   const HEAD = {
     oval: [7, [12, 11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 12, 13, 14]],
     square: [7, [11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 12, 13]],
     round: [7, [12, 10, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 11, 12, 13, 14]],
-    long: [6, [12, 11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 12, 12, 13, 14]]
+    long: [6, [12, 11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 12, 12, 13, 14]],
+    narrow: [7, [12, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 13, 14]],
+    wide: [7, [11, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 11, 12, 13]],
+    jaw: [7, [12, 11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 13]],
+    heart: [7, [11, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 12, 12, 13, 14, 15]]
   };
   const OUTLINE = '#17111c';
 
@@ -297,7 +308,7 @@
     const sk = L.skin, skD = sh(sk, -0.18), skDD = sh(sk, -0.4), skL = sh(sk, 0.2);
     const hc = L.hairColor, hD = sh(hc, -0.32), hL = sh(hc, 0.28);
     const g1 = L.gear1, g2 = L.gear2, g1D = sh(g1, -0.25), g1L = sh(g1, 0.35);
-    const fem = L.frame === 'feminine', heavy = L.build === 'heavy';
+    const fem = L.frame === 'feminine', heavy = ['heavy', 'stocky', 'belly', 'giant'].includes(L.build), musc = ['muscular', 'bodybuilder'].includes(L.build);
     let [s, n] = BUILD[L.build];
     if (fem) { s -= 1; n = Math.max(3, n - 1); }
     const [top, rows] = HEAD[L.head];
@@ -320,10 +331,10 @@
 
     // ---- body
     rect(16 - n, 20, 2 * n, 5, sk);
-    span(25, 16 - s + (L.build === 'muscular' ? 2 : 3), sk);
+    span(25, 16 - s + (musc ? 2 : 3), sk);
     span(26, 16 - s + 1, sk);
     for (let y = 27; y <= TB; y++) span(y, 16 - s - (heavy && y > 33 ? 1 : 0), sk);
-    for (let y = 33; y <= TB; y++) mset(armL, y, null);                 // gap between arm and torso
+    for (let y = 33; y <= TB; y++) if (!(L.build === 'belly' && y >= 37 && y <= 43)) mset(armL, y, null); // gap between arm and torso
     if (fem) for (let y = 35; y <= 41; y++) mset(armL + 1, y, null);    // waist
     for (let y = 44; y <= 51; y++) span(y, hipL + (y > 49 ? 1 : 0), sk); // hips
     for (let y = 52; y <= 71; y++) mrect(legL, y, 15 - legL, 1, sk);   // legs
@@ -338,7 +349,10 @@
     else { const pa = 16 - s + 5; mrect(pa, 31, 15 - pa, 1, skD); }
     mset(16 - n - 2, 26, skD); mset(16 - n - 3, 26, skD);
     if (heavy) rect(12, 39, 8, 1, skD);
-    if (L.build === 'muscular' && !fem) for (let y = 34; y <= 40; y += 2) rect(14, y, 4, 1, skD);
+    if (musc && !fem) for (let y = 34; y <= 40; y += 2) rect(14, y, 4, 1, skD);
+    if (L.build === 'bodybuilder' && !fem) { mrect(armL + 2, 33, 3, 1, skD); rect(15, 27, 2, 4, skD); mset(ax + 1, 35, skD); }
+    if (L.build === 'belly') { for (let y = 37; y <= 43; y++) mset(armL, y, sk); rect(armL + 2, 43, W - 2 * armL - 4, 1, skD); rect(15, 40, 2, 1, skDD); }
+    if (L.build === 'skinny') { mrect(armL + 2, 28, 1, 3, skD); }
     rect(15, 38, 2, 1, skD);                                            // navel
     mrect(legL, 61, 15 - legL, 1, skD);                                 // knees
 
@@ -385,6 +399,8 @@
       if (tat === 'heart') [[19, 28], [21, 28], [18, 29], [19, 29], [20, 29], [21, 29], [22, 29], [19, 30], [20, 30], [21, 30], [20, 31]].forEach(p => onSkin(p[0], p[1]));
       if (tat === 'skull') [[ax, 30], [ax + 1, 30], [ax + 2, 30], [ax, 31], [ax + 2, 31], [ax, 32], [ax + 1, 32], [ax + 2, 32], [ax + 1, 33]].forEach(p => onSkin(p[0], p[1]));
       if (tat === 'barbwire') for (let x = ax; x < armL; x++) { both(x, 31); if (x % 2) { both(x, 30); both(x, 32); } }
+      if (tat === 'forearms') for (let y = TB - 7; y <= TB - 1; y++) for (let x = ax; x < armL; x++) if ((x + y) % 2) both(x, y);
+      if (tat === 'shoulder') for (let y = 26; y <= 30; y++) for (let x = ax; x < armL; x++) if ((x * 2 + y) % 3) both(x, y);
       if (tat === 'rightsleeve') for (let y = 27; y <= TB - 2; y++) for (let x = ax; x < armL; x++) if ((x + y) % 3) onSkin(W - 1 - x, y);
     };
     drawTat(L.tattoo, L.ink); drawTat(L.tattoo2, L.ink2); drawTat(L.tattoo3, L.ink3);
@@ -412,6 +428,9 @@
       striped: () => { lower(44, 71, (x, y) => Math.floor(y / 3) % 2 ? g2 : g3); band(); },
       cargo: () => { BOT.pants(); mrect(legL, 54, 3, 4, g3D); mrect(legL, 54, 3, 1, sh(g3, 0.2)); },
       highcut: () => { hipRows(44, 47, g3); rect(12, 48, 8, 2, g3); rect(13, 50, 6, 2, g3); band(); },
+      skirt: () => { for (let y = 44; y <= 53; y++) { const w = hipL - (y > 47 ? 1 : 0) - (y > 51 ? 1 : 0); rect(w, y, W - 2 * w, 1, y > 46 && (y + 0) % 1 === 0 ? g3 : g3); if (y > 46) for (let x = w + 2; x < W - w; x += 3) set(x, y, g3D); } band(); },
+      jeans: () => { BOT.pants(); mrect(hipL + 1, 46, 3, 1, g3D); legRows(58, 61, sh(g3, 0.15)); for (let y = 46; y <= 51; y++) set(15, y, g3D); rect(hipL, 44, W - 2 * hipL, 2, '#3b2a1f'); rect(15, 44, 2, 2, '#c9a227'); },
+      trackpants: () => { hipRows(44, 51, g3); legRows(52, 71, g3); for (let y = 45; y <= 71; y++) { mset(y < 52 ? hipL : legL, y, g2); mset(y < 52 ? hipL + 1 : legL + 1, y, g2); } rect(hipL, 44, W - 2 * hipL, 1, g3D); },
       mawashi: () => { hipRows(44, 47, g3); rect(hipL, 46, W - 2 * hipL, 1, g3D); rect(13, 48, 6, 4, g3); rect(14, 50, 4, 2, g3D); for (let x = hipL + 1; x < W - hipL; x += 2) if (x < 13 || x > 18) rect(x, 48, 1, 4 + (x % 3), g2); },
       singlet: () => { hipRows(44, 51, g3); legRows(52, 57, g3); legRows(57, 57, g2); mset(hipL, 47, g2); },
       chaps: () => { hipRows(44, 51, g2); legRows(52, 71, g3, 1); for (let y = 52; y <= 71; y++) { mrect(13, y, 2, 1, sk); if (y % 2) mset(legL - 2, y, g3D); } rect(hipL, 44, W - 2 * hipL, 1, g3D); }
@@ -437,6 +456,8 @@
       wrapped: () => { legRows(66, 71, '#f2f2ee'); for (let y = 67; y <= 71; y += 2) legRows(y, y, '#d6d6d0'); mrect(legL - 1, 72, 16 - legL, 2, '#f2f2ee'); },
       platform: () => { legRows(58, 71, g4); foot(g4); legRows(58, 58, g4L); mrect(legL - 1, 74, 16 - legL, 2, g2); },
       mid: () => { legRows(60, 71, g4); foot(g4); legRows(60, 60, g4L); for (let y = 62; y <= 70; y += 2) mset(13, y, g2); },
+      ankle: () => { legRows(68, 71, g4); foot(g4); legRows(68, 68, g4L); },
+      striped: () => { FW.tall(); for (let y = 57; y <= 70; y += 3) legRows(y, y, g2); },
       kneehigh: () => { legRows(52, 71, g4); foot(g4); legRows(52, 52, g4L); legRows(59, 62, g4D); legRows(60, 61, g4); for (let y = 64; y <= 70; y += 2) mset(13, y, g2); }
     };
     const snapF = C.slice();
@@ -467,6 +488,8 @@
       sleeves: () => { for (let y = 36; y <= TB; y++) mrect(ax, y, aw, 1, y % 3 ? g2 : sh(g2, -0.15)); },
       cuffs: () => { mrect(ax, TB - 2, aw, 3, '#f2c230'); mrect(ax, TB - 2, aw, 1, '#fff1a8'); mrect(ax, TB, aw, 1, '#b8860b'); },
       spiked: () => { mrect(ax, TB - 2, aw, 3, '#1b1b1f'); mset(ax - 1, TB - 1, '#d0d0d6'); mset(ax - 1, TB - 2, '#d0d0d6'); },
+      forearm: () => { for (let y = 38; y <= TB; y++) mrect(ax, y, aw, 1, y % 3 ? '#f2f2ee' : '#d6d6d0'); },
+      fingerless: () => { mrect(ax, TB - 1, aw, 3, g2); mrect(ax, TB - 1, aw, 1, sh(g2, 0.3)); },
       handwraps: () => { for (let y = TB - 1; y <= TB + 2; y++) mrect(ax, y, aw, 1, y % 2 ? '#f2f2ee' : '#dcdcd4'); }
     })[L.wrists]();
     }
@@ -540,6 +563,10 @@
         fringe: () => { cover({arms: true, open: 2}); for (let y = 25; y <= TB; y++) mset(edge(2)(y), y, g2); brect(0, 30, W, 1, g2); for (let y = 31; y <= TB + 2; y++) if (y % 2) { mset(ax - 1, y, g2); } for (let x = tl; x < 16 - 3; x += 2) mset(x, 31, g2); mrect(ax, TB, aw, 1, g2); },
         rashguard: () => { cover({arms: true, high: true, pat: (x, y) => (x === armL + 1 || x === W - 2 - armL) ? g2 : g1}); mrect(ax, TB, aw, 1, g2); },
         longVest: () => { cover({open: 3, long: true, to: 64}); for (let y = 25; y <= 64; y++) mset(edge(3)(y), y, g2); mrect(16 - n - 3, 22, 2, 4, g1); },
+        bandeau: () => { brect(tl, 29, tw, 4, g1); brect(tl, 29, tw, 1, g2); brect(tl, 32, tw, 1, g1D); },
+        tracksuit: () => { cover({arms: true, high: true}); for (let y = 25; y <= TB; y++) set(15, y, g2); for (let y = 27; y <= TB; y++) mset(ax, y, g2); mrect(ax, TB, aw, 1, g1D); mrect(16 - n - 2, 23, 2, 2, g1); },
+        mesh: () => { cover({arms: 'short', high: true, pat: (x, y) => (x + y) % 2 ? g1 : get(x, y)}); },
+        kimono: () => { cover({arms: true, open: 2, long: true, to: 54}); for (let y = 25; y <= 54; y++) mset(edge(2)(y), y, g2); brect(0, 41, W, 2, g2); rect(13, 41, 6, 2, g2); mrect(ax, TB - 1, aw, 2, g2); },
         suspenders: () => { for (let y = 25; y <= TB; y++) mrect(armL + 2, y, 2, 1, g1); mrect(armL + 2, 28, 2, 1, g2); brect(0, TB - 1, W, 2, g1); }
       })[top_]();
     }
@@ -578,6 +605,10 @@
       [[12, 25], [13, 26], [14, 27], [15, 28]].forEach((p, i) => mset(p[0], p[1], fl[i % 3]));
     } else if (L.extra === 'dogtags') {
       [[12, 23], [13, 24], [13, 25], [14, 26], [14, 27]].forEach(p => mset(p[0], p[1], '#9aa0a8')); rect(15, 28, 2, 3, '#c8ccd4'); set(16, 29, '#9aa0a8');
+    } else if (L.extra === 'necklace') {
+      [[12, 25], [13, 26], [14, 27], [15, 27], [16, 27], [17, 27], [18, 26], [19, 25]].forEach((p, i) => set(p[0], p[1], i % 2 ? g1 : '#f4f1ea')); set(15, 28, g1); set(16, 28, g1);
+    } else if (L.extra === 'bandolier') {
+      for (let y = 25; y <= 44; y++) { const x = Math.round(armL + (y - 25) * (W - 3 - 2 * armL) / 19); brect(x, y, 2, 1, '#3b2a1f'); if (y % 2) brect(x, y, 1, 1, '#c9a227'); }
     } else if (L.extra === 'shoulderPads') {
       mrect(ax - 1, 24, aw + 3, 4, g1); mrect(ax - 1, 24, aw + 3, 1, sh(g1, 0.3)); [[ax, 23], [ax + 2, 22], [ax + 1, 23]].forEach(p => mset(p[0], p[1], '#d0d0d6'));
     } else if (L.extra === 'feathers') {
@@ -588,11 +619,14 @@
 
     }
 
+    // Head sits lower on the shoulders (owner, 27 Nov: necks were too long). Everything drawn from here is moved down NECK rows.
+    const preHead = C.slice(), NECK = L.head === 'long' ? 1 : 2;
     // ---- back hair
     const hair = L.hair, showBack = !(fullMask && mask !== 'open' && (hair === 'afro' || hair === 'liberty'));
     if (showBack) {
       if (hair === 'long') { rect(lx0 - 1, top, W - 2 * (lx0 - 1), 28 - top, hc); for (let y = top + 4; y < 28; y++) mset(lx0 - 1, y, hD); }
       if (hair === 'balding') { rect(lx0 - 1, 12, W - 2 * (lx0 - 1), 15, hc); mrect(lx0 - 1, 12, 1, 15, hD); for (let y = 23; y <= 26; y += 3) mset(lx0, y, hD); }
+      if (hair === 'bob') { rect(lx0 - 1, top, W - 2 * (lx0 - 1), 20 - top, hc); mrect(lx0 - 1, 19, W / 2 - lx0 + 1, 1, hD); }
       if (hair === 'mullet') { rect(lx0 - 1, 13, W - 2 * (lx0 - 1), 13, hc); mrect(lx0 - 1, 13, 1, 13, hD); }
       if (hair === 'afro') for (let y = 0; y < 23; y++) for (let x = 0; x < W; x++) { const d = (x - 15.5) ** 2 + (y - 10.5) ** 2; if (d <= 112) set(x, y, d > 90 && (x + y) % 3 === 0 ? hD : hc); }
       if (hair === 'dreads') for (let x = lx0 - 2; x <= W - 1 - (lx0 - 2); x++) rect(x, top - 1, 1, 29 - top + (x * 7) % 3, x % 2 ? hD : hc);
@@ -630,6 +664,7 @@
       demon: () => { hrect(0, 0, W, H, pc); mhrect(11, 13, 4, 3, '#151518'); mhrect(12, top, 1, 2, '#151518'); },
       mime: () => { hrect(0, 0, W, H, '#f4f1ea'); mhrect(12, 12, 2, 1, '#151518'); hrect(12, 16, 1, 2, '#151518'); },
       glitter: () => { for (let y = 10; y <= 18; y++) for (let x = 0; x < W; x++) if ((x * 3 + y * 5) % 7 === 0) hrect(x, y, 1, 1, (x + y) % 2 ? pc : sh(pc, 0.45)); },
+      warpaint: () => { mhrect(9, 15, 4, 1, pc); mhrect(10, 17, 3, 1, pc); hrect(15, top + 1, 2, 4, pc); },
       crow: () => { hrect(0, 0, W, H, '#f4f1ea'); mhrect(11, 12, 4, 1, pc); mhrect(12, 13, 1, 6, pc); mhrect(13, 19, 1, chin - 18, pc); hrect(15, top, 2, 3, pc); },
       kabuki: () => { hrect(0, 0, W, H, '#f4f1ea'); mhrect(10, 12, 5, 1, pc); mhrect(11, 13, 1, 3, pc); hrect(15, top, 2, 4, '#2fae5c'); mhrect(12, 17, 2, 1, pc); hrect(14, 19, 4, 1, '#c8102e'); },
       facePaint: () => { mhrect(lxAt(10), 10, 4, 1, pc); mhrect(11, 12, 4, 4, pc); hrect(15, 9, 2, 3, pc); mhrect(12, 17, 1, 3, pc); },
@@ -657,6 +692,7 @@
         vandyke: () => { stache(); rect(15, 20, 2, chin - 19, fc); rect(15, chin + 1, 2, 2, fc); set(15, chin + 3, fc); },
         mutton: () => { FH.chops(); stache(); for (let y = 17; y <= 19; y++) mset(12, y, fc); },
         pencil: () => rect(14, 18, 4, 1, fc),
+        bushy: () => { FH.full(); rect(11, chin + 1, 10, 2, fc); rect(12, chin + 3, 8, 1, sh(fc, -0.25)); for (let y = 15; y <= chin; y++) mset(lxAt(y) - 1, y, fc); },
         chinstrap: () => { for (let y = 15; y <= chin; y++) mset(lxAt(y), y, fc); rect(lxAt(chin), chin, W - 2 * lxAt(chin), 1, fc); }
       };
       FH[L.facial]();
@@ -697,6 +733,8 @@
         if (pat === 'chevron') [[11, 0], [12, 1], [13, 2], [14, 3], [15, 4]].forEach(p => mhrect(p[0], top + 2 + p[1], 1, 1, m2));
         if (pat === 'lace') for (let y = top + 1; y <= 12; y++) hrect(15 + (y % 2), y, 1, 1, m2);
         if (pat === 'sun') each((x, y) => Math.hypot(x - 15.5, y - (top + 4)) < 2.3);
+        if (pat === 'tiger') each((x, y) => (x + y * 2) % 5 === 0 && y < chin - 2);
+        if (pat === 'skull') { mhrect(10, 12, 5, 4, '#17111c'); hrect(15, 16, 2, 1, '#17111c'); for (let x = 13; x <= 18; x++) hrect(x, 19, 1, 1, x % 2 ? '#17111c' : m2); }
         if (pat === 'horned') [[11, -1], [10, -2], [10, -3], [11, -4]].forEach(p => mset(p[0], top + p[1], p[1] === -4 ? sh(m2, -0.25) : m2));
         if (pat === 'eyes') { mhrect(10, 11, 6, 1, m2); mhrect(10, 16, 6, 1, m2); mhrect(10, 12, 1, 4, m2); }
         if (pat === 'grin') { hrect(lx0, 17, W - 2 * lx0, 4, '#17111c'); for (let x = lx0 + 1; x < W - lx0 - 1; x++) { hrect(x, 17, 1, 1, x % 2 ? '#f4f1ea' : '#d9cfa8'); hrect(x, 20, 1, 1, x % 2 ? '#d9cfa8' : '#f4f1ea'); } mhrect(lx0, 15, 1, 2, '#17111c'); }
@@ -787,6 +825,8 @@
       topknot: () => { brow(); cap(3, hc); sides(13); set(13, top, hL); },
       braids: () => { brow(); cap(4, hc); sides(13); rect(15, top - 1, 2, 4, hD); },
       wavy: () => { brow(); cap(4, hc); sides(15); for (let x = lxAt(top) + 1; x < W - lxAt(top) - 1; x += 3) set(x, top + 4, hc); rect(12, top - 1, 3, 1, hL); },
+      bob: () => { brow(); cap(5, hc); sides(19); rect(lxAt(top) + 1, top + 5, W - 2 * lxAt(top) - 2, 1, hc); for (let x = lxAt(top) + 2; x < W - lxAt(top) - 2; x += 3) set(x, top + 5, hD); },
+      pixie: () => { brow(); cap(3, hc); sides(14); rect(lxAt(top) + 1, top + 3, 6, 1, hc); rect(lxAt(top) + 1, top + 4, 3, 1, hc); rect(12, top - 1, 4, 1, hL); },
       balding: () => { for (let y = 11; y <= 18; y++) { mset(lxAt(y), y, hc); if (y > 12) mset(lxAt(y) - 1, y, hc); } },
       shavedside: () => { brow(); cap(4, hc); sides(13); for (let y = top + 1; y <= top + 4; y++) rect(lxAt(y), y, 5, 1, mix(sk, hc, 0.5)); rect(16, top - 2, 7, 1, hc); rect(17, top - 3, 4, 1, hc); }
     })[hair]();
@@ -811,9 +851,12 @@
     if (hw === 'flowers') [11, 13, 15, 17, 19].forEach((x, i) => { set(x, top, ['#ff5fa2', '#f4c20d', '#ffffff', '#ff5fa2', '#f4c20d'][i]); set(x + 1, top, '#2fae5c'); set(x, top - 1, sh(['#ff5fa2', '#f4c20d', '#ffffff', '#ff5fa2', '#f4c20d'][i], -0.2)); });
     if (hw === 'skullCap') { span(top - 1, lxAt(top) + 1, g1); for (let y = top; y <= top + 2; y++) span(y, lxAt(y), g1); span(top + 3, lxAt(top + 3) - 1, g1D); set(12, top, g1L); set(13, top, g1L); }
     if (hw === 'cowl') { span(top - 2, lxAt(top) + 2, g1); span(top - 1, lxAt(top), g1); for (let y = top; y <= top + 1; y++) span(y, lxAt(y) - 1, g1); hrect(0, top + 2, W, 1, g1D); for (let y = top + 2; y <= chin + 3; y++) { const e = y <= chin ? lxAt(y) : lx0 - 1; for (let x = lx0 - 3; x <= e; x++) mset(x, y, x === e ? g1D : g1); } }
+    if (hw === 'cowboy') { rect(10, top - 4, 12, 5, g1); rect(10, top - 1, 12, 1, L.gear2); rect(15, top - 4, 2, 1, g1D); rect(7, top + 1, 18, 1, g1); mset(6, top, g1); mset(5, top - 1, g1); rect(8, top + 2, 16, 1, g1D); rect(11, top - 4, 2, 1, g1L); }
+    if (hw === 'headwrap') { span(top - 1, lxAt(top) + 1, g1); for (let y = top; y <= top + 2; y++) span(y, lxAt(y), g1); for (let x = lxAt(top); x < W - lxAt(top); x += 3) set(x, top + 1, g1D); rect(15, top - 2, 2, 2, g1D); }
     if (hw === 'headset') { span(top - 1, lxAt(top) + 1, '#2a2a2e'); mrect(lx0 - 2, 12, 2, 4, '#2a2a2e'); [[lx0 - 1, 16], [11, 17], [12, 18]].forEach(p => set(p[0], p[1], '#2a2a2e')); set(13, 18, '#9aa0a8'); }
     }
     const ew = L.eyewear;
+    if (ew === 'round') { mrect(11, 12, 1, 4, '#c9a54a'); mrect(14, 12, 1, 4, '#c9a54a'); mrect(12, 12, 2, 1, '#c9a54a'); mrect(12, 15, 2, 1, '#c9a54a'); mrect(12, 13, 2, 2, '#151518'); rect(15, 13, 2, 1, '#c9a54a'); mset(12, 13, '#5d6a7a'); }
     if (ew === 'glasses') { const f = '#2a2a2e'; mrect(11, 13, 4, 1, f); mrect(11, 15, 4, 1, f); mset(11, 14, f); mset(14, 14, f); rect(15, 13, 2, 1, f); }
     if (ew === 'aviators') { mrect(11, 13, 4, 2, '#3d3a33'); mrect(12, 15, 2, 1, '#3d3a33'); rect(15, 13, 2, 1, '#c9a54a'); mrect(11, 12, 1, 1, '#c9a54a'); mset(12, 13, '#8a7f63'); }
     if (ew === 'goggles') { rect(lx0 - 1, 13, W - 2 * (lx0 - 1), 2, '#1b1b1f'); mrect(11, 13, 4, 2, '#2bb3e8'); mset(11, 13, '#ffffff'); }
@@ -829,6 +872,9 @@
     if (L.eyewear === 'visor') { rect(lx0, 13, W - 2 * lx0, 2, g2 === '#f5f5f5' ? '#2bb3e8' : g2); rect(lx0 + 1, 13, 3, 1, '#ffffff'); }
     if (L.eyewear === 'eyepatch') { rect(11, 13, 4, 3, '#151518'); [[10, 12], [9, 11], [15, 12], [16, 11], [17, 10], [18, 9], [19, 8]].forEach(p => set(p[0], p[1], '#151518')); }
 
+    { const moved = []; for (let i = 0; i < W * H; i++) if (C[i] !== preHead[i]) moved.push([i, C[i]]);
+      for (const [i] of moved) C[i] = preHead[i];
+      for (const [i, c] of moved) { const y = ((i / W) | 0) + NECK; if (y < H && c != null) C[y * W + i % W] = c; } }
     // ---- outline
     const out = C.slice();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
@@ -852,6 +898,7 @@
       if (L.bg === 'crowd') { c = y < 46 ? bD : b; if (y < 44 && r() < 0.03) c = bLL; }
       if (L.bg === 'checker') c = ((x >> 1) + (y >> 1)) % 2 ? bD : b;
       if (L.bg === 'sunburst') c = Math.floor((Math.atan2(y - 30, x - cxm) + Math.PI) / (Math.PI / 9)) % 2 ? bL : b;
+      if (L.bg === 'lights') c = y < 62 && (Math.abs(x - 3 - y * 0.32) < 2 || Math.abs(OW - 4 - x - y * 0.32) < 2) ? bL : y < 40 ? bD : b;
       if (L.bg === 'cage') c = (x + y) % 4 === 0 || (x - y + 400) % 4 === 0 ? sh(b, 0.35) : bD;
       if (y >= 66) c = y === 66 ? matD : mat;
       if (y >= 66 && Math.abs(x - cxm) < 11 && y >= 73) c = matD;
@@ -868,7 +915,7 @@
     return { w: OW, h: H, ox, px: res };
   }
 
-  const CROPS = { head: [4, 1, 24, 26], bust: [0, 0, 32, 40], legs: [0, 40, 32, 36] };
+  const CROPS = { head: [4, 3, 24, 26], bust: [0, 0, 32, 40], legs: [0, 40, 32, 36] };
   function cropBox(crop, P) {
     if (CROPS[crop]) { const c = CROPS[crop]; return [c[0] + P.ox, c[1], c[2], c[3]]; }
     if (Array.isArray(crop) && crop.length === 4) return crop.map(v => v | 0);
