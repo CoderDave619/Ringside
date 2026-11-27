@@ -2,7 +2,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
 await p.route('https://**',r=>r.abort());const U='file:///home/user/game/index.html';
 await p.goto(U+'#new');await p.waitForTimeout(300);await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(500);
-await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);G.cos[G.me].cash=2000000;localStorage.ro_save=JSON.stringify(G)});await p.goto(U+'#business');await p.reload();await p.waitForTimeout(300);
+await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);G.cos[G.me].cash=2000000;localStorage.ro_save=JSON.stringify(G)});await p.goto(U+'#business');await p.reload();await p.waitForTimeout(300);await p.evaluate(()=>{location.hash='business'});await p.waitForTimeout(300);
 // scout
 await p.click('[data-hire=scout]');await p.click('[data-hp] >> nth=-1');await p.waitForTimeout(80);await p.click('[data-sact="scout:find"]');await p.waitForTimeout(80);
 // brands + draft
