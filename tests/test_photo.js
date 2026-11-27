@@ -1,0 +1,16 @@
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch();for(const vw of [[1280,900],[390,800]]){const p=await b.newPage({viewport:{width:vw[0],height:vw[1]}});const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.addInitScript(()=>{window.__autoyes=setInterval(()=>{const d=document.getElementById('cfm');if(d&&d.open)d.querySelector('[data-y]').click()},40)});
+await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html?sim#new');await p.waitForTimeout(300);
+await p.click('[data-nver="4"]');await p.waitForTimeout(150);await p.click('input[name=nco] >> nth=0');await p.click('#nstartbtn');await p.waitForTimeout(400);
+const png=await p.evaluate(()=>{const c=document.createElement('canvas');c.width=200;c.height=400;const x=c.getContext('2d');x.fillStyle='#eee';x.fillRect(0,0,200,400);x.fillStyle='#222';x.fillRect(60,20,80,40);x.fillStyle='#c68642';x.fillRect(60,60,80,90);x.fillStyle='#1040c0';x.fillRect(50,150,100,140);x.fillStyle='#600';x.fillRect(55,290,90,110);return c.toDataURL('image/png').split(',')[1]});
+const before=await p.evaluate(()=>__ro.run('JSON.stringify(pxOf(roster(G.me)[0]))'));
+await p.evaluate(()=>__ro.run('dLook(roster(G.me)[0])'));await p.waitForTimeout(200);
+await p.click('[data-tab="Photo"]');await p.waitForTimeout(100);
+await p.setInputFiles('#lkf',{name:'a.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await p.waitForTimeout(300);
+await p.click('[data-phb]');await p.waitForTimeout(600);
+console.log(vw[0],'msg',await p.evaluate(()=>document.querySelector('.phb .hint')?.innerText));
+await p.screenshot({path:`/tmp/photo_${vw[0]}.png`});
+const save=await p.$('#lkok');if(save)await save.click();await p.waitForTimeout(200);
+const after=await p.evaluate(()=>__ro.run('JSON.stringify(pxOf(roster(G.me)[0]))'));
+console.log('changed',before!==after,after.slice(0,160));
+console.log('scrollX',await p.evaluate(()=>document.documentElement.scrollWidth),'ERRS',errs);await p.close()}await b.close()})();

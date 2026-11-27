@@ -368,6 +368,8 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:4
 .bkcard .empty{color:#5d6478;font:600 18px "Segoe Print","Bradley Hand","Comic Sans MS",cursive}.bkcard .seg{color:#3d4660}.bkcard .sub{color:#5d6478}
 @media (max-width:760px){.bkcard{padding:10px 10px 10px 34px}.bkcard::before{left:26px}.bkcard::after{left:6px;width:10px}.bkcard .vs{flex-direction:column;align-items:flex-start;gap:2px}.bkcard .vs>i{margin-left:8px}.bkcard .bchip .w{font-size:16px}.nbtitle{font-size:21px}}
 .bkprod{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px}.bkprod select{width:auto;margin:0;min-height:34px;padding:3px 8px;font-size:14px}.bkprod .sub{flex-basis:100%;font-size:12px}
+.bstx{margin:4px 0;max-width:520px;background:rgba(255,255,255,.7);border:0;border-bottom:1px solid #8a93a8;border-radius:0;font:600 16px 'Segoe Print','Bradley Hand','Comic Sans MS',cursive;color:#1f3a7a}
+.phb .phprev{margin:10px 0;border:2px dashed var(--line);border-radius:12px;max-width:320px;min-height:140px;display:grid;place-items:center;overflow:hidden}.phb .phprev img{max-width:100%;max-height:300px;display:block}.phb .phprev.empty{color:var(--mute);font-size:14px;padding:12px;text-align:center}
 </style>
 </head>
 <body>
@@ -429,7 +431,7 @@ const CT=['Feet on the ropes','Handful of tights','Foreign object','Low blow','R
 const FPEN={Pinfall:0,Submission:0,'Count-out':.3,Disqualification:.3,Interference:.2,Screwjob:.5,'Ref missed it':.1,'Double count-out':.6,'No contest':.6};
 const FWIN={Pinfall:1,Submission:1,'Count-out':.5,Disqualification:.5,Interference:.6,Screwjob:.4,'Ref missed it':.8};
 const FLOSE={Pinfall:1,Submission:1,'Count-out':.3,Disqualification:.3,Interference:.3,Screwjob:.3,'Ref missed it':.5};
-const SEG={'Show of respect':'Shakes hands or helps a rival. Face points for both. Cools a feud a little.',Promo:'Talks to the crowd. Popularity based on Charisma.',Interview:'Backstage interview. Small, safe popularity gain.',Challenge:'Calls out a rival. Starts a rivalry and builds Major Event hype.',Attack:'Ambush. Heat for a heel attacker, sympathy for the victim.',Celebration:'Celebrates with the fans. Helps faces most.','Contract signing':'Signs for a Major Event match. Big hype boost.'};
+const SEG={Custom:'Your own segment. Write what happens and pick the tone; the tone decides how it plays.','Show of respect':'Shakes hands or helps a rival. Face points for both. Cools a feud a little.',Promo:'Talks to the crowd. Popularity based on Charisma.',Interview:'Backstage interview. Small, safe popularity gain.',Challenge:'Calls out a rival. Starts a rivalry and builds Major Event hype.',Attack:'Ambush. Heat for a heel attacker, sympathy for the victim.',Celebration:'Celebrates with the fans. Helps faces most.','Contract signing':'Signs for a Major Event match. Big hype boost.'};
 const GIM=['None','Hero','Villain','Showman','Technician','Monster','Brawler','Masked','Veteran','Rookie'];
 const EVN=['Winter Spectacular','Spring Showdown','Summer Slam-Bang','Autumn Uprising','Night of Champions','Grand Brawl','Thunder Dome','Fall Classic','Rumble Royale','Supershow','Showdown at Sundown','Clash of Legends'];
 const stars=s=>'★'.repeat(Math.floor(s))+(s%1>=.5?'½':'')||'½';
@@ -688,7 +690,7 @@ function setupTitles(scen,start,map){
 }
 /** Titles that can go on the line in this match: the holder is in it and the division fits, or the title is vacant. */
 function titleOpts(cid,m,card){
-  return titlesOf(cid).sort((a,b)=>(a.tier||1)-(b.tier||1)).filter(t=>!card.some(x=>x!==m&&x.title===t.id)).filter(t=>{const need=t.div==='tag'?2:1,r=reignOf(t);if(t.gen&&!m.sides.flat().every(id=>W(id)&&W(id).gender===t.gen))return false;
+  return titlesOf(cid).sort((a,b)=>(a.tier||1)-(b.tier||1)).filter(t=>!card.some(x=>x!==m&&x.title===t.id)).filter(t=>{const need=t.div==='tag'?2:1,r=reignOf(t);if(t.gen&&!m.sides.flat().every(id=>W(id)&&W(id).gender===t.gen))return false;if(!titleRuleOK(t,m,cid))return false;
     if(!r)return m.sides.every(sd=>sd.length===need);return m.sides.some(sd=>sd.length===need&&r.h.every(id=>sd.includes(id)))});
 }
 function vacateFor(w,why){if(!G||!G.titles)return;for(const t of Object.values(G.titles)){const r=reignOf(t);if(r&&r.h.includes(w.id)){r.lost=G.date;r.vac=why;news(`The ${t.name} is vacant: ${w.name} ${why}.`,'tt')}}}
@@ -769,7 +771,7 @@ function awards(y){
 /* Monthly growth (§4.60). Chances per month to gain 1 workrate / 1 charisma. Young wrestlers grow, Hard Workers keep growing,
    Lazy wrestlers slip without big matches. Free agents grow at half speed. TODO(ASK OWNER): pacing. */
 const GROW={young:[.22,.12],mid:[.07,.05],hardw:[.18,.08],lazy:.25},MENTOR_P=.05;
-function monthly(){for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
+function monthly(){if(featOn('earn'))earnTraits();for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
   b=a<=27?GROW.young:a<=33?GROW.mid:[0,0],pw=(b[0]+(hw&&a<=38?GROW.hardw[0]:0))*f,pc=(b[1]+(hw&&a<=38?GROW.hardw[1]:0))*f;
   if(w.wrk<95&&Math.random()<pw){w.wrk++;w.grow=(w.grow||0)+1}if(w.cha<95&&Math.random()<pc){w.cha++;w.grow=(w.grow||0)+1}
   if(hasTr(w,'lazy')&&G.week-(w.bigW??-99)>8&&Math.random()<GROW.lazy&&w.wrk>20){w.wrk--;w.grow=(w.grow||0)-1}
@@ -1206,7 +1208,7 @@ function runShow(cid,card,isPlayer){
   card=card.filter(x=>x.t==='a'||(x.t==='m'?x.sides.flat():x.who).every(id=>W(id).co===cid&&W(id).status==='active'));
   const lastM=card.map(x=>x.t).lastIndexOf('m'),firstM=card.findIndex(x=>x.t==='m');
   const crowd=Math.round(crowdFor(c,card,major)*rnd(.92,1.08)*wev(c,'crowd')*slumpCrowd(c)*(c.sabT>G.week?.8:1));let gate=crowd*price(major,c);
-  const items=[],finCount={},tpend=[];let hot=0,bonus=0,ads=0,nAds=0,nSeg=0,nM=0;
+  const e_on=featOn('earn'),items=[],finCount={},tpend=[];let hot=0,bonus=0,ads=0,nAds=0,nSeg=0,nM=0;
   card.forEach((x,i)=>{
     if(x.t==='m'){nM++;if(x.bo&&!major&&flvTop(mHeat(x.sides)))x.bo=false;
       if(x.win==null&&!(x.fin&&NOWIN.includes(x.fin.t)))x.win=simWinner(x);
@@ -1214,9 +1216,9 @@ function runShow(cid,card,isPlayer){
       if(x.fin.t==='Ref missed it'&&!x.fin.c)x.fin.c=pick(CT);
       if(NOWIN.includes(x.fin.t))x.win=null;
       finCount[x.fin.t]=(finCount[x.fin.t]||0)+1;
-      x.maj=major;const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===card.findIndex(y=>y.t==='m')&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
+      x.maj=major;const st=Math.min(5,rateMatch(x,finCount)+crewB(c,x));if(e_on)x.sides.flat().forEach(id=>{const w=W(id);w.e_m=(w.e_m||0)+1;if(st>=4.25)w.e_great=(w.e_great||0)+1;if(major&&st>=4)w.e_big=(w.e_big||0)+1});const sr=rawR(st);hot+=hotVal(sr,x.sides.flat(),major,mHeat(x.sides));x.op=i===card.findIndex(y=>y.t==='m')&&i!==lastM;x.ev=evName;applyMatch(x,st,c,i===lastM,major,sr);matchNews(x,st,c,major,i===lastM);if(x.title)titleMatch(x,st,c,evName,major,tpend);repMatch(c,x,sr);mgrAfter(x);const pf=perf(sr,crowd,x.sides.flat(),'wrk',slotB(x,i,firstM,lastM));bonus+=pf.bonus;
       items.push({label:`${x.tour&&G.tour?G.tour.name+' '+tourLabel(G.tour.alive.length).toLowerCase()+': ':''}${x.title&&G.titles?.[x.title]?G.titles[x.title].name+': ':''}${gimOf(x).k?gimOf(x).name+': ':''}${vsTxt(x)}`,sub:x.win!=null?`${nm(x.sides[x.win])} wins (${CLEAN.includes(x.fin.t)&&gimOf(x).win?gimOf(x).win:x.fin.t})`:x.fin.t,st,w:slotW(x,i,firstM,lastM),lines:pbpMatch(x,st),bonus:pf.bonus,ups:pf.ups});
-    }else if(x.t==='s'){nSeg++;const st=Math.min(5,rateSeg(x)+crewB(c,x)+stf(c,'ann')*.1);const sr=rawR(st);hot+=hotVal(sr,x.who,major,x.who.length>1?feudInSeg(x.who)?.heat||0:0);applySeg(x,sr,c,major,st);const pf=perf(sr,crowd,x.who,'cha');bonus+=pf.bonus;items.push({label:`${x.g}: ${nm(x.who)}`,sub:'Segment',st,w:1,lines:pbpSeg(x,st,c),bonus:pf.bonus,ups:pf.ups})}
+    }else if(x.t==='s'){nSeg++;const g0=x.g;if(g0==='Custom')x.g=(SEGTONE[x.tone]||SEGTONE.hype).g;const st=Math.min(5,rateSeg(x)+crewB(c,x)+stf(c,'ann')*.1);const sr=rawR(st);hot+=hotVal(sr,x.who,major,x.who.length>1?feudInSeg(x.who)?.heat||0:0);applySeg(x,sr,c,major,st);const pf=perf(sr,crowd,x.who,'cha');bonus+=pf.bonus;const ln=pbpSeg(x,st,c);x.g=g0;if(e_on)x.who.forEach(id=>{if(st>=4)W(id).e_mic=(W(id).e_mic||0)+1});items.push({label:g0==='Custom'?`${x.txt||'Custom segment'}: ${nm(x.who)}`:`${x.g}: ${nm(x.who)}`,sub:'Segment',st,w:1,lines:ln,bonus:pf.bonus,ups:pf.ups})}
     else{nAds++;const p=adPay(c);ads+=p;items.push({label:'Sponsor break',sub:`+${money(p)}`,st:null,w:0,lines:[]})}
   });
   const rated=items.filter(x=>x.st!=null);
@@ -1507,7 +1509,7 @@ function mutinyWeek(){if(!featOn('mutiny'))return;for(const c of Object.values(G
     c.mutW=0;c.mutCD=G.week+MUT_CD;c.pop=clamp(c.pop-3,1,100);if(c.id===G.me)G.mutiny={co:n.id,ids:grp.map(w=>w.id),d:G.date};
     news(`Walkout! ${lead.name} led ${grp.length} unhappy wrestlers out of ${c.short} to start ${n.name} (${n.short}): ${grp.map(w=>w.name).join(', ')}.`,c.id===G.me?'me':'co')}}}
 /* GM-mode features (§4.66, owner 26 Nov). Each can be switched off in Settings. TODO(ASK OWNER): every number here. */
-const FEATS={upstart:'New companies start up and raid rosters',mutiny:'Unhappy rosters can walk out',pcards:'Power cards in the Store',cls:'Wrestler classes and matchups',flv:'Feud levels (top level ends only at a Major Event)',prod:'Show production choices',faces:'Faces of the company',prom:'Promises to wrestlers',season:'Seasons with a yearly winner'};
+const FEATS={upstart:'New companies start up and raid rosters',mutiny:'Unhappy rosters can walk out',pcards:'Power cards in the Store',cls:'Wrestler classes and matchups',flv:'Feud levels (top level ends only at a Major Event)',prod:'Show production choices',faces:'Faces of the company',prom:'Promises to wrestlers',season:'Seasons with a yearly winner',arcs:'Multi-month storylines',earn:'Traits earned through play'};
 const featOn=k=>!(G&&G.opts&&G.opts.off&&G.opts.off[k]);
 /* Power cards: one-use boosts bought in the Store */
 const PCARDS={spot:{name:'Spotlight',cost:20000,fx:'One match on your next show rates about half a star higher. Pick the match on the Book screen.'},heal:{name:'Miracle recovery',cost:40000,fx:'One injured wrestler is back next week.'},hype:{name:'Hype machine',cost:25000,fx:'+15 hype for your next Major Event.'},party:{name:'Locker room party',cost:30000,fx:'Everyone on your roster gets +15 happiness.'},rest:{name:'Fresh legs',cost:20000,fx:'Clears fatigue for your whole roster.'},heat:{name:'Heat wave',cost:15000,fx:'+15 heat for one of your feuds.'}};
@@ -1521,6 +1523,7 @@ function pcUse(k,arg){const m=me();if(!pcN(k))return;const take=()=>{m.pcards[k]
     const w=W(arg);w.out=G.week+1;news(`Miracle recovery: ${w.name} is back next week.`,'me');return take()}
   if(k==='heat'){if(!arg){const L=FE().filter(f=>f.st==='cur'&&f.co===G.me);if(!L.length){say('You have no current feuds.');return}openD(`<div class="dh b"><h3>Heat wave</h3></div><div class="db"><div class="chips">${L.map(f=>`<button data-pcx="heat:${f.id}">${esc(fName(f))}<small>heat ${Math.round(f.heat)}</small></button>`).join('')}</div><div class="dfoot"><button data-x="1">Cancel</button></div></div>`);dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;closeD();if(b.dataset.pcx)pcUse('heat',b.dataset.pcx.split(':')[1])};return}
     const f=FE().find(x=>x.id===arg);if(f){feudHeat(f,15);news(`Heat wave: ${fName(f)} heats up.`,'me')}return take()}}
+document.addEventListener('click',e=>{if(G&&e.target.closest('[data-arcopen]')){e.preventDefault();arcPop(1)}});
 document.addEventListener('click',e=>{if(!G||tab!=='business')return;const b=e.target.closest('[data-pcb],[data-pcu]');if(!b||b.disabled)return;const m=me();
   if(b.dataset.pcb){const k=b.dataset.pcb,c=r10(PCARDS[k].cost*dif().cost);if(m.cash<c)return;m.cash-=c;(m.pcards=m.pcards||{})[k]=pcN(k)+1;save();renderHdr();render();return}
   pcUse(b.dataset.pcu)});
@@ -1557,6 +1560,42 @@ function seasonBox(){if(!featOn('season'))return '';const y=G.date.slice(0,4),L=
   return `<div class="panel" style="margin-bottom:14px"><h3>Season ${y}</h3><p class="sub" style="margin-top:0">Most fans at the end of the year wins the season. Growth, popularity and the best show are honoured too.</p><table class="stack"><thead><tr><th>Company</th><th class="n">Fans</th><th class="n">Growth</th><th class="n">Popularity</th><th class="n">Best show</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i===0?'🏆 ':''}${logo(r.c,18)} <b>${esc(r.c.short)}</b>${r.c.id===G.me?' <span class="k me">You</span>':''}</td><td class="n" data-l="Fans">${r.fans.toLocaleString('en-US')}</td><td class="n ${r.grow<0?'neg':'pos'}" data-l="Growth">${r.grow>=0?'+':''}${r.grow.toLocaleString('en-US')}</td><td class="n" data-l="Popularity">${Math.round(r.c.pop)}</td><td class="n" data-l="Best show">${r.best?stars(r.best):'–'}</td></tr>`).join('')}</tbody></table>
    ${past.length?`<h4 style="margin:12px 0 4px">Past seasons</h4>${past.map(s=>`<div class="kv"><span>${s.y}</span><b>🏆 ${esc(co(s.win)?.short||'?')} <span class="sub">· growth ${esc(co(s.grow)?.short||'?')} · popular ${esc(co(s.pop)?.short||'?')} · best show ${esc(co(s.best)?.short||'?')}</span></b></div>`).join('')}`:''}</div>`}
 
+/* JoW-inspired features (§4.67, owner 26 Nov). TODO(ASK OWNER): every number here. */
+/* Custom segments: your own text, a tone that decides how it plays, up to 8 people */
+const SEGTONE={hype:{l:'Hype someone up',g:'Promo'},call:{l:'Call someone out',g:'Challenge'},attack:{l:'Beat-down',g:'Attack'},respect:{l:'Show respect',g:'Show of respect'},party:{l:'Celebration',g:'Celebration'},sign:{l:'Big announcement',g:'Contract signing'}};
+/* Title rules: t.rule any | gim | major | weekly, t.ageMax (0 = none) */
+const TRULES={any:'Any match',gim:'Gimmick matches only',major:'Major Events only',weekly:'Weekly Shows only'};
+const titleRuleOK=(t,m,cid)=>{const c=G.cos[cid],major=c&&c.weeklyLeft===0,r=t.rule||'any';if(r==='gim'&&!gimOf(m).k)return false;if(r==='major'&&!major)return false;if(r==='weekly'&&major)return false;if(t.ageMax&&m.sides.flat().some(id=>(age(W(id))??25)>t.ageMax))return false;return true};
+function titleRulesBox(t){if(!(t.co===G.me||G.opts.sandbox))return t.rule&&t.rule!=='any'||t.ageMax?`<p class="sub">Rules: ${TRULES[t.rule||'any']}${t.ageMax?`, ${t.ageMax} and under`:''}</p>`:'';
+  return `<div class="panel" style="margin:10px 0;padding:10px 12px"><b>Title rules</b><div class="form" style="margin-top:6px"><label>Defended in<select data-trule="${t.id}">${Object.entries(TRULES).map(([k,l])=>`<option value="${k}" ${(t.rule||'any')===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Age limit (0 for none)<input type="number" min="0" max="60" data-tage="${t.id}" value="${t.ageMax||0}"></label></div></div>`}
+document.addEventListener('change',e=>{if(!G)return;const t=e.target;if(t.dataset.trule){const x=G.titles[t.dataset.trule];x.rule=t.value;save()}else if(t.dataset.tage){const x=G.titles[t.dataset.tage];x.ageMax=clamp(Math.round(+t.value||0),0,60)||undefined;save()}});
+/* Earned traits: wrestlers pick up traits from what happens to them. Up to 4 traits counting earned ones. */
+const EARN=[['bigm',w=>(w.e_big||0)>=3,'great matches at Major Events'],['mic',w=>(w.e_mic||0)>=5,'standout segments'],['crowdf',w=>(w.e_great||0)>=6,'a run of great matches'],['ironb',w=>(w.e_m||0)>=80&&!(w.injH||[]).length,'80 matches without an injury'],['workh',w=>(w.e_m||0)>=120,'120 matches'],['vet',w=>(age(w)??0)>=38&&(w.e_m||0)>=60,'years in the ring'],['injp',w=>(w.injH||[]).length>=4,'one injury too many']];
+function earnTraits(){for(const w of Object.values(G.ws)){if(w.status!=='active'||!w.co)continue;const L=trOf(w);if(L.length>=4)continue;
+  for(const [k,ok,why] of EARN){if(L.includes(k)||trClash(L,k)||(w.earned||[]).includes(k))continue;let v=false;try{v=ok(w)}catch(e){}if(!v)continue;L.push(k);w.trt=L;(w.earned=w.earned||[]).push(k);
+    if(w.co===G.me||w.pop>=70)news(`${w.name} earned a new trait: ${TRAITS[k].n} (${why}).`,w.co===G.me?'me':'ms');break}}}
+/* Multi-month storylines (player's company). One at a time; a decision at the end. */
+const ARCS={attack:{n:'Mystery attacker',start:()=>{const R=roster(G.me).filter(canWork).sort((a,b)=>b.pop-a.pop);const v=R.find(w=>w.align==='F')||R[0];return v?{v:v.id,left:ri(5,9),hits:0}:null},
+   week:a=>{const v=W(a.v);if(Math.random()<.4){a.hits++;mom(v,4);news(`The mystery attacker struck again: ${v.name} was ambushed backstage. Fans are desperate to know who did it.`,'me');me().hype=clamp((me().hype||0)+3,0,100)}},
+   ask:a=>{const v=W(a.v),L=roster(G.me).filter(w=>w.id!==a.v&&canWork(w)).sort((x,y)=>(y.align==='H')-(x.align==='H')||y.pop-x.pop).slice(0,3);a.opts=L.map(w=>w.id);return {q:`Who is ${v.name}'s mystery attacker?`,o:L.map(w=>[w.id,`Reveal ${w.name}`]).concat(a.ext?[]:[['wait','Keep the mystery going 4 more weeks']])}},
+   end:(a,c)=>{if(c==='wait'){a.left=4;a.ext=1;return false}const v=W(a.v),x=W(c);if(x.align!=='H'){x.al=70;x.align='H'}startFeud([[a.v],[c]],'Mystery attacker revealed',55+a.hits*8,'you');gainPop(x,3);gainPop(v,2);news(`Revealed: ${x.name} was the mystery attacker! ${v.name} wants revenge. The feud starts red hot.`,'fd');return true}},
+ phenom:{n:'Rookie phenom',start:()=>{const L=freeAgents().filter(w=>w.status==='active'&&!w.mgonly&&(age(w)??30)<=27).sort((a,b)=>b.wrk-a.wrk);const w=L[0];return w?{w:w.id,left:ri(4,7)}:null},
+   week:a=>{const w=W(a.w);if(w.co){a.left=0;return}gainPop(w,1.5);if(Math.random()<.5)news(`Indie buzz: ${w.name} keeps stealing shows. Everyone wants to sign ${pr(w,'him')}.`,'me')},
+   ask:a=>{const w=W(a.w);if(w.co)return null;a.fee=r10(worth(w)*.8);return {q:`${w.name}, the indie phenom, is ready to sign. Make an offer?`,o:[['sign',`Sign for ${money(a.fee)}/show (6 events)`],['pass','Pass']]}},
+   end:(a,c)=>{const w=W(a.w);if(c==='sign'&&!w.co){signW(w,G.me,a.fee,6);w.mor=80;news(`${w.name}, the indie phenom, signed with ${me().short}.`,'sg')}else if(!w.co){const r=Object.values(G.cos).filter(x=>x.active&&x.owner==='ai').sort((x,y)=>y.cash-x.cash)[0];if(r){signW(w,r.id,r10(worth(w)*1.2),6);news(`${r.short} signed the indie phenom ${w.name}.`,'sg')}}return true}},
+ split:{n:'Locker room split',start:()=>{const R=roster(G.me).filter(w=>!w.mgonly).sort((a,b)=>b.pop-a.pop);const a=R.find(w=>w.align==='F'),b=R.find(w=>w.align==='H');return a&&b?{a:a.id,b:b.id,left:ri(4,7)}:null},
+   week:a=>{roster(G.me).forEach(w=>{if(Math.random()<.3)w.mor=clamp(morOf(w)-2,0,100)});if(Math.random()<.4)news(`The locker room is splitting into camps behind ${W(a.a).name} and ${W(a.b).name}. Tension is rising.`,'me')},
+   ask:a=>{const fee=r10(5000+roster(G.me).length*800);a.fee=fee;return {q:`The locker room has split behind ${W(a.a).name} and ${W(a.b).name}. What do you do?`,o:[['a',`Back ${W(a.a).name}`],['b',`Back ${W(a.b).name}`],['peace',`Broker peace (${money(fee)})`]]}},
+   end:(a,c)=>{const R=roster(G.me);if(c==='peace'){me().cash-=a.fee;R.forEach(w=>w.mor=clamp(morOf(w)+6,0,100));news('Peace talks worked. The locker room is back together.','me')}else{const win=W(a[c]),lose=W(a[c==='a'?'b':'a']);win.mor=clamp(morOf(win)+15,0,100);lose.mor=clamp(morOf(lose)-25,0,100);startFeud([[win.id],[lose.id]],'Locker room split',50,'you');news(`You sided with ${win.name}. ${lose.name} is furious, and their feud spills into the ring.`,'fd')}return true}}};
+const ARC_P=.08;
+function arcWeek(){if(!featOn('arcs'))return;const a=G.arc;
+  if(!a){if(G.week>4&&Math.random()<ARC_P/4.3){const k=pick(Object.keys(ARCS)),d=ARCS[k].start();if(d){G.arc={k,...d,wk0:G.week};news(`A new storyline is brewing: ${ARCS[k].n}.`,'me')}}return}
+  if(a.ask)return;ARCS[a.k].week(a);if(--a.left<=0){const q=ARCS[a.k].ask(a);if(!q){delete G.arc;return}a.ask=q;if(window.__ro){arcAnswer(q.o[0][0])}}}
+function arcAnswer(c){const a=G.arc;if(!a)return;const done=ARCS[a.k].end(a,c);if(done)(G.arcs=G.arcs||[]).push({k:a.k,d:G.date,c}),delete G.arc;else delete a.ask;save()}
+function arcPop(force){const a=G.arc;if(!a||!a.ask||window.__ro||(dlg&&dlg.open))return;if(!force&&(!['office','dash'].includes(tab)||a.shown===G.week))return;a.shown=G.week;const q=a.ask;
+  openD(`<div class="dh"><h3>📖 ${esc(ARCS[a.k].n)}</h3><div>A storyline needs your call</div></div><div class="db"><p style="font-size:17px;font-weight:700">${esc(q.q)}</p><div class="chips">${q.o.map(([k,l])=>`<button data-arc="${esc(k)}">${esc(l)}</button>`).join('')}</div><p class="hint">You can decide later from here; the storyline waits for you.</p><div class="dfoot"><button data-x="1">Later</button></div></div>`);
+  dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.x){closeD();return}if(b.dataset.arc){closeD();arcAnswer(b.dataset.arc);render()}}}
+
 function aiOffers(){
   G.offers=G.offers.filter(o=>{const w=W(o.w);if(w.co===G.me&&w.left>2&&o.week!=null&&G.week-o.week>=2){news(`${co(o.co).short}'s offer for ${w.name} lapsed. ${w.name} stays under contract.`,'of');return false}return w.co===G.me});
   for(const w of roster(G.me)){
@@ -1578,7 +1617,7 @@ function advance(){
   timeline(from,G.date);if(from.slice(5,7)!==G.date.slice(5,7))monthly();
   for(const w of Object.values(G.ws)){if(w.status!=='active')continue;w.fat=Math.max(0,(w.fat||0)-(w.co===G.me&&own(me(),'jet')?18:12));if(w.out&&w.out<=G.week){w.out=0;gainPop(w,1);mom(w,6);if(w.co===G.me)news(`${w.name} is back and ready to work.`,'me')}if(w.co){let mo=w.mor??70;mo+=(65-mo)*(hasTr(w,'loyal')?.08:hasTr(w,'pro')?.1:.05);if(G.week-w.last>3&&!w.mgr)mo-=hasTr(w,'showboat')||hasTr(w,'diva')?3.5:hasTr(w,'pro')?1:2;if(hasTr(w,'hothead'))mo+=rnd(-3,3);if(hasTr(w,'greedy')&&(w.wage||0)<worth(w)*.85)mo-=1;mo+=leaderLift(w)-cancerDrag(w);if(w.dir==='push'&&w.pop>=40)mo+=.4;if(w.dir==='enhance'&&w.pop>=40)mo-=1;if(w.co===G.me)mo+=stfMy('tr')*.6;if(holds(w).length)mo+=.5;mo+=hapWeek(w);w.mor=clamp(mo,0,100);if(mo<30)mom(w,-1)}w.mom+= (50-w.mom)*.06;if(w.co&&G.week-w.last>2){mom(w,-2);gainPop(w,-.2)}if(!w.co&&w.pop>20)gainPop(w,-.05);if(w.pop>75)gainPop(w,w.pop>90&&!w.legend?-.15:-.08)}
   roster(G.me).forEach(w=>{if(w.farewell&&G.week>=w.farewell){news(`${w.name}'s farewell tour is over. Thank you, ${w.name}.`,'me');retireW(w)}});
-  aiSign(false);aiOffers();mergeWeek();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();upstartWeek();mutinyWeek();promWeek();
+  aiSign(false);aiOffers();mergeWeek();feudWeek();backstage();dispWeek();trainWeek();rogueWeek();reqWeek();promoWeek();wevWeek();upstartWeek();mutinyWeek();promWeek();arcWeek();
 
   for(const c of Object.values(G.cos)){if(!c.active)continue;
     c.pop+=((own(c,'museum')?60:50)-c.pop)*.02;if(c.owner==='ai'&&c.cash>100000&&!(c.deep&&slumpF(c)))c.cash-=(c.cash-100000)*.03;
@@ -1639,7 +1678,7 @@ function render(){
   if(!G&&!HOME.includes(tab))tab='home';navOpen=null;
   $('#nav').innerHTML=navHtml();setTimeout(tabSels,0);
   renderHdr();
-  ({dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab))hofCerPop();
+  ({dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
   if(G&&['book','dash'].includes(tab)){const cb=campBox();if(cb)$('#app').insertAdjacentHTML('afterbegin',cb)}
 }
 function renderHdr(){
@@ -1681,7 +1720,7 @@ function bkFix(x){if(x.t!=='m')return;if(x.title&&mFull(x)&&!titleOpts(G.me,x,G.
 function bkPut(id){const card=G.card,w=W(id);BK.w=id;let s=BK.sel;if(s&&!card[s.i])s=null;
   if(!s){const i=card.findIndex(x=>x.t==='m'&&!x.tour&&mNeed(x)>0);if(i>=0)s={i,s:mOpenSide(card[i])};else{card.push({t:'m',mt:'single',sides:[[],[]],win:null,fin:null});s={i:card.length-1,s:0}}}
   const x=card[s.i];
-  if(x.t==='s'){if(x.who.includes(id)){x.who=x.who.filter(y=>y!==id)}else if(x.who.length<6)x.who.push(id);x.oc='';BK.sel=x.who.length<6?s:null;rerender();return}
+  if(x.t==='s'){if(x.who.includes(id)){x.who=x.who.filter(y=>y!==id)}else if(x.who.length<8)x.who.push(id);x.oc='';BK.sel=x.who.length<8?s:null;rerender();return}
   if(x.t!=='m')return;
   if(!canWork(w)){say(w.mgr?`${w.name} is a manager. Managers can be in segments, not matches.`:`${w.name} is out of action and can't wrestle this week.`);rerender();return}
   if(used().has(id)){rerender();return}
@@ -1697,7 +1736,7 @@ function bkList(){const r=roster(G.me).filter(w=>canBrand(w,me())),u=used(),riv=
      <span class="bwn">${favMark(w)}${esc(w.name)}${w.legend?' ✦':''}${holds(w).length?' <span class="mk" title="Champion">🏆</span>':''}${wMk(w)}</span><span class="bws">${w.mgr?'Mgr':pd(w)} · ${w.align}${featOn('cls')&&!w.mgr?' · '+CLASSES[clsOf(w)]:''}${bus&&!inSeg?' · booked':''}</span></button>`};
   return `${ok.map(row).join('')||'<div class="sub" style="padding:6px">Nobody matches. Clear the search or pick another filter.</div>'}${out.length?`<div class="bksec">Injured and away (${out.length})</div>${out.map(row).join('')}`:''}`}
 function bkPanel(){const riv=bkRivals(BK.w),s=BK.sel,x=s&&G.card[s.i];
-  let hint;if(x&&x.t==='m'){const z=mSz(x);hint=`Filling <b>match ${s.i+1}</b>${z?`, side ${s.s+1}`:''}. Tap wrestlers to add them.`}else if(x&&x.t==='s')hint=`Filling <b>segment ${s.i+1}</b>. Tap up to 6 people.`;else hint='Tap a wrestler to put them in the next open spot. Tap an empty spot on the card to choose where they go.';
+  let hint;if(x&&x.t==='m'){const z=mSz(x);hint=`Filling <b>match ${s.i+1}</b>${z?`, side ${s.s+1}`:''}. Tap wrestlers to add them.`}else if(x&&x.t==='s')hint=`Filling <b>segment ${s.i+1}</b>. Tap up to 8 people.`;else hint='Tap a wrestler to put them in the next open spot. Tap an empty spot on the card to choose where they go.';
   const z=x&&x.t==='m'&&mSz(x),teams=z&&z[s.s]>=2&&!x.sides[s.s].length?TM().filter(t=>t.st!=='past'&&t.co===G.me&&t.kind==='tag'&&t.m.length===z[s.s]):[];
   const leg=BK.w&&riv.size?`<div class="bkleg"><span>Feuding with <b>${esc(W(BK.w).name)}</b>:</span> ${[[10,'Mild'],[40,'Heated'],[70,'Intense']].map(([h,l])=>`<span><i style="background:${bkFeudCol(h)}"></i>${l}</span>`).join('')}</div>`:BK.w?`<div class="bkleg">${esc(W(BK.w).name)} has no current feud.</div>`:'';
   return `<h3 style="margin-bottom:4px">Roster</h3><div class="bkhint${s?' on':''}">${hint}${s?' <button class="sm" data-bkdone="1">Done</button>':''}</div>${leg}
@@ -1728,9 +1767,9 @@ function vBook(){
         ${fh?`<span class="sub" style="color:${heatCol(fh)};font-weight:700" title="Feud heat">🔥 ${Math.round(fh)}${featOn('flv')?` · Lv ${flvOf(fh)}`:''}</span>`:''}${ctl(x,i)}</div>
         <div class="vs">${sides}</div>
         <div class="bmf">${tagT}${full?`<button class="sm" data-fin="${i}">Finish</button>`:''}${full&&mFeud(x.sides)?(flvTop(fh)&&!major?`<span class="sub" title="Top-level feuds can only end at a Major Event">Lv ${flvOf(fh)}: ends only at a Major Event</span>`:`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`):''}${full&&featOn('pcards')&&(pcN('spot')||x.pc)?`<button class="sm${x.pc?' go':''}" data-pcs="${i}" title="Use a Spotlight power card on this match">⚡ ${x.pc?'Spotlight on':'Spotlight'}</button>`:''}${crewOf(me(),'road').length?(()=>{const L=crewOf(me(),'road'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a road agent">${p?esc(p.name.split(' ').pop())+' +':'Road agent'}</button>`})():''}${k==='custom'?`<button class="sm" data-bcs="${i}:1" ${z.length>=MT_MAXSIDE?'disabled':''}>+ Side</button><button class="sm" data-bcs="${i}:-1" ${z.length<=2?'disabled':''}>− Side</button>`:''}${g.cost?`<span class="sub">${money(g.cost)}</span>`:''}</div></div>`}
-    if(x.t==='s'){const outs=x.who.length?segOuts(x.g,x.who).filter(o=>o[0]):[];return `<div class="bm${BK.sel&&BK.sel.i===i?' cur':''}${x.who.length?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind s">Segment</span><select id="bsg${i}" aria-label="Segment type">${Object.keys(SEG).map(t=>`<option ${t===x.g?'selected':''}>${t}</option>`).join('')}</select>
+    if(x.t==='s'){const outs=x.who.length?segOuts(x.g,x.who).filter(o=>o[0]):[];return `<div class="bm${BK.sel&&BK.sel.i===i?' cur':''}${x.who.length?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind s">Segment</span><select id="bsg${i}" aria-label="Segment type">${Object.keys(SEG).map(t=>`<option ${t===x.g?'selected':''}>${t}</option>`).join('')}</select>${x.g==='Custom'?`<select id="bstn${i}" aria-label="Tone">${Object.entries(SEGTONE).map(([k,v])=>`<option value="${k}" ${(x.tone||'hype')===k?'selected':''}>${v.l}</option>`).join('')}</select>`:''}
         ${outs.length?`<select id="boc${i}" aria-label="Outcome"><option value="">Outcome: sim decides</option>${outs.map(([q,l])=>`<option value="${q}" ${x.oc===q?'selected':''}>${esc(l)}</option>`).join('')}</select>`:''}${ctl(x,i)}</div>
-        <div class="vs"><span class="side">${x.who.map(id=>chip(id,i,0,false)).join('')}${x.who.length<6?empty(i,0,0):''}</span></div>
+        ${x.g==='Custom'?`<input id="bstx${i}" class="bstx" maxlength="80" placeholder="What happens? e.g. Unveils a new faction" value="${esc(x.txt||'')}">`:''}<div class="vs"><span class="side">${x.who.map(id=>chip(id,i,0,false)).join('')}${x.who.length<8?empty(i,0,0):''}</span></div>
         <div class="bmf">${x.who.length?'<span class="tag sim">Charisma</span>':'<span class="tag ns">Needs someone</span>'}${crewOf(me(),'prod').length?(()=>{const L=crewOf(me(),'prod'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a producer">${p?esc(p.name.split(' ').pop())+' +':'Producer'}</button>`})():''}</div></div>`}
     return `<div class="bm"><div class="bmh"><span class="no">${i+1}</span><span class="kind a">Ad</span><span class="seg">Sponsor break</span><span class="tag mo">+${money(adPay(m))}</span>${ctl(x,i)}</div></div>`;
   };
@@ -1754,12 +1793,14 @@ function vBook(){
 }
 const bkRedrawList=()=>{const l=$('#bklist');if(l)l.innerHTML=bkList()};
 document.addEventListener('input',e=>{if(tab!=='book'||!G||e.target.id!=='bkq'||!$('#app').contains(e.target))return;BKF.q=e.target.value;bkRedrawList()});
-document.addEventListener('change',e=>{if(tab!=='book'||!G)return;const t=e.target;if(!$('#app').contains(t)||!t.id)return;if(/^bpr[vpa]$/.test(t.id)){prodOf(me())[t.id[3]]=t.value;rerender();return}const mm=t.id.match(/^(bmt|bgm|btt|bsg|boc)(\d+)$/);if(!mm)return;const x=G.card[+mm[2]];if(!x)return;
+document.addEventListener('change',e=>{if(tab!=='book'||!G)return;const t=e.target;if(!$('#app').contains(t)||!t.id)return;if(/^bpr[vpa]$/.test(t.id)){prodOf(me())[t.id[3]]=t.value;rerender();return}const mm=t.id.match(/^(bmt|bgm|btt|bsg|boc|bstn|bstx)(\d+)$/);if(!mm)return;const x=G.card[+mm[2]];if(!x)return;
   if(mm[1]==='bmt'){bkReshape(x,t.value);const k=mOpenSide(x);BK.sel=mFull(x)&&mtOf(x)!=='multi'?null:{i:+mm[2],s:mtOf(x)==='multi'?x.sides.length:Math.max(0,k)};bkFix(x)}
   else if(mm[1]==='bgm')x.gm=t.value||undefined;
   else if(mm[1]==='btt')x.title=t.value||null;
   else if(mm[1]==='bsg'){x.g=t.value;x.oc=''}
   else if(mm[1]==='boc')x.oc=t.value;
+  else if(mm[1]==='bstn')x.tone=t.value;
+  else if(mm[1]==='bstx'){x.txt=t.value.slice(0,80);save();return}
   rerender()});
 document.addEventListener('click',e=>{
   if(tab!=='book'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t)||t.disabled)return;const d=t.dataset,card=G.card;
@@ -1979,7 +2020,7 @@ function runPlayer(){
   const who=id=>{const w=W(id),p=pre[id]||[w.pop,w.cha,w.wrk];return `<span class="sp"><b>${esc(w.name)}</b>${dl(w.pop-p[0],'pop')}${w.cha>p[1]?'<span class="dchip st">+Cha</span>':''}${w.wrk>p[2]?'<span class="dchip st">+Wrk</span>':''}</span>`};
   const row=(it,i)=>{const x=card[i]||{};
     if(x.t==='a')return `<div class="srow ad"><span class="sno"></span><div><span class="stype">Sponsor break</span></div><b class="smo">${esc(it.sub)}</b></div>`;
-    if(x.t==='s')return `<div class="srow"><span class="sno">${i+1}</span><div class="smain"><span class="stype">Segment · ${esc(x.g)}</span><div class="sline">${x.who.map(id=>`<b>${esc(W(id).name)}</b>`).join(' &amp; ')}</div>
+    if(x.t==='s')return `<div class="srow"><span class="sno">${i+1}</span><div class="smain"><span class="stype">Segment · ${x.g==='Custom'?esc(x.txt||'Custom segment'):esc(x.g)}</span><div class="sline">${x.who.map(id=>`<b>${esc(W(id).name)}</b>`).join(' &amp; ')}</div>
       <div class="schg">${x.who.map(who).join('')}${(it.ups||[]).map(u=>`<span class="dchip st">${esc(u)}</span>`).join('')}${it.bonus?`<span class="dchip ${it.bonus<0?'dn':'up'}">${it.bonus<0?'Refunds ':'Buzz +'}${money(Math.abs(it.bonus))}</span>`:''}</div>
       ${it.lines.length?`<details><summary>How it went</summary>${it.lines.map(l=>`<p>${esc(l)}</p>`).join('')}</details>`:''}</div><span class="sst">${stars(it.st)}</span></div>`;
     const t=x.title&&G.titles?.[x.title],g=gimOf(x),fin=x.fin?(CLEAN.includes(x.fin.t)&&g.win?g.win:x.fin.t):'',won=x.win!=null&&x.fin&&!NOWIN.includes(x.fin.t);
@@ -2451,7 +2492,7 @@ function titlePage(t){
   return `<div class="panel"><div class="ph"><div><div class="sub">${esc(G.cos[t.co]?.name||'')} · ${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag team':'Singles'}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(t.name)}</h2>${t.elite?'<span class="k of">Prestigious</span>':''}</div>
    <div style="min-width:180px"><div class="sub">Prestige</div><b style="font:28px Anton,sans-serif">${Math.round(t.prestige??0)}</b><div class="meter" style="margin:4px 0 0"><i style="width:${clamp(t.prestige??0,0,100)}%;background:var(--gold)"></i></div></div></div>
    <div class="beltshow">${beltImg(t,528,null,true)}${BL&&(t.co===G.me||G.opts.sandbox)?`<div class="btns" style="justify-content:center;margin-top:8px"><button data-belt="${t.id}">Design this belt</button></div>`:''}</div>
-   <div class="msg" style="background:var(--goldbg);color:var(--gold)">${cur?`Champion: <b>${hn(cur)}</b> since ${fmtDate(cur.won)}${cur.wonAt?` (${esc(cur.wonAt)})`:''} · ${days(cur)} days · ${defs(cur)} successful defence${defs(cur)===1?'':'s'}`:'Vacant'}</div>
+   ${titleRulesBox(t)}<div class="msg" style="background:var(--goldbg);color:var(--gold)">${cur?`Champion: <b>${hn(cur)}</b> since ${fmtDate(cur.won)}${cur.wonAt?` (${esc(cur.wonAt)})`:''} · ${days(cur)} days · ${defs(cur)} successful defence${defs(cur)===1?'':'s'}`:'Vacant'}</div>
    <div class="tiles">${[['Reigns',rs.length],['Champions',Object.keys(by).length],['Title matches',all.length],['Average title match',avgR!=null?stars(clampQ(avgR)):'–']].map(([l,v])=>`<div class="tile"><div class="sub">${l}</div><b>${v}</b></div>`).join('')}</div>
    <div class="sheet" style="margin-top:12px">
     <div class="kv"><span>Longest reign</span><b>${longest?`${esc(longest.hn)} <span class="sub">${days(longest)} days</span>`:'–'}</b></div>
@@ -2537,7 +2578,7 @@ function vOffice(){const m=me(),major=m.weeklyLeft===0,need=(G.offers||[]).lengt
   const links=[['dash','Inbox'],['news','News'],['book','Book the show'],['calendar','Calendar'],['roster/mine','My roster'],['roster/sign','Sign talent'],['titles','Championships'],['companies','Rival companies'],['war','Ratings war'],['business','Staff and store'],['history/hof','History'],['settings','Settings']];
   $('#app').innerHTML=`<div class="head"><div><h2>Office</h2><p>Your desk. Tap anything in the room to go there.</p></div><div class="btns"><a class="btn go" href="#book">Book ${major?esc(m.majorName):'this week\'s show'}</a></div></div>
    <div class="ofwrap">${svg}</div>
-   <div class="ofstrip"><div><small>Bank</small><b class="${m.cash<0?'neg':''}">${money(m.cash)}</b></div><div><small>Next show</small><b>${esc(major?m.majorName:wkName(m))}</b></div><div><small>Waiting for you</small><b>${need||'Nothing'}</b></div><div><small>Last show</small><b>${m.lastRating!=null?stars(m.lastRating):'None yet'}</b></div><div><small>Popularity</small><b>${Math.round(m.pop)}</b></div></div>
+   <div class="ofstrip"><div><small>Bank</small><b class="${m.cash<0?'neg':''}">${money(m.cash)}</b></div><div><small>Next show</small><b>${esc(major?m.majorName:wkName(m))}</b></div><div><small>Waiting for you</small><b>${need||'Nothing'}</b>${G.arc?`<small style="color:var(--blue)">📖 ${esc(ARCS[G.arc.k].n)}${G.arc.ask?` · <a href="#office" data-arcopen="1">decide</a>`:''}</small>`:''}</div><div><small>Last show</small><b>${m.lastRating!=null?stars(m.lastRating):'None yet'}</b></div><div><small>Popularity</small><b>${Math.round(m.pop)}</b></div></div>
    <div class="oflinks">${links.map(([h,l])=>`<a href="#${h}">${l}</a>`).join('')}</div>`}
 
 /* News site (§4.64): the game's news shown as a made-up wrestling news website. Fictional name and layout. */
@@ -2842,6 +2883,33 @@ const LK_PRESETS={Classic:{top:'none',bottoms:'trunks',boots:'boots',pads:'knee'
   Athlete:{top:'singlet',bottoms:'tights',boots:'tall',pads:'knee',wrists:'tape',headwear:'helmet',eyewear:'sport',extra:'none',mask:'none',paint:'eyeblack'}};
 const LK_CROP={eyes:'head',brows:'head',nose:'head',mouth:'head',hair:'head',facial:'head',paint:'head',mask:'head',maskPattern:'head',headwear:'head',eyewear:'head',head:'head',top:'bust',topArt:'bust',wrists:'bust',extra:'bust',tattoo:'bust',tattoo2:'bust',tattoo3:'bust',bottoms:'legs',botArt:'legs',boots:'legs',bootArt:'legs',pads:'legs'};
 const lkLab=v=>String(v).replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());
+/* Build a look from a photo (§4.68, from the owner's photo-builder handoff, adapted). Inside Claude, the page asks
+   Claude to read the photo and pick character-creator values (never who the person is). Anywhere else (GitHub Pages),
+   it falls back to a quick colour match from the photo. Either way the result is a normal pixel look you can edit. */
+const PH={img:null,url:'',msg:'',busy:false};
+function phPrompt(){const lines=[];for(const [k,o] of Object.entries(WL.OPTIONS)){if(k==='bg'||k==='bgColor')continue;lines.push(Array.isArray(o[1])?`${k} (${o[0]}): one of ${o[1].join(', ')}`:`${k} (${o[0]}): hex colour like "#a1b2c3"`)}
+  return `You are helping a player of a wrestling management game turn a photo into an original pixel-art character in the game's own creator.
+Look at the photo and describe only what is visible: body, skin tone, hair, face and the outfit worn right now. Do not identify the person or guess who they are, and do not include any name.
+For every key below choose the closest allowed value. Colours must be hex codes sampled from the photo.
+Notes: frame is the body frame; build is how big and muscular they look. top covers the upper body (none if shirtless). bottoms are trunks, tights or pants. boots is footwear. gear1 = top colour, gear2 = trim, gear3 = bottoms colour, gear4 = boots colour. Art keys are printed designs (none if plain). Use tattoo keys only for visible tattoos. mask only if they wear one. Leave eyewear, headwear and extra as none unless clearly visible.
+Keys:
+${lines.join('\n')}
+Reply with only a JSON object holding every key above, plus "summary": one plain sentence of at most 25 words describing the look (no names).`}
+function phLook(reply,cur){const picked={};for(const k of Object.keys(WL.OPTIONS))if(k!=='bg'&&k!=='bgColor'&&reply[k]!=null)picked[k]=reply[k];
+  const L=WL.normalize(Object.assign(WL.defaults(),picked,{bg:cur.bg,bgColor:cur.bgColor}));const o={};WL.OUTFIT_KEYS.forEach(k=>o[k]=L[k]);L.outfits=[0,1,2].map(()=>Object.assign({},o));L.outfit=0;return WL.normalize(L)}
+function phQuick(cur){const W0=WL.W,H0=WL.H,c=document.createElement('canvas');c.width=W0;c.height=H0;const x=c.getContext('2d'),im=PH.img,cw=im.height*W0/H0;x.drawImage(im,(im.width-cw)/2,0,cw,im.height,0,0,W0,H0);const d=x.getImageData(0,0,W0,H0).data;
+  const med=(x0,x1,y0,y1)=>{const a=[];for(let y=y0;y<=y1;y++)for(let xx=x0;xx<=x1;xx++){const i=(y*W0+xx)*4;a.push([d[i],d[i+1],d[i+2]])}a.sort((p,q)=>p[0]+p[1]+p[2]-q[0]-q[1]-q[2]);return a[a.length>>1]};
+  const hex=v=>'#'+v.map(n=>n.toString(16).padStart(2,'0')).join(''),near=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2<45*45;
+  const skin=med(12,19,12,19),hair=med(11,20,3,8),top=med(10,21,28,40),bot=med(11,20,45,51),boots=med(10,21,64,72);
+  const L=Object.assign(JSON.parse(JSON.stringify(cur)),{skin:hex(skin),gear3:hex(bot)});if(near(hair,skin))L.hair='bald';else{L.hairColor=L.facialColor=hex(hair)}if(near(top,skin))L.top='none';else L.gear1=hex(top);if(near(boots,skin))L.boots='barefoot';else{L.gear4=L.padColor=hex(boots)}
+  return phLook(L,cur)}
+async function phBuild(cur){const im=PH.img,k=Math.min(1,768/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+  let s=null;try{s=window.claude&&window.claude.use?await window.claude.use('sample'):null;if(s&&!(await s.limits()).images)s=null}catch(e){s=null}
+  if(!s)return {L:phQuick(cur),msg:'Quick colour match: skin, hair and outfit colours came from the photo. Their current styles were kept, so change those in the other tabs. (Reading photos needs Claude, so it only works inside the Claude app.)'};
+  try{const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.88));const r=await s(phPrompt(),{images:[blob],modelTier:'default'});const t=r.text||'',a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<a)throw 0;const j=JSON.parse(t.slice(a,b+1));
+    return {L:phLook(j,cur),msg:(typeof j.summary==='string'?j.summary.slice(0,200)+' ':'')+'Their outfit is in all three outfit slots. Change anything you like, then save.'}}
+  catch(e){if(e&&e.code==='rate_limited')return {L:null,msg:'Too many photo reads right now. Try again in a minute.'};return {L:phQuick(cur),msg:'Claude could not read that photo, so this is a quick colour match. Their current styles were kept.'}}}
+
 function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxOf(w)))),tab='Body',pal=null,gal=null;const hist=[];let desc=typeof w.look==='string'?w.look:'',col=w.col||'#c8102e';
   const set=(k,v)=>{hist.push(JSON.stringify(L));if(hist.length>40)hist.shift();L[k]=v;L=WL.normalize(L)};
   const row=([lab,k,ck])=>{const vals=k?WL.OPTIONS[k][1]:null,i=k?vals.indexOf(L[k]):0;
@@ -2853,10 +2921,13 @@ function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxO
      <div class="pv"><canvas id="lkc" aria-label="Portrait preview"></canvas>
       <div class="chips" role="group" aria-label="Outfit">${'ABC'.split('').map((c,i)=>`<button data-slot="${i}" class="${L.outfit===i?'sel':''}">Outfit ${c}</button>`).join('')}</div>
       <div class="btns"><button data-rnd="1">🎲 Random look</button><button data-undo="1" ${hist.length?'':'disabled'}>Undo</button></div></div>
-     <div><div class="tabs" role="tablist">${[...LK_GROUPS.map(g=>g[0]),...(noNotes?[]:['Notes'])].map(t=>`<button data-tab="${t}" class="${tab===t?'on':''}" role="tab" aria-selected="${tab===t}">${t}</button>`).join('')}</div>
+     <div><div class="tabs" role="tablist">${[...LK_GROUPS.map(g=>g[0]),'Photo',...(noNotes?[]:['Notes'])].map(t=>`<button data-tab="${t}" class="${tab===t?'on':''}" role="tab" aria-selected="${tab===t}">${t}</button>`).join('')}</div>
       ${tab==='Gear'?`<div class="chips" style="margin-bottom:6px">${Object.keys(LK_PRESETS).map(p=>`<button data-pre="${p}" class="sm">${p}</button>`).join('')}</div>`:''}
-      ${tab==='Notes'?`<label>Description<textarea id="plk" rows="3" maxlength="200" placeholder="Ring gear, entrance, anything else">${esc(desc)}</textarea></label><div class="form" style="margin-top:10px">${imgField('w:'+w.id,w.logo,'Photo (optional)','Replaces the pixel portrait on the profile when set.')}</div><label style="margin-top:10px">Colour<input type="color" id="pcol" value="${esc(col)}" style="max-width:120px"></label>`:
-       (LK_GROUPS.find(g=>g[0]===tab)||LK_GROUPS[0])[1].map(row).join('')}</div></div>
+      ${tab==='Photo'?`<div class="phb"><p class="sub" style="margin:0 0 8px">Start from a photo. Claude picks the closest body, skin, hair, face and outfit from this editor's own options, so it stays a pixel wrestler in our style. It never tries to say who the person is.</p>
+        <label class="btn sm" style="display:inline-flex;cursor:pointer">Choose a photo<input type="file" id="lkf" accept="image/*" hidden></label>
+        ${PH.url?`<div class="phprev"><img src="${PH.url}" alt="Your photo"></div>`:'<div class="phprev empty">No photo yet. A clear, full-body shot works best.</div>'}
+        <div class="btns"><button class="go" data-phb="1" ${PH.img&&!PH.busy?'':'disabled'}>${PH.busy?'Looking at the photo…':'Build look from photo'}</button></div>${PH.msg?`<p class="hint" role="status">${esc(PH.msg)}</p>`:''}</div>`:tab==='Notes'?`<label>Description<textarea id="plk" rows="3" maxlength="200" placeholder="Ring gear, entrance, anything else">${esc(desc)}</textarea></label><div class="form" style="margin-top:10px">${imgField('w:'+w.id,w.logo,'Photo (optional)','Replaces the pixel portrait on the profile when set.')}</div><label style="margin-top:10px">Colour<input type="color" id="pcol" value="${esc(col)}" style="max-width:120px"></label>`:
+       tab==='Photo'?'':(LK_GROUPS.find(g=>g[0]===tab)||LK_GROUPS[0])[1].map(row).join('')}</div></div>
      <div class="dfoot"><button data-x="1">Cancel</button>${w.px?'<button data-gen="1">Back to their original look</button>':''}<button class="bl" id="lkok">Save look</button></div></div>`,'wide');WL.draw($('#lkc'),L,{scale:6})};
   const keep=()=>{const t=$('#plk');if(t)desc=t.value;const c=$('#pcol');if(c)col=c.value};
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const d=b.dataset;keep();
@@ -2868,9 +2939,11 @@ function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxO
     else if(d.undo){if(hist.length)L=WL.normalize(JSON.parse(hist.pop()))}
     else if(d.gen){hist.push(JSON.stringify(L));L=pxSeed(w)}
     else if(d.k&&d.v!=null){set(d.k,d.v)}
+    else if(d.phb){if(!PH.img||PH.busy)return;PH.busy=true;PH.msg='';draw();phBuild(L).then(r=>{PH.busy=false;PH.msg=r.msg;if(r.L){hist.push(JSON.stringify(L));L=r.L}if(dlg.open)draw()});return}
     else if(b.id==='lkok'){const base=JSON.stringify(pxSeed(w));w.px=JSON.stringify(L)===base?undefined:L;if(!w.px)delete w.px;if(!noNotes){w.look=desc.trim();w.col=col}save();closeD();if(after)after();else rerender();return}
     else return;
     draw()};
+  dlg.onchange=e=>{const t=e.target;if(t.id!=='lkf')return;const f=t.files[0];if(!f||!/^image\//.test(f.type)){PH.msg='That file is not an image.';draw();return}const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{PH.img=im;PH.url=url;PH.msg='';draw()};im.onerror=()=>{PH.msg='That image could not be opened.';draw()};im.src=url};
   dlg.oninput=e=>{const t=e.target;if(t.type==='color'&&t.dataset.k){L[t.dataset.k]=t.value;L=WL.normalize(L);WL.draw($('#lkc'),L,{scale:6});const s=dlg.querySelector(`[data-pal="${t.dataset.k}"]`);if(s)s.style.setProperty('--c',t.value)}};
   dlg.onclose=()=>{dlg.oninput=null;dlg.onclose=null};
   draw()}
