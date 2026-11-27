@@ -3,6 +3,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 await p.route('https://**',r=>r.abort());await p.goto('file:///home/user/game/index.html#new');await p.waitForTimeout(300);
 await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTimeout(200);
 const ids=await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).filter(w=>w.co===G.me&&w.status==='active').map(w=>w.id)});
+await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);G.teams=[];localStorage.ro_save=JSON.stringify(G)});await p.reload();await p.waitForTimeout(200);
 await p.goto('file:///home/user/game/index.html#teams');await p.waitForTimeout(100);
 await p.evaluate(()=>{location.hash='factions'});await p.waitForTimeout(250);await p.click('#tnewf');await p.fill('#tn','Heenan Family');await p.click(`[data-mm="${ids[0]}"]`);await p.click(`[data-mm="${ids[1]}"]`);await p.click('#tok');await p.waitForTimeout(80);
 await p.click('[data-tgo]');await p.waitForTimeout(80);
