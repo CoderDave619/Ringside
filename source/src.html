@@ -241,6 +241,10 @@ dialog.wide{width:min(980px,96vw)}
 .scard .ban b{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:34px;letter-spacing:.06em;padding-bottom:10px}
 .scard .ban img{width:56px;height:auto}
 .scard .bd{padding:10px 14px 14px}.scard .bd b{display:block}.scard .bd span{font-size:14px;color:var(--mute)}
+.bizc .fcard{grid-template-columns:1fr auto;column-gap:12px}.bizc .fcard>*{grid-column:1}.bizc .fcard>.btns{grid-column:2;grid-row:1/span 3;align-self:center;display:flex;flex-direction:column;align-items:stretch;gap:6px;margin:0}.bizc .fcard>.btns button{white-space:nowrap}
+.sedit .form{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 10px}.sedit .form .wide{grid-column:1/-1}
+.rexp td{background:var(--bluebg);white-space:normal}.rexpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 14px}.rexpg .kv b{text-align:right}.rexpg .kv{margin:0}
+.slist3{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px}.slist3 button{display:flex;align-items:center;gap:4px;min-width:0;padding:5px 6px;min-height:0;font-size:13px;text-align:left;justify-content:flex-start;background:none;border:1px solid var(--line);border-radius:8px}.slist3 button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.slist3 button.sel{border-color:var(--blue);background:var(--bluebg)}@media (max-width:600px){.slist3{grid-template-columns:repeat(3,minmax(0,1fr))}.slist3 button{font-size:12px;padding:4px}.slist3 .head-img,.slist3 img{display:none}}
 .ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .ccard{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:10px;background:var(--panel);cursor:pointer;position:relative;min-width:0}
 .ccard:has(input:checked){border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
@@ -254,7 +258,7 @@ dialog.wide{width:min(980px,96vw)}
 .ph{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:start}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
 .ed{min-height:30px;min-width:30px;padding:0 6px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--mute);font-size:15px;line-height:1;vertical-align:middle}.ed:hover{color:var(--blue);border-color:var(--blue)}
-.tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px}.tile b{font:26px Anton,sans-serif;display:block;white-space:nowrap}
+.tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px}.tile b{font:26px Anton,sans-serif;display:block;overflow-wrap:anywhere;line-height:1.1}.tile b.long,.tile b:is([data-long]){font-size:18px}
 .logo{object-fit:contain;border-radius:8px;background:#fff;vertical-align:middle;flex:none}
 .imgf{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.imgf .ph0{display:grid;place-items:center;border:2px dashed var(--line);border-radius:10px;color:var(--mute);font-size:12px;text-align:center}
 .note{font-size:13px;color:var(--mute);margin-top:22px}
@@ -320,17 +324,17 @@ tr.secrow td{background:light-dark(#f6e4e6,#33191e);color:var(--red2);font-weigh
 .ofstrip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}.ofstrip>div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.ofstrip small{display:block;color:var(--mute);font-size:12px}.ofstrip b{font-size:16px}
 .oflinks{display:none}
 @media (max-width:760px){.ofstrip{grid-template-columns:repeat(2,minmax(0,1fr))}.ofstrip>div:last-child{display:none}.oflinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.oflinks a{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 6px;text-align:center;font-weight:700;font-size:14px;color:var(--ink);text-decoration:none}}
-.nwsite{background:#fbfaf7;color:#1a1a1a;border-radius:12px;border:1px solid #d8d2c6;overflow:hidden;color-scheme:light}
-.nwbar{display:flex;justify-content:space-between;gap:8px;background:#e9e5dd;padding:6px 12px;font-size:13px;color:#555}.nwbar a{color:#1546d1;font-weight:700;text-decoration:none}
-.nwmast{padding:16px 18px 8px;border-bottom:4px double #1a1a1a;text-align:center}.nwmast b{display:block;font:900 42px Georgia,serif;letter-spacing:-.01em}.nwmast span{font-size:13px;color:#666}
-.nwnav{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:8px;border-bottom:1px solid #d8d2c6}.nwnav button{background:none;border:0;color:#1a1a1a;font-weight:700;font-size:13px;min-height:30px;padding:2px 8px;border-radius:6px}.nwnav button.on{background:#1a1a1a;color:#fff}
-.nwgrid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;padding:16px 18px;border-bottom:1px solid #d8d2c6}
-.nwside{border-left:1px solid #d8d2c6;padding-left:14px}.nwside h4{font:800 13px system-ui;text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px;color:#9e0b23}.nwside .kv{font-size:14px;color:#1a1a1a;border-color:#e4dfd5}
+.nwsite{background:#24201a;color:#ece4d4;border-radius:12px;border:1px solid #4a4236;overflow:hidden;color-scheme:dark}
+.nwbar{display:flex;justify-content:space-between;gap:8px;background:#1b1814;padding:6px 12px;font-size:13px;color:#b9ae9a}.nwbar a{color:#1546d1;font-weight:700;text-decoration:none}
+.nwmast{padding:16px 18px 8px;border-bottom:4px double #ece4d4;text-align:center}.nwmast b{display:block;font:900 42px Georgia,serif;letter-spacing:-.01em}.nwmast span{font-size:13px;color:#666}
+.nwnav{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:8px;border-bottom:1px solid #4a4236}.nwnav button{background:none;border:0;color:#ece4d4;font-weight:700;font-size:13px;min-height:30px;padding:2px 8px;border-radius:6px}.nwnav button.on{background:#ece4d4;color:#fff}
+.nwgrid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;padding:16px 18px;border-bottom:1px solid #4a4236}
+.nwside{border-left:1px solid #4a4236;padding-left:14px}.nwside h4{font:800 13px system-ui;text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px;color:#ff6b6b}.nwside .kv{font-size:14px;color:#ece4d4;border-color:#3b342b}
 .nwlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:0 18px;padding:6px 18px 12px}
-.nwa{padding:10px 0;border-bottom:1px solid #e4dfd5}.nwa h3{font:700 18px/1.25 Georgia,serif;margin:2px 0 4px;color:#111}.nwa p{margin:0 0 4px;font-size:14px;color:#333;line-height:1.45}.nwa small{color:#777;font-size:12px}
-.nwa.lead h3{font-size:30px}.nwa.lead p{font-size:16px}.nwk{font:800 11px system-ui;text-transform:uppercase;letter-spacing:.06em;color:#9e0b23}
-.nwsite .hint{color:#777}.nwsite .k.me{font-size:11px}
-@media (max-width:760px){.nwgrid{grid-template-columns:minmax(0,1fr)}.nwside{border-left:0;padding-left:0;border-top:1px solid #d8d2c6;padding-top:10px}.nwmast b{font-size:32px}.nwa.lead h3{font-size:24px}}
+.nwa{padding:10px 0;border-bottom:1px solid #3b342b}.nwa h3{font:700 18px/1.25 Georgia,serif;margin:2px 0 4px;color:#111}.nwa p{margin:0 0 4px;font-size:14px;color:#333;line-height:1.45}.nwa small{color:#777;font-size:12px}
+.nwa.lead h3{font-size:30px}.nwa.lead p{font-size:16px}.nwk{font:800 11px system-ui;text-transform:uppercase;letter-spacing:.06em;color:#ff6b6b}
+.nwsite .hint{color:#a39883}.nwsite .k.me{font-size:11px}
+@media (max-width:760px){.nwgrid{grid-template-columns:minmax(0,1fr)}.nwside{border-left:0;padding-left:0;border-top:1px solid #4a4236;padding-top:10px}.nwmast b{font-size:32px}.nwa.lead h3{font-size:24px}}
 a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:6px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-weight:700;text-decoration:none}a.btn.go{background:var(--red);color:#fff;border-color:var(--red)}a.btn.sm{min-height:36px;padding:4px 11px;font-size:14px}
 .hofcer{background:linear-gradient(160deg,#2a1d0a,#120c05);color:#fff4d6;border-radius:12px;padding:14px;border:2px solid #d9a520}
 .hch{text-align:center;padding:6px 0 12px;border-bottom:1px solid #6b4e10}.hch small{display:block;color:#d9a520;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.hch b{display:block;font:32px Anton,sans-serif;color:#ffd56b;letter-spacing:.02em}.hch span{font-size:13px;color:#cdb98a}
@@ -353,6 +357,7 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:4
 /* Booking notebook (owner, 26 Nov): the card looks like a page in a booker's notebook; names stay in a clear typeface. */
 .nbtitle{font-family:Anton,Impact,sans-serif;font-size:24px;font-weight:400;margin:0 0 6px}.nbtitle small{font:600 14px Archivo,system-ui,sans-serif;color:var(--mute);margin-left:6px}
 .bkcard .bm.cur{background:var(--goldbg);outline:2px solid var(--gold)}
+.bmc{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding:4px 2px}.bmc:first-of-type{border-top:0}.bmcb{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;background:none;border:0;box-shadow:none;text-align:left;padding:6px 4px;min-height:0;color:inherit;font:inherit;cursor:pointer;border-radius:8px}.bmcb:hover{background:var(--bluebg)}.bmct{font-weight:800;font-size:16px}.bmct i{color:var(--red2);font-weight:800}.bmct .bwin{color:var(--green,#3fb950)}.bmc.main .no{color:var(--gold)}.bkdone{margin-top:14px}.bkdone .bctl{flex:none}
 .bkcard .no{font-size:20px;font-weight:800;color:var(--red2);min-width:22px}
 .bkcard .vs{gap:6px 10px;font-size:17px;margin:2px 0}.bkcard .vs>i{font-weight:800;color:var(--red2)}
 .bkcard .bchip .w{font-size:17px;font-weight:800}
@@ -432,7 +437,8 @@ const EVN=['Winter Spectacular','Spring Showdown','Summer Slam-Bang','Autumn Upr
 const stars=s=>'★'.repeat(Math.floor(s))+(s%1>=.5?'½':'')||'½';
 const alLetter=v=>v< -33?'F':v>33?'H':'T';
 const alDefault=a=>a==='H'?70:a==='T'?0:-70;
-const SIZES={Local:{t:-2,cash:.6},Regional:{t:0,cash:1},National:{t:2,cash:1.6},International:{t:4,cash:2.4}};
+/* Roster ranges (owner, 27 Nov): Local 10-20, Regional 20-50, National 50-120, International 120+. 160 is our soft top. tv = TV money multiplier so income grows with the roster a company is expected to carry. TODO(ASK OWNER): tv numbers. */
+const SIZES={Local:{t:-2,cash:.6,lo:10,hi:20,tv:1.5},Regional:{t:0,cash:1,lo:20,hi:50,tv:2.5},National:{t:2,cash:1.6,lo:50,hi:120,tv:4},International:{t:4,cash:2.4,lo:120,hi:160,tv:7}};
 const clampQ=s=>clamp(Math.round(s*4)/4,.25,5);
 /* Star scale (§4.59, owner 26 Nov): the average match rates about 3 stars and a perfect one 5. The match formula's raw score
    averages about 4, so toStars() maps it onto the star scale. Money, crowds and popularity still use the raw score through
@@ -440,21 +446,28 @@ const clampQ=s=>clamp(Math.round(s*4)/4,.25,5);
 const R_MID=4.25,R_K=.9,toStars=v=>3+(v-R_MID)*R_K,rawR=r=>r==null?r:clamp(R_MID+(r-3)/R_K,0,5);
 
 /* ---------- game state ---------- */
+let rexp=null;
 let rcomp=(()=>{try{return localStorage.ro_rcomp!=='0'}catch(e){return true}})();
 let G=null, tab='office', ED=null, rview='mine', rq='', rco='all', rsort='pop', ecat='w', esel=null, rfil='all';
 
 const co=id=>G.cos[id];
 const me=()=>G.cos[G.me];
 const W=id=>G.ws[id];
-const roster=cid=>Object.values(G.ws).filter(w=>w.co===cid&&w.status==='active');
+const roster=cid=>{const o=[],ws=G.ws;for(const k in ws){const w=ws[k];if(w.co===cid&&w.status==='active')o.push(w)}return o};
 const freeAgents=()=>Object.values(G.ws).filter(w=>!w.co&&w.status==='active');
 const LOGK=['co','db','ms','sg','mt','aw','rt','tt','fd'];
 let news=(text,kind='')=>{G.news.unshift({date:G.date,text,kind});if(G.news.length>300)G.news.length=300;if(LOGK.includes(kind)){G.log=G.log||[];G.log.unshift({date:G.date,text,kind});if(G.log.length>4000)G.log.length=4000}};
 const age=w=>ageOn(w.birth,G.date);
 function worth(w){const s=.5*w.pop+.25*w.wrk+.25*w.cha;let v=.15*s*s+20;if(G&&G.titles){const k=topTier(w);if(k<=3)v*=1+(4-k)*.04}v*=1+(w.mom-50)/250;const a=age(w);if(a!=null&&(a<21||a>46))v*=.85;if(w.legend)v*=1.25;return Math.max(50,r10(v))}
-const target=c=>clamp(6+Math.round(c.pop/12)+(SIZES[c.size]?.t||0),4,18);
-const wageBill=cid=>roster(cid).reduce((t,w)=>t+w.wage,0);
-const budget=c=>(800+c.pop*45+1800)*1.5*.75;
+const target=c=>{const z=SIZES[c.size]||SIZES.Regional;return Math.round(z.lo+(z.hi-z.lo)*clamp(((c.pop||0)-25)/70,0,1))};
+/* Depth discount (§4.69): beyond the DEPTH_FULL best-paid wrestlers, the rest cost DEPTH_PAY of their wage per show (they work fewer dates). TODO(ASK OWNER) numbers. */
+const DEPTH_FULL=25,DEPTH_PAY=.6;
+const wageBill=cid=>roster(cid).map(w=>w.wage).sort((a,b)=>b-a).reduce((t,v,i)=>t+(i<DEPTH_FULL?v:v*DEPTH_PAY),0);
+const budget=c=>Math.max((800+c.pop*45+1800)*1.125,estInc(c)*.8);
+/* TV deal (§4.69): the network pays per wrestler the company is expected to carry (target roster), more for a good show. So income grows with size and popularity, and a company doing well can pay its whole roster. TODO(ASK OWNER) TV_PER_W. */
+const TV_PER_W=90;
+const tvDeal=(c,rating,major)=>target(c)*TV_PER_W*(.6+clamp(rating,0,5)/5*.8)*(major?1.3:1);
+const estInc=c=>tvDeal(c,3,false)+(c=>{const cr=(800+c.pop*45+c.pop*30)*(ARENA[c.size]?.crowd||1);return cr*price(false,c)+viewersFor(c,3,false)*VIEW_PAY*(SIZES[c.size]?.tv||1)-showCost(c,false)})(c);
 /* ---------- feuds ---------- */
 const REASONS=['Disrespect','Backstage fight','Title chase','Lost the title','Dirty finish','Ambush','Called out','Contract signed','Unfinished business','Jealousy','Betrayal','Respect turned sour','Rookie vs veteran','Hero vs villain','Injury revenge','Family matter','Tag team rivalry','Faction war','Partners split','Personal'];
 /* groups: tag teams (2+ linked wrestlers) and factions (wrestlers and teams linked together) */
@@ -649,7 +662,7 @@ function draftPick(cid,w){const d=G.draft;signW(w,cid,worth(w),ri(3,8));d.need[c
 function draftAI(cid){const P=draftPool();if(!P.length)return draftEnd();const R=roster(cid),wf=d=>R.filter(w=>w.gender==='F').length/Math.max(1,R.length);
   const wantF=wf()<G.draft.women[cid]-.02&&P.some(w=>w.gender==='F'),L=P.filter(w=>wantF?w.gender==='F':true);draftPick(cid,(Math.random()<.8?L[0]:pick(L.slice(0,4)))||P[0])}
 function draftRun(stopAtMe){let g=0;while(G.draft&&g++<2000){const c=draftWho();if(G.draft.need[c]<=0){draftNext();continue}if(c===G.me&&stopAtMe)break;if(c===G.me){const P=draftPool();if(!P.length){draftEnd();break}draftPick(c,P[0])}else draftAI(c)}}
-function draftEnd(){if(!G.draft)return;delete G.draft;news('The draft is over. Every company has its roster, and every title is vacant until someone wins it.','co');save()}
+function draftEnd(){if(!G.draft)return;delete G.draft;if(G.opts?.gen)fillRosters();news('The draft is over. Every company has its roster, and every title is vacant until someone wins it.','co');save()}
 function vDraft(){draftRun(true);if(!G.draft){location.hash='office';return}const d=G.draft,P=draftPool();
   const myNeed=d.need[G.me],mine=roster(G.me);
   $('#app').innerHTML=`<div class="head"><div><h2>Draft</h2><p>Everyone is a free agent. Companies pick in turns, weakest first. The game starts when every roster is full. All titles start vacant.</p></div><div class="btns"><button id="dauto">Auto-pick for Me</button><button class="go" id="dsim">Finish the Draft</button></div></div>
@@ -688,7 +701,7 @@ function newGame(scen,start,choice,opts){
   const BIG_ROSTER=16;Object.keys(G.cos).forEach(cid=>{const R=Object.values(G.ws).filter(w=>w.co===cid);if(R.length>BIG_ROSTER){const k=Math.sqrt(BIG_ROSTER/R.length);R.forEach(w=>{if(w._sw)w.wage=Math.max(50,r10(w.wage*k))})}});
   Object.values(G.ws).forEach(w=>delete w._sw);
   if(opts.gen){const F=['Duke','Rex','Tony','Buck','Chuck','Vic','Hank','Jimmy','Rocco','Sal','Max','Lars','Kenji','Diego','Ray','Billy','Ace','Mack','Otis','Gus','Nico','Bobby','Dutch','Moose','Rico','Lenny','Clint','Jet','Brick','Hiro','Pablo','Seamus'],Fw=['Dolly','Rita','Vera','Gail','Trixie','Mae','Lola','Kitty','Sunny','Babs'],L=['Malone','Riker','Vance','Dalton','Cruz','Brennan','Hayes','Stone','Mercer','Valdez','Kowal','Rourke','Sato','Mendez','Ford','Blaze','Kincaid','Holt','Graves','Sloan','Drake','Thorne','Bishop','Navarro','Doyle','Farrell','Okada','Lund','Petrov','Quinn'],seen=new Set(Object.values(G.ws).map(w=>w.name));
-    const nGen=30+8*Object.values(G.cos).filter(c=>c.active).length;for(let i=0;i<nGen;i++){const f=Math.random()<.35;let n;do n=pick(f?Fw:F)+' '+pick(L);while(seen.has(n));seen.add(n);const y=+start.slice(0,4)-ri(20,38);
+    const nGen=30+8*Object.values(G.cos).filter(c=>c.active).length;for(let i=0;i<nGen;i++){genW({fs:.35,p1:45})}if(0){const f=0,n='',y=0;
       G.ws['g'+i]={id:'g'+i,name:n,gender:f?'F':'M',birth:`${y}-${pad(ri(1,12))}-${pad(ri(1,28))}`,debut:'',retire:'',al:pick([-80,-60,60,80,0]),align:'F',gim:'None',wt:f?ri(120,170):ri(195,320),cha:ri(30,75),wrk:ri(30,80),pop:ri(5,45),mom:50,status:'active',co:null,wage:0,left:0,next:null,riv:{},last:0,gm:0}}
     /* manager-only staff (§4.31) */const gi=Object.keys(G.ws).filter(k=>/^g\d+$/.test(k)).sort(()=>Math.random()-.5).slice(0,4+Object.values(G.cos).filter(c=>c.active).length);gi.forEach(k=>{const w=G.ws[k];w.mgr=true;w.mgonly=true;w.cha=ri(60,88);w.wrk=ri(15,40);w.gim=pick(['Showman','Villain','Hero']);w.pop=ri(10,40)})}
   if(choice.type==='new'){
@@ -704,6 +717,7 @@ function newGame(scen,start,choice,opts){
     TM().push({id:'ts'+i,kind:s.kind==='faction'||m.length>4?'faction':'tag',name:String(s.name||'Team'),m,co,since:start,st:'act',join:Object.fromEntries(m.map(id=>[id,start])),log:[{d:start,t:`Together at the start: ${m.map(id=>G.ws[id].name).join(', ')}`}]})});
   if(opts.shuf==='random'&&start===scen.start)shuffleRosters('random');
   if(opts.shuf==='draft')draftStart();
+  else if(opts.gen&&start===scen.start)fillRosters();
   if(start!==scen.start)for(let i=0;i<30;i++)aiSign(true);
   news(`You took charge of ${me().name}. Scenario: ${scen.name}.`,'me');
   save();
@@ -716,10 +730,13 @@ const reignOf=t=>t.reigns.find(r=>!r.lost&&!r.pre)||null;
 const titlesOf=cid=>Object.values(G.titles||{}).filter(t=>t.co===cid&&t.active);
 const daysBetween=(a,b)=>Math.round((D(b)-D(a))/864e5);
 /* Who can hold a title (§4.58): '' anyone, 'M' men, 'F' women. Scenarios can set gen; otherwise women's titles are spotted by name. */
+/* Weight classes (owner, 27 Nov): from weight alone. */
+const WCLASS=[[205,'Cruiserweight'],[225,'Light Heavyweight'],[280,'Heavyweight'],[1e9,'Super Heavyweight']];
+const wClass=w=>w&&+w.wt>0?WCLASS.find(([x])=>+w.wt<=x)[1]:'';
 const titleGen=st=>['M','F'].includes(st.gen)?st.gen:st.gen==='any'?'':/women|knockout|diva|stardom|joshi/i.test(st.name||'')?'F':'';
 function setupTitles(scen,start,map){
   G.titles={};
-  (scen.titles||[]).forEach((st,i)=>{const cid=map[st.co];if(!cid)return;const t={id:'t'+i,co:cid,name:st.name||'Title',div:st.div==='tag'?'tag':'singles',tier:[1,2,3].includes(+st.tier)?+st.tier:1,prestige:[0,60,45,35][[1,2,3].includes(+st.tier)?+st.tier:1],last:start,active:true,reigns:[],gen:titleGen(st),...(G.cos[cid]&&G.cos[cid].open&&G.cos[cid].open<start?{vacStart:1}:{}),...(st.belt&&window.BeltLook?{belt:BeltLook.normalize(st.belt)}:{})};
+  (scen.titles||[]).forEach((st,i)=>{const cid=map[st.co];if(!cid)return;const t={id:'t'+i,co:cid,name:st.name||'Title',div:st.div==='tag'?'tag':'singles',tier:[1,2,3].includes(+st.tier)?+st.tier:1,prestige:[0,60,45,35][[1,2,3].includes(+st.tier)?+st.tier:1],last:start,active:true,reigns:[],gen:titleGen(st),...(st.wc?{wc:st.wc}:{}),...(G.cos[cid]&&G.cos[cid].open&&G.cos[cid].open<start?{vacStart:1}:{}),...(st.belt&&window.BeltLook?{belt:BeltLook.normalize(st.belt)}:{})};
     (st.past||'').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(p=>p[2]||p[0]).forEach(p=>t.reigns.push({h:[],hn:p[2]||p[0],won:normDate(p[0])||'',lost:normDate(p[1])||'',pre:true,def:[]}));
     const names=(st.champ||'').split('&').map(x=>x.trim().toLowerCase()).filter(Boolean);
     if(names.length&&start===scen.start){const ids=names.map(n=>{const L=Object.values(G.ws).filter(w=>w.name.toLowerCase()===n&&w.status==='active'&&w.co);return (L.find(w=>w.co===cid)||L[0])?.id}).filter(Boolean); /* a real champion can work for a partner company (e.g. Omega and the AAA Mega title in 2020) */
@@ -728,7 +745,7 @@ function setupTitles(scen,start,map){
 }
 /** Titles that can go on the line in this match: the holder is in it and the division fits, or the title is vacant. */
 function titleOpts(cid,m,card){
-  return titlesOf(cid).sort((a,b)=>(a.tier||1)-(b.tier||1)).filter(t=>!card.some(x=>x!==m&&x.title===t.id)).filter(t=>{const need=t.div==='tag'?2:1,r=reignOf(t);if(t.gen&&!m.sides.flat().every(id=>W(id)&&W(id).gender===t.gen))return false;if(!titleRuleOK(t,m,cid))return false;
+  return titlesOf(cid).sort((a,b)=>(a.tier||1)-(b.tier||1)).filter(t=>!card.some(x=>x!==m&&x.title===t.id)).filter(t=>{const need=t.div==='tag'?2:1,r=reignOf(t);if(t.gen&&!m.sides.flat().every(id=>W(id)&&W(id).gender===t.gen))return false;if(t.wc&&!m.sides.flat().every(id=>wClass(W(id))===t.wc))return false;if(!titleRuleOK(t,m,cid))return false;
     if(!r)return m.sides.every(sd=>sd.length===need);return m.sides.some(sd=>sd.length===need&&r.h.every(id=>sd.includes(id)))});
 }
 function vacateFor(w,why){if(!G||!G.titles)return;for(const t of Object.values(G.titles)){const r=reignOf(t);if(r&&r.h.includes(w.id)){r.lost=G.date;r.vac=why;news(`The ${t.name} is vacant: ${w.name} ${why}.`,'tt')}}}
@@ -769,7 +786,8 @@ const CHAMP_BUFF=3,CHAMP_GROW=1.5; // TODO(ASK OWNER): exact buff size
 const TIERS={1:'Primary',2:'Secondary',3:'Tertiary'};
 const topTier=w=>Math.min(...holds(w).map(t=>t.tier||1),9);
 const champB=w=>{const k=topTier(w);return k>3?0:CHAMP_BUFF+1-k};  // top tier +3, secondary +2, lower +1
-const chTxt=w=>G&&G.titles&&holds(w).length?`<span class="k tt" title="${esc(holds(w).map(t=>t.name).join(', '))}">🏆 Champion</span>`:'';
+const chTxt=w=>G&&G.titles&&holds(w).length?`<span class="k tt" title="${esc(holds(w).map(t=>t.name).join(', '))}">${wMedal(w)} Champion</span>`:'';
+const MEDAL=['','🥇','🥈','🥉'];const medal=t=>MEDAL[(t&&t.tier)||1]||'🥇';const medalN=n=>medal(Object.values(G.titles||{}).find(t=>t.name===n));const wMedal=w=>{const H=holds(w);return H.length?medal(H.slice().sort((a,b)=>(a.tier||1)-(b.tier||1))[0]):''};
 const holds=w=>Object.values(G.titles||{}).filter(t=>{const r=reignOf(t);return r&&r.h.includes(w.id)});
 
 /* ---------- timeline ---------- */
@@ -827,7 +845,7 @@ function defectAnswer(k){const d=G.defect;if(!d)return;delete G.defect;const w=W
 const GUEST_CHAMP_DAYS=120; // TODO(ASK OWNER)
 function guestChampCheck(){for(const t of Object.values(G.titles||{})){const r=reignOf(t);if(!r||!t.active||!r.h.length||r.h.every(id=>W(id).co===t.co))continue;const last=(r.def||[]).length?r.def[r.def.length-1].d||r.won:r.won;
   if(last&&daysBetween(last,G.date)>GUEST_CHAMP_DAYS){r.lost=G.date;r.vac='did not defend';news(`The ${t.name} is vacant: ${r.hn||nm(r.h)} works for another company and did not defend it.`,'tt')}}}
-function monthly(){defectMonth();guestChampCheck();if(featOn('earn'))earnTraits();for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
+function monthly(){defectMonth();if(G.opts?.gen)stockIndies(8);guestChampCheck();if(featOn('earn'))earnTraits();for(const w of Object.values(G.ws)){if(w.status!=='active')continue;const a=age(w)??30,hw=hasTr(w,'hardw'),f=w.co?1:.5,
   b=a<=27?GROW.young:a<=33?GROW.mid:[0,0],pw=(b[0]+(hw&&a<=38?GROW.hardw[0]:0))*f,pc=(b[1]+(hw&&a<=38?GROW.hardw[1]:0))*f;
   if(w.wrk<95&&Math.random()<pw){w.wrk++;w.grow=(w.grow||0)+1}if(w.cha<95&&Math.random()<pc){w.cha++;w.grow=(w.grow||0)+1}
   if(hasTr(w,'lazy')&&G.week-(w.bigW??-99)>8&&Math.random()<GROW.lazy&&w.wrk>20){w.wrk--;w.grow=(w.grow||0)-1}
@@ -1243,7 +1261,7 @@ const promoCost=(k,w)=>r10(PROMOS[k].cost*(1+w.pop/100)*dif().cost);
 function promoWeek(){roster(G.me).forEach(w=>{const p=w.promo;if(!p)return;gainPop(w,p.per);if(p.k==='merch')me().cash+=r10(30*w.pop*dif().inc);if(--p.left<=0)delete w.promo})}
 function dPromo(k,w0){const m=me(),P=PROMOS[k],R=w0?[w0]:roster(G.me).filter(w=>w.status==='active'&&!w.promo).sort((a,b)=>b.pop-a.pop);
   openD(`<div class="dh b"><h3>${P.name}</h3><div>${P.fx} One promotion at a time per wrestler.</div></div><div class="db"><div class="chips">${R.map(w=>{const c=promoCost(k,w);return `<button data-pw="${w.id}" ${w.promo||m.cash<c?'disabled':''}>${esc(w.name)}<small>${pd(w)} · ${money(c)}${w.promo?' · already promoted':''}</small></button>`}).join('')||'<span class="sub">Everyone is already being promoted.</span>'}</div><div class="kv"><span>Bank</span><b>${money(m.cash)}</b></div><div class="dfoot"><button data-x="1">Close</button></div></div>`);
-  dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.x){closeD();return}const w=W(b.dataset.pw);if(!w)return;const c=promoCost(k,w);m.cash-=c;w.promo={k,left:P.wk,per:P.per};if(P.mom)mom(w,P.mom);news(`You booked ${w.name} a ${P.name.toLowerCase()} for ${money(c)}.`,'me');save();closeD();renderHdr();rerender()}}
+  dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.x){closeD();return}const w=W(b.dataset.pw);if(!w)return;const c=promoCost(k,w);if(!cfm(`Book ${w.name} a ${P.name} for ${money(c)}? Your bank goes from ${money(m.cash)} to ${money(m.cash-c)}.`,'Buy'))return;m.cash-=c;w.promo={k,left:P.wk,per:P.per};if(P.mom)mom(w,P.mom);news(`You booked ${w.name} a ${P.name.toLowerCase()} for ${money(c)}.`,'me');save();closeD();renderHdr();rerender()}}
 const STF_FIRST=['Gordon','Jim','Lance','Mean','Gene','Bobby','Vince','Paul','Tony','Sam','Ricky','Ed','Marv','Hal','Joe','Ray','Ann','Lou','Carla','Nina','Joan','Pat','Rosa','Mae'];
 const STF_LAST=['Solie','Ross','Russell','Okerlund','Heenan','Gaines','Brisco','Monsoon','Tenay','Ventura','Lyons','Kessler','Marlow','Bishop','Quinn','Varga','Holt','Ramos','Crane','Doyle'];
 function staffPool(k){const base=staffPool0(k);const fit={ann:w=>w.cha,gm:w=>Math.round((w.cha*2+pst(w,'psy'))/3),trainer:w=>w.wrk,agent:w=>w.cha,tr:w=>w.cha,scout:w=>pst(w,'psy'),prod:w=>Math.round((w.cha+pst(w,'psy'))/2),road:w=>Math.round((w.wrk+pst(w,'psy'))/2)}[k];if(!fit)return base;
@@ -1281,7 +1299,7 @@ function runShow(cid,card,isPlayer){
   const rated=items.filter(x=>x.st!=null);
   let rating=rated.length?rated.reduce((t,x)=>t+x.st*x.w,0)/rated.reduce((t,x)=>t+x.w,0):.25;
   rating-=nAds*.15;if(nSeg>nM)rating-=.25;{const pp=PROD.p[prodOf(c).p];rating+=pp.rate;c.hype=clamp((c.hype||0)+pp.hype,0,100)}rating=clampQ(Math.min(5,rating));showShare(card,rating,major,firstM,lastM,c);
-  const DF=difC(cid);gate=gate*DF.inc;ads=ads*DF.inc;const rr=rawR(rating),buys=major?buysFor(c,rr):0,buyInc=buys*BUY_PRICE*DF.inc,viewers=Math.round(viewersFor(c,rr,major)*wev(c,'view')),viewInc=viewers*VIEW_PAY*DF.inc;gate+=buyInc;ads+=viewInc;c.lastViewers=viewers;fansWeek(c,rr);const wages=wageBill(cid)*DF.cost,cost=(showCost(c,major)+prodExtra(c,major)+cardCost(card)+staffPay(c))*DF.cost*wev(c,'cost')*slumpCost(c),profit=gate+ads+bonus-wages-cost;
+  const DF=difC(cid);gate=gate*DF.inc;ads=ads*DF.inc;const rr=rawR(rating),buys=major?buysFor(c,rr):0,buyInc=buys*BUY_PRICE*DF.inc,viewers=Math.round(viewersFor(c,rr,major)*wev(c,'view')),viewInc=(viewers*VIEW_PAY*(SIZES[c.size]?.tv||1)+tvDeal(c,rr,major))*DF.inc;gate+=buyInc;ads+=viewInc;c.lastViewers=viewers;fansWeek(c,rr);const wages=wageBill(cid)*DF.cost,cost=(showCost(c,major)+prodExtra(c,major)+cardCost(card)+staffPay(c))*DF.cost*wev(c,'cost')*slumpCost(c),profit=gate+ads+bonus-wages-cost;
   c.cash+=profit;
   if(stf(c,'gm'))c.hype=clamp((c.hype||0)+stf(c,'gm')*1.2,0,100);
   const popBefore=c.pop;
@@ -1385,7 +1403,7 @@ function expire(w){
   const c=co(w.co),pend=G.offers.find(o=>o.w===w.id);
   if(w.next){const n=w.next,from=c.short;signW(w,n.co,n.wage,n.len);news(`${w.name} leaves ${from} and joins ${co(n.co).short}.`,'sg');return}
   if(pend){signW(w,pend.co,pend.wage,pend.len);news(`${w.name}'s contract ran out and ${pr(w,'he')} took ${co(pend.co).short}'s offer.`,'me');return}
-  if(c.owner==='ai'&&Math.random()<.65&&c.cash>0){w.wage=worth(w);w.left=ri(3,8);return}
+  if(c.owner==='ai'&&Math.random()<(roster(c.id).length<=target(c)?.85:.5)&&c.cash>0){w.wage=worth(w);w.left=ri(3,8);return}
   const mine=c.id===G.me;freeW(w);if(mine||w.pop>=50)news(`${w.name}'s contract with ${c.short} ran out. Now on the Indies.`,mine?'me':'');
 }
 function aiCard(c){
@@ -1417,7 +1435,7 @@ const WOMEN_MIN=4,WOMEN_SHARE=.25;
 function aiSign(draft){
   for(const c of Object.values(G.cos)){
     if(!c.active||c.owner!=='ai')continue;
-    let n=draft?1:2;
+    let n=draft?1:Math.max(2,Math.ceil(target(c)/25));
     while(n-->0&&roster(c.id).length<(draft?Math.min(target(c),7):target(c))&&c.cash>3000&&freeAgents().length>(draft?20:6)){
       /* Women's division (owner, 26 Nov): a company with fewer than WOMEN_MIN working women looks for women first. TODO(ASK OWNER) number. */
       const R0=roster(c.id),needF=!c.noWomen&&R0.length>=6&&R0.filter(w=>w.gender==='F'&&!w.mgr).length<Math.max(WOMEN_MIN,Math.round(R0.length*WOMEN_SHARE));
@@ -1442,8 +1460,10 @@ function hapWeek(w){const r=[];let d=0;const add=(v,t)=>{d+=v;r.push([v,t])};
   if(morOf(w)<20&&w.co===G.me){w.unh=(w.unh||0)+1;if(w.unh===4)news(`${w.name} is miserable and has asked to be let go. Book them better, pay them more or release them.`,'me')}else w.unh=0;
   return d}
 const hapWord=v=>v<20?'Miserable':v<35?'Unhappy':v<60?'Okay':v<80?'Happy':'Thrilled';
-function leaderLift(w){if(!w.co||hasTr(w,'leader'))return 0;return Math.min(.6,roster(w.co).filter(x=>hasTr(x,'leader')&&x.mor>=50).length*.3)}
-function cancerDrag(w){if(!w.co||hasTr(w,'cancer'))return 0;return Math.min(1,roster(w.co).filter(x=>hasTr(x,'cancer')).length*.4)}
+/* counted once per game day per company (big rosters made this slow) */
+let _tcK=null,_tc={};const trCount=(cid,k)=>{if(_tcK!==G.date+G.week){_tcK=G.date+G.week;_tc={}}return _tc[cid+k]??(_tc[cid+k]=roster(cid).filter(x=>hasTr(x,k)&&(k!=='leader'||x.mor>=50)).length)};
+function leaderLift(w){if(!w.co||hasTr(w,'leader'))return 0;return Math.min(.6,trCount(w.co,'leader')*.3)}
+function cancerDrag(w){if(!w.co||hasTr(w,'cancer'))return 0;return Math.min(1,trCount(w.co,'cancer')*.4)}
 /* Backstage politics (§4.29): at most one simple event a week for your company, shown as news. TODO(ASK OWNER): events, odds. */
 const BACKSTAGE_CH=.08; // TODO(ASK OWNER): chance per show of one backstage event
 /* Disputes (§4.29): conflict events leave a dispute you can settle from the Inbox. TODO(ASK OWNER): numbers. */
@@ -1571,7 +1591,7 @@ const featOn=k=>!(G&&G.opts&&G.opts.off&&G.opts.off[k]);
 /* Power cards: one-use boosts bought in the Store */
 const PCARDS={spot:{name:'Spotlight',cost:20000,fx:'One match on your next show rates about half a star higher. Pick the match on the Book screen.'},heal:{name:'Miracle Recovery',cost:40000,fx:'One injured wrestler is back next week.'},hype:{name:'Hype Machine',cost:25000,fx:'+15 hype for your next Major Event.'},party:{name:'Locker Room Party',cost:30000,fx:'Everyone on your roster gets +15 happiness.'},rest:{name:'Fresh Legs',cost:20000,fx:'Clears fatigue for your whole roster.'},heat:{name:'Heat Wave',cost:15000,fx:'+15 heat for one of your feuds.'}};
 const pcN=k=>(me().pcards||{})[k]||0;
-function pcBox(){if(!featOn('pcards'))return '';const m=me();return `<div class="panel" style="margin-top:16px"><h3>Power cards</h3><p class="sub" style="margin-top:0">One-use boosts. Buy as many as you like and use them when you need them.</p><div class="ccards" style="margin-top:10px">${Object.entries(PCARDS).map(([k,v])=>{const c=r10(v.cost*dif().cost),n=pcN(k);return `<div class="fcard" style="--hc:${n?'var(--blue)':'var(--line)'}"><b>⚡ ${v.name} <span class="sub">· you have ${n}</span></b><span class="sub">${v.fx}</span><div class="btns"><button class="sm go" data-pcb="${k}" ${m.cash<c?'disabled':''}>Buy ${money(c)}</button>${k!=='spot'?`<button class="sm" data-pcu="${k}" ${n?'':'disabled'}>Use</button>`:''}</div></div>`}).join('')}</div></div>`}
+function pcBox(){if(!featOn('pcards'))return '';const m=me();return `<div class="panel" style="margin-top:16px"><h3>Power cards</h3><p class="sub" style="margin-top:0">One-use boosts. Buy as many as you like and use them when you need them.</p><div class="ccards bizc" style="margin-top:10px">${Object.entries(PCARDS).map(([k,v])=>{const c=r10(v.cost*dif().cost),n=pcN(k);return `<div class="fcard" style="--hc:${n?'var(--blue)':'var(--line)'}"><b>⚡ ${v.name} <span class="sub">· you have ${n}</span></b><span class="sub">${v.fx}</span><div class="btns"><button class="sm go" data-pcb="${k}" ${m.cash<c?'disabled':''}>Buy ${money(c)}</button>${k!=='spot'?`<button class="sm" data-pcu="${k}" ${n?'':'disabled'}>Use</button>`:''}</div></div>`}).join('')}</div></div>`}
 function pcUse(k,arg){const m=me();if(!pcN(k))return;const take=()=>{m.pcards[k]--;save();render()};
   if(k==='hype'){m.hype=clamp((m.hype||0)+15,0,100);news('Hype machine: +15 hype for your next Major Event.','me');return take()}
   if(k==='party'){roster(G.me).forEach(w=>w.mor=clamp(morOf(w)+15,0,100));news('Locker room party: everyone is a little happier.','me');return take()}
@@ -1582,7 +1602,7 @@ function pcUse(k,arg){const m=me();if(!pcN(k))return;const take=()=>{m.pcards[k]
     const f=FE().find(x=>x.id===arg);if(f){feudHeat(f,15);news(`Heat wave: ${fName(f)} heats up.`,'me')}return take()}}
 document.addEventListener('click',e=>{if(G&&e.target.closest('[data-arcopen]')){e.preventDefault();arcPop(1)}});
 document.addEventListener('click',e=>{if(!G||tab!=='business')return;const b=e.target.closest('[data-pcb],[data-pcu]');if(!b||b.disabled)return;const m=me();
-  if(b.dataset.pcb){const k=b.dataset.pcb,c=r10(PCARDS[k].cost*dif().cost);if(m.cash<c)return;m.cash-=c;(m.pcards=m.pcards||{})[k]=pcN(k)+1;save();renderHdr();render();return}
+  if(b.dataset.pcb){const k=b.dataset.pcb,c=r10(PCARDS[k].cost*dif().cost);if(m.cash<c||!cfm(`Buy the ${PCARDS[k].name} power card for ${money(c)}? Your bank goes from ${money(m.cash)} to ${money(m.cash-c)}.`,'Buy'))return;m.cash-=c;(m.pcards=m.pcards||{})[k]=pcN(k)+1;save();renderHdr();render();return}
   pcUse(b.dataset.pcu)});
 /* Wrestler classes: some matchups rate higher */
 const CLASSES={giant:'Giant',power:'Powerhouse',brawl:'Brawler',tech:'Technician',fly:'High-flyer',show:'Showman'};
@@ -1702,14 +1722,14 @@ async function slotLoad(n){await slotFlush();const g=await idbGet('slot'+n);if(!
 async function slotDelete(n){await idbDel('slot'+n).catch(()=>{});const M=slotMeta();delete M[n];store.set('ro_slots',M);if(G&&G.slot===n){G=null;localStorage.removeItem('ro_save')}}
 
 /* ---------- rendering ---------- */
-const TABS=[['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['superstars','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Edit Game'],['editor','Scenario Editor'],['new','New Game'],['home','Home'],['draft','Draft']];
+const TABS=[['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['wrestlers','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Edit Game'],['editor','Scenario Editor'],['new','New Game'],['home','Home'],['draft','Draft']];
 const HOME=['home','new','editor'];
 let prevTab=null,navOpen=null,tselKeep=false;
 const NAVG=()=>[
   ['Office',[['office','Office','Your desk']]],
   ['Inbox',[['dash','Inbox','Messages and decisions']]],
   ['Book',[['book','Book the Show','Build and run this week\'s card']]],
-  ['Roster',[['roster/mine','My Roster','Contracts, filters and champions'],['superstars','Wrestler Profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag Teams','Pairs and trios who team up'],['factions','Factions','Bigger groups of wrestlers and teams'],['roster/fa','Indies','Pay someone for one show']]],
+  ['Roster',[['roster/mine','My Roster','Contracts, filters and champions'],['wrestlers','Wrestler Profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag Teams','Pairs and trios who team up'],['factions','Factions','Bigger groups of wrestlers and teams'],['roster/fa','Indies','Pay someone for one show']]],
   ['Business',[['company','Company Overview','Type, money, roster, titles and schedule'],['roster/sign','Sign Talent','Free agents to sign full time'],['titles','Championships','Every title, champion and prestige'],['events','Events','Upcoming and past Major Events'],['business','Staff and Store','Staff, wrestler promotion, upgrades'],['calendar','Calendar and News','Show names, schedule, brands, news'],['war','Ratings War','Who won each week'],['companies','Companies','Rival owners and their stats']]],
   ['History',[['history/ev','Events','Every Major Event, card by card'],['history/rk','Rankings','Top 25 across the business'],['history/tt','Titles','Lineages, reigns and records'],['history/yr','Year by Year','Every company\'s shows by date'],['history/shows','All Shows'],['history/cos','Companies and Titles'],['history/wl','Win-Loss'],['history/time','Timeline'],['history/rec','Records'],['history/st','Stats','Matches, pairings, finishes, gimmicks'],['history/hof','Hall of Fame','Everyone who reached 2,300'],['history/aw','Awards']]],
   ['Menu',[['settings','Settings','Difficulty, injuries, Hall of Fame'],['edit',G.opts.sandbox?'Edit Game (Sandbox)':'Edit Game','Change this game\'s copy'],['home','Main Menu','Save is kept'],['new','New Game'],['editor','Scenario Editor']]]];
@@ -1731,11 +1751,12 @@ function tabSels(){document.querySelectorAll('.tabrow').forEach(row=>{const nx=r
   sel.onchange=()=>bs[+sel.value].click();row.after(sel)})}
 new MutationObserver(()=>{if(document.querySelector('.tabrow')&&[...document.querySelectorAll('.tabrow')].some(r=>!(r.nextElementSibling&&r.nextElementSibling.classList.contains('tabsel'))))tabSels()}).observe(document.documentElement,{childList:true,subtree:true});
 function render(){
-  const h=location.hash.slice(1).split('/')[0];const nt=TABS.some(t=>t[0]===h)?h:(G?'office':'home');if(nt!==tab&&(nt==='teams'||nt==='factions')&&!tselKeep)tsel=null;tselKeep=false;if(nt!==tab)prevTab=tab;tab=nt;
+  if(/^#superstars/.test(location.hash))history.replaceState(null,'',location.hash.replace('#superstars','#wrestlers'));
+  const h=location.hash.slice(1).split('/')[0];const nt=TABS.some(t=>t[0]===h)?h:(G?'office':'home');if(nt!==tab&&(nt==='teams'||nt==='factions')&&!tselKeep)tsel=null;if(nt!==tab)sEdit=false;tselKeep=false;if(nt!==tab)prevTab=tab;tab=nt;
   if(!G&&!HOME.includes(tab))tab='home';if(G&&G.draft&&!HOME.includes(tab)&&tab!=='draft'){tab='draft';history.replaceState(null,'','#draft')}navOpen=null;
   $('#nav').innerHTML=navHtml();setTimeout(tabSels,0);
   renderHdr();
-  ({draft:vDraft,dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,superstars:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
+  ({draft:vDraft,dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,wrestlers:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
   if(G&&['book','dash'].includes(tab)){const cb=campBox();if(cb)$('#app').insertAdjacentHTML('afterbegin',cb)}
 }
 function renderHdr(){
@@ -1751,14 +1772,14 @@ const popCell=p=>`${Math.round(p)}<span class="bar"><i style="width:${Math.round
 const lgTxt=w=>w.legend?'<span class="k of">★ Legend</span>':'';
 const momTxt=w=>w.mom>=70?'<span class="hot">Hot</span>':w.mom<=30?'<span class="cold">Cold</span>':'<span class="sub">Steady</span>';
 const alName=v=>v< -33?'Face':v>33?'Heel':'Tweener';
-const alBar=(id,v,attr='')=>`<div class="albar"><span>Face</span><input type="range" id="${id}" ${attr} min="-100" max="100" step="1" value="${v}"><span>Heel</span></div><div class="sub" style="display:flex;justify-content:space-between;margin-top:-4px"><span>left third</span><span>Tweener in the middle third</span><span>right third</span></div>`;
+const alBar=(id,v,attr='')=>{const k=alLetter(+v||0);return `<select ${id?`id="${id}"`:''} ${attr} aria-label="Alignment">${[['F','Face',-70],['T','Tweener',0],['H','Heel',70]].map(([l,n,x])=>`<option value="${k===l?v:x}" ${k===l?'selected':''}>${n}</option>`).join('')}</select>`};
 const alTxt=a=>`<span class="al ${a}">${a==='F'?'Face':a==='H'?'Heel':'Tweener'}</span>`;
 
 /* ----- booking ----- */
 /* One-screen booking (§4.62). The card and the roster sit side by side. Tap an empty spot on the card, then tap
    wrestlers in the roster list; or just tap wrestlers and they fill the next open spot (a new singles match if none).
    Match type, gimmick and title change in place. Picking a wrestler lights up their feud opponents by heat. */
-const BK={sel:null,w:null};
+const BK={sel:null,w:null,openX:null};
 const mtOf=x=>{if(x.mt&&MTYPES[x.mt])return x.mt;const s=x.sides.map(sd=>sd.length).join();return Object.keys(MTYPES).find(k=>k!=='custom'&&MTYPES[k].s&&MTYPES[k].s.join()===s)||(x.sides.length>=5&&x.sides.every(sd=>sd.length===1)?'multi':'custom')};
 const mSz=x=>{const k=mtOf(x);if(k==='multi')return null;if(k==='custom')return x.sz||(x.sz=x.sides.map(sd=>Math.max(1,sd.length)));return MTYPES[k].s};
 const mOpenSide=x=>{const z=mSz(x);if(!z)return 0;return x.sides.findIndex((sd,i)=>sd.length<z[i])};
@@ -1803,7 +1824,7 @@ function bkList(){const r=roster(G.me).filter(w=>canBrand(w,me())),u=used(),riv=
   const L=bkFilter(r).sort((a,b)=>(!!b.fav)-(!!a.fav)||b.pop-a.pop),ok=L.filter(w=>!isOut(w)),out=L.filter(isOut);
   const row=w=>{const h=riv.get(w.id),inSeg=cur&&cur.t==='s'&&cur.who.includes(w.id),bus=u.has(w.id);
     return `<button class="bw${holds(w).length?' champ':''}${bus&&!inSeg?' used':''}${inSeg?' pick':''}${BK.w===w.id?' me':''}${h!=null?' fe':''}${isOut(w)?' out':''}" data-bw="${w.id}"${h!=null?` style="--fc:${bkFeudCol(h)}" title="Feud: ${bkFeudName(h)} (heat ${Math.round(h)})"`:''}>
-     <span class="bwn">${favMark(w)}${esc(w.name)}${w.legend?' ✦':''}${holds(w).length?' <span class="mk" title="Champion">🏆</span>':''}${wMk(w)}</span><span class="bws">${w.mgr?'Mgr':pd(w)} · ${w.align}${featOn('cls')&&!w.mgr?' · '+CLASSES[clsOf(w)]:''}${bus&&!inSeg?' · booked':''}</span></button>`};
+     <span class="bwn">${favMark(w)}${esc(w.name)}${w.legend?' ✦':''}${holds(w).length?' <span class="mk" title="Champion">${wMedal(w)}</span>':''}${wMk(w)}</span><span class="bws">${w.mgr?'Mgr':pd(w)} · ${w.align}${featOn('cls')&&!w.mgr?' · '+CLASSES[clsOf(w)]:''}${bus&&!inSeg?' · booked':''}</span></button>`};
   return `${ok.map(row).join('')||'<div class="sub" style="padding:6px">Nobody matches. Clear the search or pick another filter.</div>'}${out.length?`<div class="bksec">Injured and away (${out.length})</div>${out.map(row).join('')}`:''}`}
 function bkPanel(){const riv=bkRivals(BK.w),s=BK.sel,x=s&&G.card[s.i];
   let hint;if(x&&x.t==='m'){const z=mSz(x);hint=`Filling <b>match ${s.i+1}</b>${z?`, side ${s.s+1}`:''}. Tap wrestlers to add them.`}else if(x&&x.t==='s')hint=`Filling <b>segment ${s.i+1}</b>. Tap up to 8 people.`;else hint='Tap a wrestler to put them in the next open spot. Tap an empty spot on the card to choose where they go.';
@@ -1823,9 +1844,18 @@ function vBook(){
   const DF=dif(),crowd=crowdFor(m,okc,major),gate=crowd*price(major,m)*DF.inc,ads=card.filter(x=>x.t==='a').length*adPay(m)*DF.inc,wages=wageBill(G.me)*DF.cost,gcost=cardCost(okc)*DF.cost,cost=(showCost(m,major)+prodExtra(m,major))*DF.cost,tvx=viewersFor(m,3,major)*VIEW_PAY*DF.inc,bx=major?buysFor(m,3)*BUY_PRICE*DF.inc:0,pr=gate+ads+tvx+bx-wages-cost-gcost;
   const wevB=G.wev&&G.wev.wk===G.week?`<div class="msg" style="margin-bottom:12px">🌩 This week: ${esc(WEVS[G.wev.k].t)}</div>`:'';
   const riv=bkRivals(BK.w);
-  const chip=(id,i,si,canWin)=>{const w=W(id),h=riv.get(id);return `<span class="bchip${holds(w).length?' champ':''}${h!=null?' fe':''}${BK.w===id?' me':''}"${h!=null?` style="--fc:${bkFeudCol(h)}"`:''}><button class="w" ${canWin?`data-win="${i}:${si}"`:`data-bsel="${id}"`} title="${canWin?'Tap to set the winner':''}">${favMark(w)}${esc(w.name)}${holds(w).length?' 🏆':''}${wMk(w)}<small>${pd(w)}</small></button><button class="x" data-rmw="${i}:${si}:${id}" aria-label="Take ${esc(w.name)} off">✕</button></span>`};
+  const chip=(id,i,si,canWin)=>{const w=W(id),h=riv.get(id);return `<span class="bchip${holds(w).length?' champ':''}${h!=null?' fe':''}${BK.w===id?' me':''}"${h!=null?` style="--fc:${bkFeudCol(h)}"`:''}><button class="w" ${canWin?`data-win="${i}:${si}"`:`data-bsel="${id}"`} title="${canWin?'Tap to set the winner':''}">${favMark(w)}${esc(w.name)}${holds(w).length?' '+wMedal(w):''}${wMk(w)}<small>${pd(w)}</small></button><button class="x" data-rmw="${i}:${si}:${id}" aria-label="Take ${esc(w.name)} off">✕</button></span>`};
   const empty=(i,si,n)=>{const on=BK.sel&&BK.sel.i===i&&BK.sel.s===si;return `<button class="bslot${on?' on':''}" data-bsl="${i}:${si}">${on?'Tap a wrestler →':n>1?`+ Add (${n})`:'+ Add'}</button>`};
   const ctl=(x,i)=>`<span class="bctl"><button class="sm" data-up="${i}" aria-label="Move up" ${i?'':'disabled'}>↑</button><button class="sm" data-dn="${i}" aria-label="Move down" ${i<card.length-1?'':'disabled'}>↓</button><button class="sm" data-rm="${i}" aria-label="Remove">✕</button></span>`;
+  /* Booking layout (owner, 27 Nov): the match being built stays open at the top; finished ones fold into a one-line row in the Booked Card list below, where they can be reordered or tapped to edit. */
+  const isOpen=(x,i)=>x.t!=='a'&&((x.t==='m'?!mFull(x):!x.who.length)||BK.openX===x||(BK.sel&&BK.sel.i===i));
+  const wn=id=>{const w=W(id);return esc(w.name)+(holds(w).length?' '+wMedal(w):'')};
+  const crow=(x,i)=>{let kind,main,sub=[];
+    if(x.t==='m'){kind=`<span class="kind m">${x.tour?'Bracket':x.pre?'Pre-show':i===lastM?'Main':'Match'}</span>`;main=x.sides.map((sd,si)=>`<span class="${x.win===si?'bwin':''}">${sd.map(wn).join(' &amp; ')}</span>`).join(' <i>vs</i> ');const tt=x.title&&G.titles?.[x.title];if(tt)sub.push(medal(tt)+' '+esc(tt.name));const g=gimOf(x);if(g.k)sub.push(esc(g.name));sub.push(x.fin?esc(x.fin.t):x.win!=null?'Clean win':'Sim decides');if(x.bo)sub.push('Blowoff')}
+    else if(x.t==='s'){kind='<span class="kind s">Segment</span>';main=esc(x.g==='Custom'&&x.txt?x.txt:x.g)+' · '+x.who.map(wn).join(', ')}
+    else{kind='<span class="kind a">Ad</span>';main='Sponsor break';sub.push('+'+money(adPay(m)))}
+    if(isOpen(x,i)){main='<span class="sub" style="font-weight:600">Being booked above</span>';sub=[]}
+    return `<div class="bmc${i===lastM?' main':''}"><button class="bmcb" ${x.t==='a'?'':`data-bopen="${i}"`} title="${x.t==='a'?'':'Tap to edit'}"><span class="no">${i+1}</span>${kind}<span class="bmct">${main}</span>${sub.length?`<span class="sub">${sub.join(' · ')}</span>`:''}</button>${ctl(x,i)}</div>`};
   const row=(x,i)=>{
     if(x.t==='m'){const k=mtOf(x),z=mSz(x),full=mFull(x),fh=full?mHeat(x.sides):0,tos=full?titleOpts(G.me,x,card):[],g=gimOf(x);
       const tagT=!full?`<span class="tag ns">Needs ${mNeed(x)} more</span>`:x.fin?`<span class="tag${NOWIN.includes(x.fin.t)?' ns':''}">${esc(x.fin.t)}${x.fin.c?': '+esc(x.fin.c):''}</span>`:x.win!=null?'<span class="tag">Clean win</span>':'<span class="tag sim">Sim decides</span>';
@@ -1835,20 +1865,21 @@ function vBook(){
       return `<div class="bm${i===lastM?' main':''}${BK.sel&&BK.sel.i===i?' cur':''}${full?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind m">${x.tour?'Bracket':x.pre?'Pre-show':i===lastM?'Main':'Match'}</span>
         ${x.tour?`<span class="sub">${esc(MTYPES[k]?.l||'Singles')}</span>`:(()=>{const md=mMode(x),per=md==='t'?Math.max(...z):2;return `<span class="seg2 bmode" role="group" aria-label="Match style"><button data-bmode="${i}:s" class="${md==='s'?'on':''}">Singles</button><button data-bmode="${i}:t" class="${md==='t'?'on':''}">Tag</button></span>${md==='t'?`<select id="btz${i}" aria-label="Wrestlers per team">${[2,3,4].map(n=>`<option value="${n}" ${per===n?'selected':''}>${n} per team</option>`).join('')}</select><span class="cpm"><button class="sm" data-btk="${i}:-1" aria-label="One fewer team" ${x.sides.length<=2?'disabled':''}>− Team</button><button class="sm" data-btk="${i}:1" aria-label="One more team" ${x.sides.length>=6?'disabled':''}>+ Team</button></span>`:`<span class="sub">${x.sides.filter(sd=>sd.length).length>2?'Free-for-all':'One on one'}</span>`}`})()}
         ${gimSel(x.gm||'',k==='multi'?Math.max(5,x.sides.length):x.sides.length,'bgm'+i)}
-        ${tos.length?`<select id="btt${i}" aria-label="Title" class="${x.title?'gold':''}"><option value="">Non-title</option>${tos.map(t=>`<option value="${t.id}" ${x.title===t.id?'selected':''}>🏆 ${esc(t.name)}</option>`).join('')}</select>`:''}
+        ${tos.length?`<select id="btt${i}" aria-label="Title" class="${x.title?'gold':''}"><option value="">Non-title</option>${tos.map(t=>`<option value="${t.id}" ${x.title===t.id?'selected':''}>${medal(t)} ${esc(t.name)}</option>`).join('')}</select>`:''}
         ${fh?`<span class="sub" style="color:${heatCol(fh)};font-weight:700" title="Feud heat">🔥 ${Math.round(fh)}${featOn('flv')?` · Lv ${flvOf(fh)}`:''}</span>`:''}${ctl(x,i)}</div>
         <div class="vs">${sides}</div>
-        <div class="bmf">${tagT}${full?`<button class="sm" data-fin="${i}">Finish</button>`:''}${full&&mFeud(x.sides)?(flvTop(fh)&&!major?`<span class="sub" title="Top-level feuds can only end at a Major Event">Lv ${flvOf(fh)}: ends only at a Major Event</span>`:`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`):''}${full&&featOn('pcards')&&(pcN('spot')||x.pc)?`<button class="sm${x.pc?' go':''}" data-pcs="${i}" title="Use a Spotlight power card on this match">⚡ ${x.pc?'Spotlight on':'Spotlight'}</button>`:''}${crewOf(me(),'road').length?(()=>{const L=crewOf(me(),'road'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a road agent">${p?esc(p.name.split(' ').pop())+' +':'Road agent'}</button>`})():''}${k==='custom'?`<button class="sm" data-bcs="${i}:1" ${z.length>=MT_MAXSIDE?'disabled':''}>+ Side</button><button class="sm" data-bcs="${i}:-1" ${z.length<=2?'disabled':''}>− Side</button>`:''}${g.cost?`<span class="sub">${money(g.cost)}</span>`:''}</div></div>`}
+        <div class="bmf">${tagT}${full?`<button class="sm" data-fin="${i}">Finish</button>`:''}${full?`<button class="sm go" data-bkdone="1" title="Fold it into the Booked Card">Done</button>`:''}${full&&mFeud(x.sides)?(flvTop(fh)&&!major?`<span class="sub" title="Top-level feuds can only end at a Major Event">Lv ${flvOf(fh)}: ends only at a Major Event</span>`:`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`):''}${full&&featOn('pcards')&&(pcN('spot')||x.pc)?`<button class="sm${x.pc?' go':''}" data-pcs="${i}" title="Use a Spotlight power card on this match">⚡ ${x.pc?'Spotlight on':'Spotlight'}</button>`:''}${crewOf(me(),'road').length?(()=>{const L=crewOf(me(),'road'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a road agent">${p?esc(p.name.split(' ').pop())+' +':'Road agent'}</button>`})():''}${k==='custom'?`<button class="sm" data-bcs="${i}:1" ${z.length>=MT_MAXSIDE?'disabled':''}>+ Side</button><button class="sm" data-bcs="${i}:-1" ${z.length<=2?'disabled':''}>− Side</button>`:''}${g.cost?`<span class="sub">${money(g.cost)}</span>`:''}</div></div>`}
     if(x.t==='s'){const outs=x.who.length?segOuts(x.g,x.who).filter(o=>o[0]):[];return `<div class="bm${BK.sel&&BK.sel.i===i?' cur':''}${x.who.length?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind s">Segment</span><select id="bsg${i}" aria-label="Segment type">${Object.keys(SEG).map(t=>`<option ${t===x.g?'selected':''}>${t}</option>`).join('')}</select>${x.g==='Custom'?`<select id="bstn${i}" aria-label="Tone">${Object.entries(SEGTONE).map(([k,v])=>`<option value="${k}" ${(x.tone||'hype')===k?'selected':''}>${v.l}</option>`).join('')}</select>`:''}
         ${outs.length?`<select id="boc${i}" aria-label="Outcome"><option value="">Outcome: sim decides</option>${outs.map(([q,l])=>`<option value="${q}" ${x.oc===q?'selected':''}>${esc(l)}</option>`).join('')}</select>`:''}${ctl(x,i)}</div>
         ${x.g==='Custom'?`<input id="bstx${i}" class="bstx" maxlength="80" placeholder="What happens? e.g. Unveils a new faction" value="${esc(x.txt||'')}">`:''}<div class="vs"><span class="side">${x.who.map(id=>chip(id,i,0,false)).join('')}${x.who.length<8?empty(i,0,0):''}</span></div>
-        <div class="bmf">${x.who.length?'<span class="tag sim">Charisma</span>':'<span class="tag ns">Needs someone</span>'}${crewOf(me(),'prod').length?(()=>{const L=crewOf(me(),'prod'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a producer">${p?esc(p.name.split(' ').pop())+' +':'Producer'}</button>`})():''}</div></div>`}
+        <div class="bmf">${x.who.length?'<span class="tag sim">Charisma</span><button class="sm go" data-bkdone="1">Done</button>':'<span class="tag ns">Needs someone</span>'}${crewOf(me(),'prod').length?(()=>{const L=crewOf(me(),'prod'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a producer">${p?esc(p.name.split(' ').pop())+' +':'Producer'}</button>`})():''}</div></div>`}
     return `<div class="bm"><div class="bmh"><span class="no">${i+1}</span><span class="kind a">Ad</span><span class="seg">Sponsor break</span><span class="tag mo">+${money(adPay(m))}</span>${ctl(x,i)}</div></div>`;
   };
   const r=roster(G.me),fc=feudCards();
   $('#app').innerHTML=`<div class="head"><div><h2>${major?esc(m.majorName)+' (Major Event)':esc(wkName(m))+', '+fmtDate(G.date)}</h2><p>Tap wrestlers in the roster to fill the card. Tap a name on the card to pick the winner. The last match is the main event.</p></div>
   ${wevB}<div class="btns"><button id="addm" ${r.length<2?'disabled':''}>+ Match</button><button id="adds" ${r.length?'':'disabled'}>+ Segment</button><button id="adda">+ Ad</button><button id="auto" ${r.length<2?'disabled':''}>Auto-fill</button>${G.tour?(G.card.some(x=>x.tour)?'':`<button id="tround" class="bl">Add ${esc(G.tour.name)} ${tourLabel(G.tour.alive.length).toLowerCase()}</button>`):`<button id="tnew">Tournament</button>`}<button id="skip" title="No show this week">Skip week</button><button class="go" id="run">Run the show</button></div></div>
-  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard"><div class="nbtitle">${major?esc(m.majorName):esc(wkName(m))} <small>${fmtDate(G.date)}</small></div>${major?`<div class="bkpre"><div class="bkpreh"><b>Pre-show</b><span class="sub">Before the main card. Counts a little toward the rating.</span><span class="btns"><button class="sm" id="addpm">+ Match</button><button class="sm" id="addps">+ Segment</button><button class="sm" id="addpa">+ Ad</button></span></div>${card.map((x,i)=>x.pre?row(x,i):'').join('')}</div><div class="bkpreh"><b>Main card</b></div>`:''}${card.some(x=>!x.pre)?card.map((x,i)=>x.pre?'':row(x,i)).join(''):`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
+  <div class="bkgrid"><div class="bkmain"><div class="panel bkcard"><div class="nbtitle">${major?esc(m.majorName):esc(wkName(m))} <small>${fmtDate(G.date)}</small></div>${card.some(isOpen)?card.map((x,i)=>isOpen(x,i)?row(x,i):'').join(''):card.length?`<p class="sub" style="margin:6px 0 2px">Add a match or segment above, or tap one on the Booked Card to change it.</p>`:`<div class="empty">${r.length<2?'You need at least 2 wrestlers. Sign talent from Business.':'The card is empty. Tap wrestlers in the roster to start a match, or use Auto-fill.'}</div>`}</div>
+  ${card.length||major?`<div class="panel bkcard bkdone"><h3 style="margin:0 0 4px">Booked Card</h3>${major?`<div class="bkpreh"><b>Pre-show</b><span class="sub">Before the main card. Counts a little toward the rating.</span><span class="btns"><button class="sm" id="addpm">+ Match</button><button class="sm" id="addps">+ Segment</button><button class="sm" id="addpa">+ Ad</button></span></div>${card.map((x,i)=>x.pre?crow(x,i):'').join('')}<div class="bkpreh"><b>Main card</b></div>`:''}${card.map((x,i)=>x.pre?'':crow(x,i)).join('')}</div>`:''}
   ${fc?`<details class="panel bkfe" ${G.bkFeudsShut?'':'open'}><summary><b>Your feuds</b> <span class="sub">tap one to book it</span></summary><p class="sub" style="margin:4px 0 0">Staleness counts their matches in the last 6 weeks; too many cools the feud.</p>${fc}</details>`:''}
   ${featOn('prod')?`<div class="panel bkprod"><b>Production</b>${Object.entries(PROD).map(([g,o])=>`<select id="bpr${g}" aria-label="Production">${Object.entries(o).map(([k,v])=>`<option value="${k}" ${prodOf(m)[g]===k?'selected':''}>${v.l}${v.cost&&g!=='v'?` · ${money(v.cost*(major?2:1))}`:''}</option>`).join('')}</select>`).join('')}<span class="sub">Bigger venues and ads draw more fans; pyro adds to the show and to hype.</span></div>`:''}
   <details class="panel bkout"><summary><b>Show outlook</b> <span class="sub">expected profit</span> <b class="${pr<0?'neg':'pos'}">${money(pr)}</b></summary>${(()=>{const L=G.war||[],x=L[L.length-1];if(!x)return '';const mine=x.rows.find(r=>r.c===G.me);return `<div class="kv"><span>Last week's ratings war</span><b>${mine?`${ord(mine.rk)} of ${x.rows.length}`:'Sat out'}</b></div>`})()}
@@ -1882,7 +1913,8 @@ document.addEventListener('click',e=>{
   else if(d.bmode){const[i,md]=d.bmode.split(':');const x=card[+i];if(!x||mMode(x)===md)return;if(md==='s')bkSingles(x);else bkTag(x,2,Math.max(2,Math.ceil(x.sides.flat().length/2)));const k=mOpenSide(x);BK.sel=k>=0?{i:+i,s:k}:null;bkFix(x);rerender()}
   else if(d.btk){const[i,dv]=d.btk.split(':').map(Number);const x=card[i],z=mSz(x),per=Math.max(...z);bkTag(x,per,clamp(z.length+dv,2,6));const k=mOpenSide(x);BK.sel=k>=0?{i,s:k}:null;bkFix(x);rerender()}
   else if(d.bsel){BK.w=BK.w===d.bsel?null:d.bsel;rerender()}
-  else if(d.bkdone){BK.sel=null;rerender()}
+  else if(d.bkdone){BK.sel=null;BK.openX=null;rerender()}
+  else if(d.bopen){const x=card[+d.bopen];BK.openX=BK.openX===x?null:x;BK.sel=null;rerender();requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}))}
   else if(d.bkf){BKF.f=d.bkf;rerender()}
   else if(d.rmw){const[i,s,id]=d.rmw.split(':');const x=card[+i];if(x.t==='s'){x.who=x.who.filter(y=>y!==id);x.oc='';BK.sel={i:+i,s:0}}else{if(mMode(x)==='s'&&x.sides.length>2){x.sides=x.sides.filter(sd=>!sd.includes(id));bkSingles(x,Math.max(2,x.sides.length));BK.sel=null}else{x.sides[+s]=x.sides[+s].filter(y=>y!==id);BK.sel={i:+i,s:+s}}x.win=null;x.fin=null;bkFix(x)}rerender()}
   else if(d.btm){const s=BK.sel,x=s&&card[s.i],tm=grp(d.btm);if(!x||!tm)return;x.sides[s.s]=tm.m.slice(0,mSz(x)[s.s]);const n=mOpenSide(x);BK.sel=n>=0?{i:s.i,s:n}:null;x.win=null;x.fin=null;bkFix(x);rerender()}
@@ -1899,14 +1931,14 @@ document.addEventListener('click',e=>{
   else if(d.pcs){const x=card[+d.pcs];if(x.pc)delete x.pc;else{const used=card.filter(y=>y.pc).length;if(used>=pcN('spot')){say('You have no Spotlight cards left. Buy more in Staff and store.');return}x.pc=1}rerender()}
   else if(d.crw){const x=card[+d.crw],L=crewOf(me(),x.t==='m'?'road':'prod'),used=card.filter(y=>y!==x&&y.t===x.t&&y.cr!=null).map(y=>y.cr);let n=x.cr==null?0:x.cr+1;while(n<L.length&&used.includes(n))n++;x.cr=n<L.length?n:null;rerender()}
   else if(d.tt){const x=card[+d.tt],o=titleOpts(G.me,x,card);const k=o.findIndex(t=>t.id===x.title);x.title=k<0?o[0].id:(o[k+1]?.id||null);rerender()}
-  else if(t.id==='addm'){card.push({t:'m',mt:'single',sides:[[],[]],win:null,fin:null});BK.sel={i:card.length-1,s:0};rerender()}
-  else if(t.id==='adds'){card.push({t:'s',g:'Promo',who:[],oc:''});BK.sel={i:card.length-1,s:0};rerender()}
+  else if(t.id==='addm'){card.push({t:'m',mt:'single',sides:[[],[]],win:null,fin:null});BK.sel={i:card.length-1,s:0};BK.openX=card[card.length-1];rerender()}
+  else if(t.id==='adds'){card.push({t:'s',g:'Promo',who:[],oc:''});BK.sel={i:card.length-1,s:0};BK.openX=card[card.length-1];rerender()}
   else if(t.id==='adda'){if(card.filter(x=>x.t==='a').length>=3)return;card.push({t:'a'});rerender()}
   else if(t.id==='addpm'||t.id==='addps'||t.id==='addpa'){const k=card.filter(x=>x.pre).length,it=t.id==='addpm'?{t:'m',mt:'single',sides:[[],[]],win:null,fin:null,pre:1}:t.id==='addps'?{t:'s',g:'Promo',who:[],oc:'',pre:1}:{t:'a',pre:1};
-    if(it.t==='a'&&card.filter(x=>x.t==='a').length>=3)return;card.splice(k,0,it);BK.sel=it.t==='a'?null:{i:k,s:0};rerender()}
+    if(it.t==='a'&&card.filter(x=>x.t==='a').length>=3)return;card.splice(k,0,it);BK.sel=it.t==='a'?null:{i:k,s:0};BK.openX=it.t==='a'?BK.openX:it;rerender()}
   else if(t.id==='tnew')dTour();
   else if(t.id==='tround'){const ok=tourRound().filter(p=>p.every(id=>canWork(W(id))));if(!ok.length){say('Someone in this round is unavailable. Try next week.');return}ok.forEach(p=>G.card.push({t:'m',sides:[[p[0]],[p[1]]],win:null,fin:null,tour:1}));rerender()}
-  else if(t.id==='auto'){G.card=[...card.filter(x=>x.pre),...aiCard(me())];BK.sel=null;rerender()}
+  else if(t.id==='auto'){G.card=[...card.filter(x=>x.pre),...aiCard(me())];BK.sel=null;BK.openX=null;rerender()}
   else if(t.id==='run'){const bad=card.findIndex(x=>!mFull(x));if(bad>=0){BK.sel=null;say(`${card[bad].t==='s'?'Segment':'Match'} ${bad+1} still needs ${card[bad].t==='s'?'someone in it':'wrestlers'}. Fill it or take it off the card.`);return}BK.sel=null;runPlayer()}
   else if(t.id==='skip'){const m=me();m.pop=clamp(m.pop-1,1,100);m.cash-=wageBill(G.me);news('You skipped this week. Wages were still paid and popularity slipped.','me');BK.sel=null;advance();render()}
 });
@@ -2101,7 +2133,7 @@ function runPlayer(){
       <div class="schg">${x.who.map(who).join('')}${(it.ups||[]).map(u=>`<span class="dchip st">${esc(u)}</span>`).join('')}${it.bonus?`<span class="dchip ${it.bonus<0?'dn':'up'}">${it.bonus<0?'Refunds ':'Buzz +'}${money(Math.abs(it.bonus))}</span>`:''}</div>
       ${it.lines.length?`<details><summary>How it went</summary>${it.lines.map(l=>`<p>${esc(l)}</p>`).join('')}</details>`:''}</div><span class="sst">${stars(it.st)}</span></div>`;
     const t=x.title&&G.titles?.[x.title],g=gimOf(x),fin=x.fin?(CLEAN.includes(x.fin.t)&&g.win?g.win:x.fin.t):'',won=x.win!=null&&x.fin&&!NOWIN.includes(x.fin.t);
-    return `<div class="srow${i===lastM?' main':''}${it.st>=5?' five5':''}"><span class="sno">${i+1}</span><div class="smain"><span class="stype">${i===lastM?'Main event':x.tour?'Tournament':'Match'}${t?` · <span class="sgold">🏆 ${esc(t.name)}</span>`:''}${g.k?` · ${esc(g.name)}`:''}</span>
+    return `<div class="srow${i===lastM?' main':''}${it.st>=5?' five5':''}"><span class="sno">${i+1}</span><div class="smain"><span class="stype">${i===lastM?'Main event':x.tour?'Tournament':'Match'}${t?` · <span class="sgold">${medal(t)} ${esc(t.name)}</span>`:''}${g.k?` · ${esc(g.name)}`:''}</span>
       <div class="sline">${won?`<b class="swin">${esc(nm(x.sides[x.win]))}</b> <i>def.</i> ${x.sides.filter((_,k)=>k!==x.win).map(sd=>esc(nm(sd))).join(', ')}`:x.sides.map(sd=>esc(nm(sd))).join(' <i>vs</i> ')}</div>
       <div class="sfin">${fin?`<span class="sftag">${esc(fin)}</span>`:''}${x.tres?`<span class="sftag gold">${esc(x.tres)}</span>`:''}</div>
       <div class="schg">${x.sides.flat().map(who).join('')}${(it.ups||[]).map(u=>`<span class="dchip st">${esc(u)}</span>`).join('')}${it.bonus?`<span class="dchip ${it.bonus<0?'dn':'up'}">${it.bonus<0?'Refunds ':'Buzz +'}${money(Math.abs(it.bonus))}</span>`:''}</div>
@@ -2146,7 +2178,7 @@ function vRoster(){
   const RFL=[['all','All'],['fav','★ Favourites'],['he','He'],['she','She'],['they','They'],['F','Face'],['H','Heel'],['T','Tweener'],['champ','Champions'],['feud','Feuding'],['unhappy','Unhappy'],['out','Injured or away'],['tired','Tired'],['mgr','Managers']];
   const rcount={};RFL.forEach(([k])=>rcount[k]=list.filter(RF[k]).length);list=list.filter(RF[rfil]||RF.all);
   const chCo=rview==='mine'?G.me:rview==='other'&&rco!=='all'?rco:null,chL=chCo?Object.values(G.titles||{}).filter(t=>t.co===chCo&&!t.retired).sort((a,b)=>(a.tier||1)-(b.tier||1)):[];
-  const champBox=chL.length?`<div class="panel" style="margin-bottom:14px"><h3>Champions</h3><table><tbody>${chL.map(t=>{const r=reignOf(t);return `<tr><td><b>${r?r.h.map(id=>`<button class="ed" style="border:0;color:var(--gold);font-weight:800;font-size:16px;padding:0" data-star="${id}">${esc(W(id).name)}</button>`).join(' &amp; '):'<span class="sub">Vacant</span>'}</b></td><td>🏆 ${esc(t.name)} <span class="sub">${TIERS[t.tier||1]||''}</span></td><td class="n sub">${r?`since ${fmtDate(r.won)}`:''}</td></tr>`}).join('')}</tbody></table></div>`:'';
+  const champBox=chL.length?`<div class="panel" style="margin-bottom:14px"><h3>Champions</h3><table><tbody>${chL.map(t=>{const r=reignOf(t);return `<tr><td><b>${r?r.h.map(id=>`<button class="ed" style="border:0;color:var(--gold);font-weight:800;font-size:16px;padding:0" data-star="${id}">${esc(W(id).name)}</button>`).join(' &amp; '):'<span class="sub">Vacant</span>'}</b></td><td>${medal(t)} ${esc(t.name)} <span class="sub">${TIERS[t.tier||1]||''}</span></td><td class="n sub">${r?`since ${fmtDate(r.won)}`:''}</td></tr>`}).join('')}</tbody></table></div>`:'';
   const q=rq.toLowerCase();const SK={pop:w=>-w.pop,cha:w=>-w.cha,wrk:w=>-w.wrk,worth:w=>-worth(w),name:w=>w.name.toLowerCase(),age:w=>age(w)??99};list=list.filter(w=>!q||w.name.toLowerCase().includes(q)).sort((a,b)=>{const x=SK[rsort](a),y=SK[rsort](b);return x<y?-1:x>y?1:0});
   if(rfil!=='out')list=[...list.filter(w=>!isOut(w)),...list.filter(isOut)];const nOk=list.filter(w=>!isOut(w)).length,nOut=rfil==='out'?0:list.length-nOk;
   const secTr=n=>`<tr class="secrow"><td colspan="${n+CX_N}">Injured and away (${nOut})</td></tr>`;
@@ -2154,6 +2186,8 @@ function vRoster(){
     if(w.status==='future')return `Debuts ${fmtMonth(w.debut)}`;
     if(rview==='fa')return 'Indies';if(rview==='sign')return 'Free agent';
     return `<b>${esc(co(w.co).short)}</b><div class="sub${w.left<=2?' warn':''}">${w.left} event${w.left===1?'':'s'} left${w.next?`, then ${esc(co(w.next.co).short)}`:''}</div>`};
+  const rexpRow=w=>{const a=age(w),it=(l,v)=>`<div class="kv"><span>${l}</span><b>${v}</b></div>`;return `<tr class="rexp"><td colspan="${3+CX_N}"><div class="rexpb">${bodyImg?'' :''}<div class="rexpg">${it('Age',a??'?')}${it('Gender',w.gender==='F'?'Female':w.gender==='M'?'Male':'Other')}${it('Alignment',alTxt(w.align))}${w.wt?it('Weight',`${w.wt} lbs`)+it('Class',wClass(w)):''}${it('Style',CLASSES[clsOf(w)]||'')}${it('Charisma',w.cha)}${it('Workrate',w.wrk)}${it('Popularity',pd(w))}${it('Asking',money(worth(w))+'/show')}</div>
+    <div class="btns" style="margin-top:8px"><button class="sm go" data-ct="${w.id}">Sign Long-Term</button>${rview==='fa'?`<button class="sm" data-guest="${w.id}" ${me().cash<guestFee(w)?'disabled':''}>One show ${money(guestFee(w))}</button>`:''}<button class="sm" data-star="${w.id}">Full Profile</button></div></div></td></tr>`};
   const act=w=>{if(rview==='mine')return `<button class="sm" data-ct="${w.id}">Contract</button>`;
     if(w.status==='future')return `<button class="sm" disabled title="Talks open with 2 or fewer Major Events left, or after debut">Negotiate</button>`;
     if(rview==='sign')return `<button class="sm go" data-ct="${w.id}">Negotiate</button>`;
@@ -2166,7 +2200,7 @@ function vRoster(){
    ${[['roster','Roster'],['fa',`Indies (${freeAgents().length})`]].map(([k,l])=>{const on=k==='roster'?['mine','other'].includes(rview):rview===k;return `<button data-rv="${k}" class="${on?(k==='off'?'bl':'go'):''}">${l}</button>`}).join('')}</div></div>
    ${rview==='mine'&&offers.length?`<div class="panel" id="roff" style="margin-bottom:14px;border-color:var(--blue)"><h3>Rival offers to decide (${offers.length})</h3>${offTbl}</div>`:''}${`${champBox}<div class="panel">${rview==='mine'?`<div class="kv" style="margin:0 0 8px"><span>Roster size</span><b class="${roster(G.me).length>target(me())+2?'neg':'pos'}">${roster(G.me).length} / ${target(me())} suggested</b></div>`:''}<div class="chipf tabrow" role="group" aria-label="Filter">${RFL.map(([k,l])=>`<button class="${rfil===k?'on':''}" data-rf="${k}">${l} <small>${rcount[k]}</small></button>`).join('')}</div><div class="btns" style="margin:0 0 10px;align-items:end"><input id="rq" placeholder="Search wrestlers" value="${esc(rq)}" style="max-width:280px;margin:0">
    ${['mine','other'].includes(rview)?`<label style="min-width:220px">Company<select id="rco">${[['me',`${esc(me().short)} (you) · ${pl(roster(G.me).length,'wrestler')}`],...Object.values(G.cos).filter(c=>c.active&&c.id!==G.me).sort((a,b)=>b.pop-a.pop).map(c=>[c.id,`${esc(c.short)} · ${pl(roster(c.id).length,'wrestler')}`]),['all','All other companies']].map(([id,l])=>`<option value="${id}" ${(rview==='mine'?'me':rco)===id?'selected':''}>${l}</option>`).join('')}</select></label>`:''}
-   <label style="min-width:160px">Sort by<select id="rsort">${[['pop','Popularity'],['cha','Charisma'],['wrk','Workrate'],['worth','Worth'],['age','Age'],['name','Name']].map(([k,l])=>`<option value="${k}" ${rsort===k?'selected':''}>${l}</option>`).join('')}</select></label><div class="seg2" role="group" aria-label="View"><button data-rcomp="1" class="${rcomp?'on':''}">Compact</button><button data-rcomp="0" class="${rcomp?'':'on'}">Detailed</button></div></div>${rcomp?`<table class="compact"><thead><tr><th>Wrestler <span class="sub" style="font-weight:400">· tap a name for the profile</span></th>${CX_H}<th class="n">Pop</th><th class="n">${rview==='mine'?'Left':rview==='fa'?'Book once':rview==='sign'?'Sign':'Co'}</th></tr></thead><tbody>${list.map((w,ix)=>(ix===nOk&&nOut?secTr(3):'')+`<tr class="${holds(w).length?'champ':''}"><td><button class="cname" data-star="${w.id}">${headImg(w,18)}${favMark(w)}${esc(w.name)}</button>${holds(w).length?' 🏆':''}${wMk(w)}${w.next?' <span class="k warn">Leaving</span>':''}</td>${cxRow(w)}<td class="n">${pd(w)}</td><td class="n${w.left<=2&&rview!=='fa'&&!w.guest?' warn':''}">${rview==='mine'?(w.guest!=null?'Guest':w.left):rview==='fa'?(w.status==='active'?`<button class="sm" data-guest="${w.id}" title="Pay once for an appearance on your next show" ${me().cash<guestFee(w)?'disabled':''}>One show ${money(guestFee(w))}</button>`:'Future'):rview==='sign'?(w.status==='active'?`<button class="sm go" data-ct="${w.id}">Sign ${money(worth(w))}</button>`:`<span class="sub">Debuts ${fmtMonth(w.debut)}</span>`):w.status==='future'?'Future':esc(co(w.co).short)}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">Nobody here.</td></tr>'}</tbody></table>`:`<table class="stack"><thead><tr><th>Wrestler</th><th class="n">Cha</th><th class="n">Wrk</th><th class="n">Pop</th><th class="n">Worth</th><th>${rview==='mine'?'Contract':'Status'}</th><th></th></tr></thead><tbody>
+   <label style="min-width:160px">Sort by<select id="rsort">${[['pop','Popularity'],['cha','Charisma'],['wrk','Workrate'],['worth','Worth'],['age','Age'],['name','Name']].map(([k,l])=>`<option value="${k}" ${rsort===k?'selected':''}>${l}</option>`).join('')}</select></label><div class="seg2" role="group" aria-label="View"><button data-rcomp="1" class="${rcomp?'on':''}">Compact</button><button data-rcomp="0" class="${rcomp?'':'on'}">Detailed</button></div></div>${rcomp?`<table class="compact"><thead><tr><th>Wrestler <span class="sub" style="font-weight:400">· ${['fa','sign'].includes(rview)?'tap a name for details':'tap a name for the profile'}</span></th>${CX_H}<th class="n">Pop</th><th class="n">${rview==='mine'?'Left':rview==='fa'?'Book once':rview==='sign'?'Sign':'Co'}</th></tr></thead><tbody>${list.map((w,ix)=>(ix===nOk&&nOut?secTr(3):'')+`<tr class="${holds(w).length?'champ':''}"><td><button class="cname" ${['fa','sign'].includes(rview)?`data-rexp="${w.id}" aria-expanded="${rexp===w.id}"`:`data-star="${w.id}"`}>${headImg(w,18)}${favMark(w)}${esc(w.name)}</button>${holds(w).length?' '+wMedal(w):''}${wMk(w)}${w.next?' <span class="k warn">Leaving</span>':''}</td>${cxRow(w)}<td class="n">${pd(w)}</td><td class="n${w.left<=2&&rview!=='fa'&&!w.guest?' warn':''}">${rview==='mine'?(w.guest!=null?'Guest':w.left):rview==='fa'?(w.status==='active'?`<button class="sm" data-guest="${w.id}" title="Pay once for an appearance on your next show" ${me().cash<guestFee(w)?'disabled':''}>One show ${money(guestFee(w))}</button>`:'Future'):rview==='sign'?(w.status==='active'?`<button class="sm go" data-ct="${w.id}">Sign ${money(worth(w))}</button>`:`<span class="sub">Debuts ${fmtMonth(w.debut)}</span>`):w.status==='future'?'Future':esc(co(w.co).short)}</td></tr>`+(rexp===w.id&&['fa','sign'].includes(rview)?rexpRow(w):'')).join('')||'<tr><td colspan="3" class="empty">Nobody here.</td></tr>'}</tbody></table>`:`<table class="stack"><thead><tr><th>Wrestler</th><th class="n">Cha</th><th class="n">Wrk</th><th class="n">Pop</th><th class="n">Worth</th><th>${rview==='mine'?'Contract':'Status'}</th><th></th></tr></thead><tbody>
    ${list.map((w,ix)=>(ix===nOk&&nOut?secTr(7):'')+`<tr class="${holds(w).length?'champ':''}"><td>${headImg(w)}<b>${favMark(w)}${esc(w.name)}</b>${wMk(w)} ${lgTxt(w)}${chTxt(w)}<button class="ed" data-star="${w.id}" aria-label="Edit ${esc(w.name)}" title="Open profile and edit">✎</button><div class="sub">${isOut(w)?`<span class="k" style="background:var(--red);color:#fff">${w.outWhy==='lawsuit'?'Sitting out (lawsuit) until their deal ends':`${w.outWhy==='injury'?'Injured':'Away'}, back in ${w.out-G.week} wk`}</span>`:''}${w.shot?'<span class="k of">Title shot</span>':''}${w.dir&&w.dir!=='steady'?`<span class="k">${cdir(w).name}</span>`:''}${w.mgr?'<span class="k">Manager</span>':''}${feudsOf(w.id).length?`<span class="k" style="color:${heatCol(feudsOf(w.id)[0].heat)}">Feud</span>`:''}${age(w)!=null?age(w)+' · ':''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?' · '+esc(w.gim):''} · ${momTxt(w)}${w.rec?` · ${w.rec.w}-${w.rec.l}-${w.rec.d}`:''}${(w.streak||0)>=3?` · <span class="hot">W${w.streak}</span>`:(w.lstreak||0)>=3?` · <span class="cold">L${w.lstreak}</span>`:''}</div></td><td class="n">${w.cha}</td><td class="n">${w.wrk}</td><td class="n">${pd(w)}</td><td class="n">${money(worth(w))}</td><td>${status(w)}</td><td>${act(w)}</td></tr>`).join('')||`<tr><td colspan="7" class="empty">Nobody here.</td></tr>`}
    </tbody></table>`}</div>`}`;
   const rc=$('#rco');if(rc)rc.onchange=()=>{if(rc.value==='me')rview='mine';else{rview='other';rco=rc.value}vRoster()};const rs=$('#rsort');if(rs)rs.onchange=()=>{rsort=rs.value;vRoster()};
@@ -2174,10 +2208,11 @@ function vRoster(){
 }
 document.addEventListener('click',e=>{
   if(tab!=='roster'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
-  if(d.star){gcat='w';gsel=d.star;gmsg='';location.hash='superstars'}
+  if(d.star){gcat='w';gsel=d.star;gmsg='';location.hash='wrestlers'}
   else if(d.rv){rview=d.rv==='roster'?'mine':d.rv;render()}
   else if(d.rf){rfil=d.rf;vRoster()}
   else if(d.guest){const w=W(d.guest);if(!cfm(`Pay ${w.name} ${money(guestFee(w))} to work your next show? ${cap(pr(w,'he'))} goes back to the Indies after this week.`,'Book them'))return;if(guestBook(w)){save();renderHdr();toast(`${esc(w.name)} is on your roster for this week's show.`);vRoster()}}
+  else if(d.rexp){rexp=rexp===d.rexp?null:d.rexp;vRoster()}
   else if(d.rcomp!=null){rcomp=d.rcomp==='1';try{localStorage.ro_rcomp=rcomp?'1':'0'}catch(e){}vRoster()}
   else if(d.ct)dContract(d.ct);
   else if(d.gm)dGimmick(d.gm);
@@ -2238,7 +2273,7 @@ function dGimmick(id){
   const w=W(id);let g=w.gim||'None',name=w.name,alv=w.al??alDefault(w.align);
   const draw=()=>openD(`<div class="dh"><h3>Gimmick: ${esc(w.name)}</h3><div>A gimmick that fits their stats gets a small crowd bonus</div></div><div class="db">
    <label>Ring name<input id="gn" maxlength="40" value="${esc(name)}"></label>
-   <label style="margin-top:10px">Alignment: <b id="alv">${alName(alv)}</b> <span class="sub">(${alv})</span></label>${alBar('gal',alv)}
+   <label style="margin-top:10px">Alignment <b id="alv" hidden>${alName(alv)}</b></label>${alBar('gal',alv)}
    <label>Gimmick type</label><div class="chips">${GIM.map(x=>`<button data-g="${x}" class="${g===x?'sel':''}">${x}</button>`).join('')}</div>
    <p class="hint">Changing alignment is a turn: a one-time popularity jolt if they're hot, a dip if they're cold. A new gimmick resets momentum a little.</p>
    <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="gok">Save</button></div></div>`);
@@ -2253,7 +2288,7 @@ function dGimmick(id){
 /* ----- companies ----- */
 /* ---- Dashboard, company overview, championships and events (§4.30). Own layout; reuses the history pages for detail. ---- */
 let coSel=null,tiCo='all',evCo='all';
-const goW=id=>{if(!G.ws[id])return;gcat='w';gsel=id;gmsg='';location.hash='superstars'};
+const goW=id=>{if(!G.ws[id])return;gcat='w';gsel=id;gmsg='';location.hash='wrestlers'};
 function nextShows(c,n){const out=[];for(let i=0;i<n;i++){const d=addDays(G.date,7*i),mj=isMajorDate(c,d);out.push({d,mj,name:mj?(i===wkLeft(c)?c.majorName:'Major Event'):wkName(c)})}return out}
 function vDash(){const m=me(),R=roster(G.me),sec=(t,body,empty)=>`<div class="panel"><h3>${t}</h3>${body||`<div class="empty" style="padding:10px 0">${empty}</div>`}</div>`;
   const li=a=>a.length?`<ul style="margin:4px 0 0;padding-left:20px">${a.map(x=>`<li style="margin:4px 0">${x}</li>`).join('')}</ul>`:'';
@@ -2309,7 +2344,7 @@ function vCompany(){if(!coSel||!G.cos[coSel])coSel=G.me;const c=G.cos[coSel],min
     <div class="panel"><h3>Money</h3>${kv('Bank',money(c.cash))}${kv('Wages per show',money(wageBill(c.id)))}${kv('Last show profit',S.length?money(S[S.length-1].$):'–')}${kv('Shows held',S.length)}${mine?kv('Money difficulty',dif().name):''}</div>
     <div class="panel"><h3>Fans</h3>${(()=>{const f=fansOf(c),A=ARENA[c.size]||ARENA.Regional,ready=A.next&&f>=A.need;return `${kv('Fans',f.toLocaleString('en-US'))}${kv('Trend',f<fanTarget(c)*.97?'Growing ↑':f>fanTarget(c)*1.03?'Shrinking ↓':'Steady')}${kv('Viewers last show',c.lastViewers!=null?c.lastViewers.toLocaleString('en-US'):'–')}${kv('Last Major Event buys',c.lastBuys!=null?c.lastBuys.toLocaleString('en-US'):'–')}${kv('Arenas',`${esc(c.size||'Regional')}-size`)}
       ${A.next?`<p class="hint" style="margin:6px 0 0">${ready?`<b>Your fans want bigger arenas.</b> Moving up to ${A.next} venues means bigger crowds and higher show costs.`:`Fans needed for ${A.next} arenas: ${A.need.toLocaleString('en-US')}.`}</p>${mine&&ready?`<div class="btns" style="margin-top:6px"><button class="sm ag" data-arena="1">Move up to ${A.next} arenas (${money(r10(A.up*dif().cost))})</button></div>`:''}`:'<p class="hint" style="margin:6px 0 0">You run the biggest arenas there are.</p>'}`})()}</div>
-    <div class="panel"><h3>Champions</h3>${titlesOf(c.id).length?titlesOf(c.id).map(t=>{const r=reignOf(t);return `<div class="kv"><span><button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-ctl="${t.id}">🏆 ${esc(t.name)}</button></span><b>${r?esc(r.hn||nm(r.h)):'<span class="sub">Vacant</span>'}</b></div>`}).join(''):'<div class="empty">No titles.</div>'}</div>
+    <div class="panel"><h3>Champions</h3>${titlesOf(c.id).length?titlesOf(c.id).map(t=>{const r=reignOf(t);return `<div class="kv"><span><button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-ctl="${t.id}">${medal(t)} ${esc(t.name)}</button></span><b>${r?esc(r.hn||nm(r.h)):'<span class="sub">Vacant</span>'}</b></div>`}).join(''):'<div class="empty">No titles.</div>'}</div>
     <div class="panel"><h3>Schedule</h3>${nextShows(c,6).map(x=>`<div class="kv"><span>${fmtDate(x.d)}</span><b>${x.mj?'<span class="k me">Major</span> ':''}${esc(x.name)}</b></div>`).join('')}</div>
     <div class="panel"><h3>Top of the roster</h3>${R.slice(0,10).map(w=>`<div class="kv"><span><button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-dw="${w.id}">${esc(w.name)}</button> <span class="sub">${tierOf(w)[1]}</span></span><b>${pd(w)} <span class="sub">${w.rec?`${w.rec.w}-${w.rec.l}-${w.rec.d}`:''}</span></b></div>`).join('')||'<div class="empty">Nobody signed.</div>'}<div class="btns" style="margin-top:8px"><button class="sm" data-cfull="${c.id}">Full roster</button></div></div>
     <div class="panel"><h3>Recent shows</h3>${S.slice(-6).reverse().map(x=>`<div class="kv"><span><button class="ed" style="border:0;padding:0;font-weight:700;color:var(--blue)" data-cev="${x.i}">${esc(x.n)}</button> <span class="sub">${fmtDate(x.d)}</span></span><b>${stars(x.r)}</b></div>`).join('')||'<div class="empty">No shows yet.</div>'}<div class="btns" style="margin-top:8px"><button class="sm" data-chist="${c.id}">Full history</button></div></div>
@@ -2376,13 +2411,14 @@ function dNewTitle(){const m=me();
     <label>Belt Type<select id="ntd"><option value="singles">Singles (one wrestler)</option><option value="tag">Tag Team (two wrestlers together)</option></select></label>
     <label>Tier<select id="ntt"><option value="1">Primary</option><option value="2" selected>Secondary</option><option value="3">Tertiary</option></select></label>
     <label>Who can hold it<select id="ntg"><option value="">Anyone</option><option value="M">Men Only</option><option value="F">Women Only</option></select></label>
+    <label>Weight Class<select id="ntw"><option value="">Open (any weight)</option>${WCLASS.map(([x,n])=>`<option>${n}</option>`).join('')}</select></label>
     <p class="hint" id="nterr" role="status"></p></div></div>
     <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="ntok">Create Championship</button></div>`);
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.x){closeD();return}
     if(b.id==='ntok'){const name=$('#ntn').value.trim().replace(/\s+/g,' ');if(name.length<3){$('#nterr').textContent='Give it a name (at least 3 letters).';return}
       if(Object.values(G.titles).some(t=>t.active&&t.name.toLowerCase()===name.toLowerCase())){$('#nterr').textContent='A championship with that name already exists.';return}
       const tier=+$('#ntt').value,id='tn'+Date.now().toString(36);
-      G.titles[id]={id,co:G.me,name,div:$('#ntd').value,tier,prestige:[0,40,30,20][tier],last:G.date,active:true,reigns:[],gen:$('#ntg').value,made:G.date};
+      G.titles[id]={id,co:G.me,name,div:$('#ntd').value,tier,prestige:[0,40,30,20][tier],last:G.date,active:true,reigns:[],gen:$('#ntg').value,wc:$('#ntw').value||undefined,made:G.date};
       news(`${m.short} introduced a new title: the ${name}.`,'me');save();closeD();tiCo=G.me;render()}}}
 function vTitles(){const T=Object.values(G.titles||{}).filter(t=>t.active&&G.cos[t.co]?.active&&(tiCo==='all'||t.co===tiCo));const cos=[...new Set(T.map(t=>t.co))].map(id=>G.cos[id]).sort((a,b)=>(b.id===G.me)-(a.id===G.me)||b.pop-a.pop);
   const allCos=Object.values(G.cos).filter(c=>c.active&&titlesOf(c.id).length);
@@ -2519,7 +2555,7 @@ function vHist(){
   else if(hview==='rk'){const sc=w=>{const h=(w.hist||[]).slice(0,10);return Math.round(fameOf(w)+h.filter(x=>x.r==='w').length*25-h.filter(x=>x.r==='l').length*10+holds(w).reduce((t,x)=>t+({1:150,2:80,3:40}[x.tier||1]||40),0))};
     const L=Object.values(G.ws).filter(w=>w.status==='active'&&w.co&&!w.mgonly).map(w=>({w,s:sc(w)})).sort((a,b)=>b.s-a.s).slice(0,25);
     const T=TM().filter(t=>t.kind==='tag'&&t.st!=='past').map(t=>({t,s:(t.rec?.w||0)*2-(t.rec?.l||0)+avg(t.m.map(id=>W(id).pop))})).sort((a,b)=>b.s-a.s).slice(0,10);
-    body=`<p class="hint" style="margin-top:0">Live rankings across every company: popularity, recent results (last 10 matches) and titles held.</p><div class="grid2"><div class="panel"><h3>Top 25 wrestlers</h3><table class="stack"><thead><tr><th class="n">#</th><th>Wrestler</th><th>Company</th><th class="n">Score</th></tr></thead><tbody>${L.map((x,i)=>`<tr${x.w.co===G.me?' style="background:var(--bluebg)"':''}><td class="n">${i+1}</td><td>${headImg(x.w,22)}<button class="ed" style="border:0;padding:0;font-weight:700" data-star="${x.w.id}">${esc(x.w.name)}</button>${holds(x.w).length?' 🏆':''}</td><td>${esc(co(x.w.co).short)}</td><td class="n">${x.s}</td></tr>`).join('')}</tbody></table></div>
+    body=`<p class="hint" style="margin-top:0">Live rankings across every company: popularity, recent results (last 10 matches) and titles held.</p><div class="grid2"><div class="panel"><h3>Top 25 wrestlers</h3><table class="stack"><thead><tr><th class="n">#</th><th>Wrestler</th><th>Company</th><th class="n">Score</th></tr></thead><tbody>${L.map((x,i)=>`<tr${x.w.co===G.me?' style="background:var(--bluebg)"':''}><td class="n">${i+1}</td><td>${headImg(x.w,22)}<button class="ed" style="border:0;padding:0;font-weight:700" data-star="${x.w.id}">${esc(x.w.name)}</button>${holds(x.w).length?' '+wMedal(x.w):''}</td><td>${esc(co(x.w.co).short)}</td><td class="n">${x.s}</td></tr>`).join('')}</tbody></table></div>
      <div class="panel"><h3>Top 10 tag teams</h3>${T.length?`<table class="stack"><thead><tr><th class="n">#</th><th>Team</th><th>Company</th><th class="n">Record</th></tr></thead><tbody>${T.map((x,i)=>`<tr><td class="n">${i+1}</td><td><b>${esc(x.t.name)}</b></td><td>${esc(co(x.t.co)?.short||'')}</td><td class="n">${x.t.rec?.w||0}-${x.t.rec?.l||0}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No tag teams yet.</div>'}</div></div>`}
   else if(hview==='rec'){
     const all=[];(G.shows||[]).forEach(x=>x.m.forEach(m=>{if(m[4]!=null)all.push({m,x})}));all.sort((a,b)=>b.m[4]-a.m[4]);
@@ -2554,7 +2590,7 @@ function vHist(){
 document.addEventListener('click',e=>{const bv=e.target.closest('[data-belt-view]');if(bv&&G&&G.titles[bv.dataset.beltView]){htl=bv.dataset.beltView;hview='tt';location.hash='history/tt';return}const bb=e.target.closest('[data-belt]');if(bb&&G&&G.titles[bb.dataset.belt]){dBelt(G.titles[bb.dataset.belt],()=>rerender());return}});
 document.addEventListener('click',e=>{if(tab!=='history')return;const b=e.target.closest('[data-hv],[data-hev],[data-htl],[data-hy],[data-hw]');if(!b)return;const d=b.dataset;
   if(d.hv){hview=d.hv;vHist()}else if(d.hev){hev=d.hev;hview='ev';vHist();window.scrollTo(0,0)}else if(d.htl){htl=d.htl;hview='tt';vHist()}else if(d.hy){hyv=+d.hy;hview='yr';vHist()}
-  else if(d.hw){if(!G.ws[d.hw])return;gcat='w';gsel=d.hw;gmsg='';location.hash='superstars'}});
+  else if(d.hw){if(!G.ws[d.hw])return;gcat='w';gsel=d.hw;gmsg='';location.hash='wrestlers'}});
 const mRes=m=>m[2]!=null?`<b>${esc(m[m[2]])}</b> def. ${esc(m[1-m[2]])}`:`${esc(m[0])} vs ${esc(m[1])} <span class="sub">(no winner)</span>`;
 const showsAll=()=>{const L=G.shows||[];L.forEach((x,k)=>{if(x.i==null)x.i='o'+k});return L};
 function evPage(x){
@@ -2564,7 +2600,7 @@ function evPage(x){
   return `<div class="panel"><div class="ph"><div><div class="sub">${logo(G.cos[x.c],28)} ${fmtDate(x.d)} · ${esc(G.cos[x.c]?.name||x.s)}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(x.n)}</h2><div style="margin-top:4px">${x.mj?'<span class="k of">Major Event</span>':'<span class="k">Weekly Show</span>'}${x.p?'<span class="k me">Your show</span>':''}</div></div><div class="big">${stars(x.r)}</div></div>
    <div class="tiles">${[['Crowd',x.cr.toLocaleString('en-US')],['Show profit',x.$!=null?money(x.$):'–'],['Company popularity after',x.cp??'–'],['Matches',x.m.length]].map(([l,v])=>`<div class="tile"><div class="sub">${l}</div><b>${v}</b></div>`).join('')}</div>
    <h3 style="margin-top:18px">The card</h3>
-   ${x.m.map((m,i)=>{const nc=/won the/.test(m[6]||'');return `<div class="res"><span class="st">${m[4]!=null?stars(m[4]):''}</span>${i===x.m.length-1?'<span class="k mt">Main event</span>':''}${m[9]?`<span class="k co">${esc(m[9])}</span>`:''}${m[5]?`<span class="k tt">🏆 ${esc(m[5])}</span>`:''}${nc?'<span class="k of">New champion</span>':''}${m[7]?'<span class="k">Feud blowoff</span>':''}${best===m&&x.m.length>1?'<span class="k sg">Match of the night</span>':''}<div>${mRes(m)}</div><p>${esc(m[3]||'Decision')}${m[6]?` · ${esc(m[6])}`:''}${m[8]?` · ${m[8].flat().filter(id=>G.ws[id]).map(id=>`<button class="ed" style="border:0;padding:0 4px;font-size:13px" data-hw="${id}">${esc(W(id).name)}</button>`).join('')}`:''}</p></div>`}).join('')}
+   ${x.m.map((m,i)=>{const nc=/won the/.test(m[6]||'');return `<div class="res"><span class="st">${m[4]!=null?stars(m[4]):''}</span>${i===x.m.length-1?'<span class="k mt">Main event</span>':''}${m[9]?`<span class="k co">${esc(m[9])}</span>`:''}${m[5]?`<span class="k tt">${medalN(m[5])} ${esc(m[5])}</span>`:''}${nc?'<span class="k of">New champion</span>':''}${m[7]?'<span class="k">Feud blowoff</span>':''}${best===m&&x.m.length>1?'<span class="k sg">Match of the night</span>':''}<div>${mRes(m)}</div><p>${esc(m[3]||'Decision')}${m[6]?` · ${esc(m[6])}`:''}${m[8]?` · ${m[8].flat().filter(id=>G.ws[id]).map(id=>`<button class="ed" style="border:0;padding:0 4px;font-size:13px" data-hw="${id}">${esc(W(id).name)}</button>`).join('')}`:''}</p></div>`}).join('')}
    ${!x.p&&!x.mj?'<p class="hint">Rival Weekly Shows only keep their main event.</p>':''}
    ${segs.length?`<h3 style="margin-top:14px;font-size:19px">Segments</h3>${segs.map(g=>`<div class="res"><span class="st">${g[1]!=null?stars(g[1]):''}</span>${esc(g[0])}${g[2]?` <span class="tag">${esc(g[2])}</span>`:''}</div>`).join('')}`:''}
    <div class="btns" style="margin-top:14px">${prev?`<button class="sm" data-hev="${prev.i}">← ${esc(prev.n)} (${fmtDate(prev.d)})</button>`:''}${next?`<button class="sm" data-hev="${next.i}">${esc(next.n)} (${fmtDate(next.d)}) →</button>`:''}<button class="sm" data-hy="${x.d.slice(0,4)}">All of ${x.d.slice(0,4)}</button></div>
@@ -2673,13 +2709,13 @@ function vOffice(){const m=me(),major=m.weeklyLeft===0,need=(G.offers||[]).lengt
    ${o('business','Staff and Store',`<rect x="780" y="470" width="84" height="88" rx="6" fill="#4b525a" stroke="#2a2e33" stroke-width="5"/><circle cx="822" cy="514" r="18" fill="#6d7680" stroke="#2a2e33" stroke-width="4"/><line x1="822" y1="514" x2="834" y2="504" stroke="#ffd56b" stroke-width="4"/><rect x="848" y="500" width="6" height="28" rx="2" fill="#2a2e33"/>`,822,580)}
   </svg>`;
   const links=[['dash','Inbox'],['news','News'],['book','Book the Show'],['calendar','Calendar'],['roster/mine','My Roster'],['roster/sign','Sign Talent'],['titles','Championships'],['companies','Rival Companies'],['war','Ratings War'],['business','Staff and Store'],['history/hof','History'],['settings','Settings']];
-  $('#app').innerHTML=`<div class="head"><div><h2>Office</h2><p>Your desk. Tap anything in the room to go there.</p></div><div class="btns"><a class="btn go" href="#book">Book ${major?esc(m.majorName):'this week\'s show'}</a></div></div>
+  $('#app').innerHTML=`<div class="head"><div><h2>Your Office</h2><p>Your desk. Tap anything in the room to go there.</p></div><div class="btns"><a class="btn go" href="#book">Book ${major?esc(m.majorName):'this week\'s show'}</a></div></div>
    <div class="ofwrap">${svg}</div>
    <div class="ofstrip"><div><small>Bank</small><b class="${m.cash<0?'neg':''}">${money(m.cash)}</b></div><div><small>Next show</small><b>${esc(major?m.majorName:wkName(m))}</b></div><div><small>Waiting for you</small><b>${need||'Nothing'}</b>${G.arc?`<small style="color:var(--blue)">📖 ${esc(ARCS[G.arc.k].n)}${G.arc.ask?` · <a href="#office" data-arcopen="1">decide</a>`:''}</small>`:''}</div><div><small>Last show</small><b>${m.lastRating!=null?stars(m.lastRating):'None yet'}</b></div><div><small>Popularity</small><b>${Math.round(m.pop)}</b></div></div>
    <div class="oflinks">${links.map(([h,l])=>`<a href="#${h}">${l}</a>`).join('')}</div>`}
 
 /* News site (§4.64): the game's news shown as a made-up wrestling news website. Fictional name and layout. */
-const NEWS_SITE='Canvas Dispatch';let nwSec='all';
+const NEWS_SITE='The Wrestling Bystander';let nwSec='all';
 const NWSEC={tt:'Title Picture',sg:'Signings',db:'Debuts',rt:'Retirements',aw:'Awards',ms:'Milestones',fd:'Feuds',mt:'Results',co:'Business',of:'Contracts'};
 const nwHead=t=>{let h=String(t).split(/(?<=[.!?])\s/)[0].replace(/[.]$/,'');if(h.length>90)h=h.slice(0,h.lastIndexOf(' ',86))+'…';return h};
 const nwBy=i=>['Staff writer','Ringside desk','Backstage correspondent','Results desk','Business desk'][i%5];
@@ -2688,7 +2724,7 @@ function vNews(){const NWOK=n=>n.kind&&!['me','of'].includes(n.kind)&&!/^(Achiev
   const secs=[['all','Front page'],...Object.entries(NWSEC).filter(([k])=>(G.news||[]).some(n=>n.kind===k&&NWOK(n)))];
   const war=(G.war||[]).slice(-1)[0];
   const art=(n,i,big)=>{const h=nwHead(n.text),more=n.text.replace(/[.]$/,'').trim()!==h;return `<article class="nwa${big?' lead':''}"><span class="nwk">${esc(NWSEC[n.kind]||'News')}</span><h3>${esc(h)}</h3>${more?`<p>${esc(n.text)}</p>`:''}<small>${nwBy(i)} · ${fmtDate(n.date)}</small></article>`};
-  $('#app').innerHTML=`<div class="nwsite"><div class="nwbar"><span>🔒 canvasdispatch.example</span><a href="#office">✕ Close</a></div>
+  $('#app').innerHTML=`<div class="nwsite"><div class="nwbar"><span>🔒 wrestlingbystander.example</span><a href="#office">✕ Close</a></div>
    <header class="nwmast"><b>${NEWS_SITE}</b><span>Wrestling news, results and rumours · ${fmtDate(G.date)}</span></header>
    <nav class="nwnav">${secs.map(([k,l])=>`<button data-nws="${k}" class="${nwSec===k?'on':''}">${l}</button>`).join('')}</nav>
    ${top?`<div class="nwgrid"><div>${art(top,0,true)}</div><aside class="nwside"><h4>Ratings war</h4>${war?war.rows.slice(0,6).map(r=>`<div class="kv"><span>${ord(r.rk)} ${esc(co(r.c).short)}${r.c===G.me?' <span class="k me">You</span>':''}</span><b>${r.r!=null?stars(r.r):""}</b></div>`).join(''):'<p class="sub">No shows yet.</p>'}
@@ -2730,16 +2766,16 @@ document.addEventListener('input',e=>{if(tab!=='calendar'||!G)return;const t=e.t
 
 /* ----- in-game editor ----- */
 let gcat='w',gsel=null,gq='',gmsg='';
-function gwForm(w){if(!G.opts.sandbox&&!w.fresh&&w.co!==G.me)return `<p class="sub" style="margin:0">Only wrestlers on your roster can be changed. Sign them first, or turn on Sandbox to edit anyone.</p>`;const sb=!!G.opts.sandbox,cs=Object.values(G.cos).sort((a,b)=>a.short.localeCompare(b.short));const coOpts=cur=>`<option value="">Free agent</option>`+cs.filter(c=>c.active).map(c=>`<option value="${c.id}" ${cur===c.id?'selected':''}>${esc(c.short)}</option>`).join('');return `<div class="form">
+function gwForm(w){if(!G.opts.sandbox&&!w.fresh&&w.co!==G.me)return `<p class="sub" style="margin:0">Only wrestlers on your roster can be changed. Sign them first, or turn on Sandbox to edit anyone.</p>`;const sb=!!G.opts.sandbox,cr=sb||!!w.fresh,cs=Object.values(G.cos).sort((a,b)=>a.short.localeCompare(b.short));const coOpts=cur=>`<option value="">Free agent</option>`+cs.filter(c=>c.active).map(c=>`<option value="${c.id}" ${cur===c.id?'selected':''}>${esc(c.short)}</option>`).join('');return `<div class="form">
    <label class="wide">Ring name<input data-g="name" value="${esc(w.name)}"></label>
    <label>Gender<select data-g="gender">${['M','F',''].map(g=>`<option value="${g}" ${w.gender===g?'selected':''}>${g==='M'?'Male':g==='F'?'Female':'Other'}</option>`).join('')}</select></label>
-   <label class="wide">Alignment: <b data-alv>${alName(w.al??alDefault(w.align))}</b>${alBar('',w.al??alDefault(w.align),'data-g="al"')}</label>
+   <label>Alignment<b data-alv hidden></b>${alBar('',w.al??alDefault(w.align),'data-g="al"')}</label>
    <label>Weight (lbs)<input type="number" min="0" max="700" data-g="wt" value="${w.wt||''}"></label>
-   <label>Legend<select data-g="legend" ${sb||w.fresh?'':'disabled'}><option value="" ${w.legend?'':'selected'}>No</option><option value="1" ${w.legend?'selected':''}>Yes</option></select></label>
    <label>Gimmick<select data-g="gim">${GIM.map(g=>`<option ${w.gim===g?'selected':''}>${g}</option>`).join('')}</select></label>
+   <label>Leaves the business<input type="date" data-g="retire" value="${esc(w.retire)}"></label>
+   ${cr?`   <label>Legend<select data-g="legend" ${sb||w.fresh?'':'disabled'}><option value="" ${w.legend?'':'selected'}>No</option><option value="1" ${w.legend?'selected':''}>Yes</option></select></label>
    <label>Birth date<input type="date" data-g="birth" value="${esc(w.birth)}"></label>
    <label>Debut date<input type="date" data-g="debut" value="${esc(w.debut)}"></label>
-   <label>Leaves the business<input type="date" data-g="retire" value="${esc(w.retire)}"></label>
    <label>Charisma<input type="number" min="0" max="100" data-g="cha" value="${w.cha}" ${sb||w.fresh?'':'disabled'}></label>
    <label>Workrate<input type="number" min="0" max="100" data-g="wrk" value="${w.wrk}" ${sb||w.fresh?'':'disabled'}></label>
    ${XSTATS.map(x=>`<label>${x.name}<input type="number" min="1" max="100" data-g="${x.k}" value="${pst(w,x.k)}" ${sb||w.fresh?'':'disabled'}></label>`).join('')}
@@ -2747,14 +2783,15 @@ function gwForm(w){if(!G.opts.sandbox&&!w.fresh&&w.co!==G.me)return `<p class="s
    ${[0,1].map(i=>`<label>Specialty ${i+1}<select data-g="spec${i}" ${sb||w.fresh?'':'disabled'}><option value="">None</option>${Object.entries(SPECS).map(([k,v])=>`<option value="${k}" ${specOf(w)[i]===k?'selected':''}>${v.name}</option>`).join('')}</select></label>`).join('')}
    <label>Popularity (10 to 3,000)<input type="number" min="10" max="3000" data-g="pop" value="${Math.round(fameOf(w))}" ${sb||w.fresh?'':'disabled'}></label>
    <label>Momentum (0 cold, 100 hot)<input type="number" min="0" max="100" data-g="mom" value="${Math.round(w.mom)}" ${sb||w.fresh?'':'disabled'}></label>
-   ${w.fresh?'<div class="msg wide" style="margin:0">New superstar: set the stats now. They lock when you press Done or when the week ends. <button class="sm go" id="gdone" style="margin-left:8px">Done</button></div>':sb?'':'<p class="hint wide" style="margin:0">Stats, popularity, momentum and Legend status change only through play. Turn on Sandbox to edit them.</p>'}
+`:''}
+   ${w.fresh?'<div class="msg wide" style="margin:0">New wrestler: set the stats now. They lock when you press Done or when the week ends. <button class="sm go" id="gdone" style="margin-left:8px">Done</button></div>':sb?'':'<p class="hint wide" style="margin:0">Birth date, debut and stats are set when a wrestler is created. After that they change only through play.</p>'}
    <p class="hint wide" style="margin:0">Status: ${w.status==='future'?`Future wrestler, debuts ${fmtDate(w.debut)}`:w.status==='retired'?'Left the business':w.co?`Signed to ${esc(co(w.co).name)}`:'Free agent'}. A debut date after today makes an unsigned wrestler a Future Superstar.</p>
    ${w.status==='retired'?`<div class="wide"><button id="gback">Bring back as a free agent</button></div>`:''}
    ${sb&&w.status==='active'?`<div class="wide" style="border-top:1px solid var(--line);padding-top:12px"><b>Sandbox: contract</b></div>
    <label>Company<select data-g="co">${coOpts(w.co)}</select></label>
    <label>Wage per show<input type="number" min="0" step="10" data-g="wage" value="${w.wage}" ${w.co?'':'disabled'}></label>
    <label>Major Events left<input type="number" min="1" max="24" data-g="left" value="${w.left||1}" ${w.co?'':'disabled'}></label>`:''}</div>`}
-const gView=()=>tab==='superstars'?vStar():vEdit();
+const gView=()=>tab==='wrestlers'?vStar():vEdit();
 function vEdit(){
   const sb=!!G.opts.sandbox,q=gq.toLowerCase();
   const ws=Object.values(G.ws).sort((a,b)=>a.name.localeCompare(b.name)),cs=Object.values(G.cos).sort((a,b)=>a.short.localeCompare(b.short));
@@ -2814,14 +2851,14 @@ function gApply(t){
   }
   save();renderHdr();
 }
-document.addEventListener('input',e=>{if(!['edit','superstars'].includes(tab)||!G)return;const t=e.target;
+document.addEventListener('input',e=>{if(!['edit','wrestlers'].includes(tab)||!G)return;const t=e.target;
   if(t.id==='gq'){gq=t.value;const p=t.selectionStart;gView();const j=$('#gq');j.focus();j.setSelectionRange(p,p);return}
   if(t.dataset.g&&t.tagName!=='SELECT')gApply(t)});
-document.addEventListener('change',e=>{if(!['edit','superstars'].includes(tab)||!G)return;const t=e.target;
+document.addEventListener('change',e=>{if(!['edit','wrestlers'].includes(tab)||!G)return;const t=e.target;
   if(t.id==='gsb'){G.opts.sandbox=t.checked;save();gView();return}
   if(t.dataset.g&&t.tagName==='SELECT')gApply(t);
   else if(t.dataset.g&&['name','short','open','close','debut'].includes(t.dataset.g))gView()});
-document.addEventListener('click',e=>{if(!['edit','superstars'].includes(tab)||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
+document.addEventListener('click',e=>{if(!['edit','wrestlers'].includes(tab)||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
   if(d.gc){gcat=d.gc;gsel=null;gq='';gmsg='';gView()}
   else if(d.gs){gsel=d.gs;gmsg='';gView()}
   else if(d.gtr){const w=G.ws[gsel],L=trOf(w).slice(),k=d.gtr,i=L.indexOf(k);if(i>=0){if(L.length>1)L.splice(i,1)}else{if(trClash(L,k)){gmsg=`${TRAITS[k].n} clashes with a trait they already have.`;gView();return}if(L.length>=3)L.shift();L.push(k)}w.trt=L;w.per=TRAITS[L[0]]&&PERS[L[0]]?L[0]:w.per;save();gView()}
@@ -2836,7 +2873,8 @@ document.addEventListener('click',e=>{if(!['edit','superstars'].includes(tab)||!
 });
 
 /* ----- superstars ----- */
-let sq='',sf='mine';
+let sq='',sf='mine',sEdit=false;
+document.addEventListener('change',e=>{const t=e.target;if(t.tagName==='SELECT'&&(t.id==='gal'||t.id==='pal'||t.dataset.g==='al'||t.dataset.f==='al'))t.dispatchEvent(new Event('input',{bubbles:true}))},true);
 function vStar(){
   const q=sq.toLowerCase();
   let L=Object.values(G.ws);if(sf==='mine')L=L.filter(w=>w.co===G.me&&w.status==='active');else if(sf==='active')L=L.filter(w=>w.status==='active');
@@ -2848,23 +2886,22 @@ function vStar(){
   const status=w=>w.status==='future'?`Future wrestler, debuts ${fmtDate(w.debut)}`:w.status==='retired'?'Left the business':w.co?`${esc(co(w.co).name)} · ${money(w.wage)}/show · ${w.left} Major Event${w.left===1?'':'s'} left${w.next?` · moving to ${esc(co(w.next.co).short)}`:''}`:'Free agent';
   const rec=w?.rec||{w:0,l:0,d:0};
   const RL={w:'Win',l:'Loss',d:'Draw'};
-  $('#app').innerHTML=`<div class="head"><div><h2>Wrestler Profiles</h2><p>Profiles for every wrestler. Edit anything in the panel under the profile.</p></div>
-   <div class="seg2">${[['mine','My roster'],['active','All active'],['all','Everyone']].map(([k,l])=>`<button data-sf="${k}" class="${sf===k?'on':''}">${l}</button>`).join('')}</div></div>
-   <div class="grid side">
-   <div class="panel"><input id="sq" placeholder="Search" value="${esc(sq)}"><div class="list">${L.map(x=>`<button data-ss="${x.id}" class="${x.id===gsel?'sel':''}"><span style="display:flex;align-items:center;min-width:0">${headImg(x,22)}${esc(x.name)}</span><span class="sub">${pd(x)}</span></button>`).join('')||'<div class="empty">Nobody here.</div>'}</div></div>
+  $('#app').innerHTML=`<div class="head"><div><h2>${w&&sEdit?'Edit Wrestler':'Wrestler Profiles'}</h2></div></div>
+   ${w&&sEdit?`<div class="panel sedit"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">${headImg(w,40)}<h3 style="margin:0;flex:1">${esc(w.name)}</h3><button class="sm" data-sedit="0">Back to Profile</button></div>${gmsg?`<div class="msg" style="margin:0 0 12px">${esc(gmsg)}</div>`:''}${gwForm(w)}
+     <label style="margin-top:12px"><input type="checkbox" id="gsb" ${G.opts.sandbox?'checked':''}>Sandbox: allow editing stats and contracts</label></div>`:`
    <div>${w?`<div class="panel prof"><div class="ph"><div>${w.logo?`<img class="logo" src="${w.logo}" alt="" style="width:84px;height:84px;float:left;margin:0 14px 6px 0">`:bodyImg(w)}<h2 style="font-size:clamp(30px,5vw,48px)">${esc(w.name)}</h2>${w.legend||holds(w).length?'<div style="margin:4px 0">'+lgTxt(w)+chTxt(w)+'</div>':''}${holds(w).length&&BL?`<div class="chips" style="margin:6px 0">${holds(w).map(t=>`<button class="sm" data-belt-view="${t.id}" title="${esc(t.name)}" style="padding:2px 8px"><span class="beltmini">${beltImg(t,72,'plate')}</span> ${esc(t.name)}</button>`).join('')}</div>`:''}
-     <div class="sub" style="font-size:15px;margin-top:4px">${age(w)!=null?`Age ${age(w)} · `:''}${w.wt?`${w.wt} lbs · `:''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?` · ${esc(w.gim)}${gfit(w)?' (good fit)':' (poor fit)'}`:''} · ${momTxt(w)}</div>
+     <div class="sub" style="font-size:15px;margin-top:4px">${age(w)!=null?`Age ${age(w)} · `:''}${w.wt?`${w.wt} lbs · ${wClass(w)} · `:''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?` · ${esc(w.gim)}${gfit(w)?' (good fit)':' (poor fit)'}`:''} · ${momTxt(w)}</div>
      <div style="margin-top:6px">${status(w)}</div></div>
-     <div class="btns">${w.co===G.me?`<button class="sm go" data-sct="${w.id}">Contract</button><button class="sm" data-sgm="${w.id}">Gimmick</button>`:w.status==='active'?(!w.co||w.left<=2&&!w.next?`<button class="sm go" data-sct="${w.id}">Negotiate</button>`:`<button class="sm" disabled title="Talks open with 2 or fewer Major Events left">Negotiate</button><div class="sub" style="width:100%;text-align:right">${w.next?'Already signed elsewhere next':'Opens with 2 events left'}</div>`):w.status==='future'?`<button class="sm" disabled>Negotiate</button><div class="sub" style="width:100%;text-align:right">After debut</div>`:''}</div></div>
+     <div class="btns"><button class="sm" data-pa="look">Change Look</button>${G.opts.sandbox||w.fresh||w.co===G.me?`<button class="sm" data-sedit="1">Edit Wrestler</button>`:''}${w.co===G.me?`<button class="sm go" data-sct="${w.id}">Contract</button><button class="sm" data-sgm="${w.id}">Gimmick</button>`:w.status==='active'?(!w.co||w.left<=2&&!w.next?`<button class="sm go" data-sct="${w.id}">Negotiate</button>`:`<button class="sm" disabled title="Talks open with 2 or fewer Major Events left">Negotiate</button><div class="sub" style="width:100%;text-align:right">${w.next?'Already signed elsewhere next':'Opens with 2 events left'}</div>`):w.status==='future'?`<button class="sm" disabled>Negotiate</button><div class="sub" style="width:100%;text-align:right">After debut</div>`:''}</div></div>
      <div class="tiles">${tile('Charisma',w.cha)}${tile('Workrate',w.wrk)}${tile('Popularity',pd(w),0,`<div class="sub">${tierOf(w)[1]}${ascOf(w)?' (ascended)':''}</div>`)}${tile('Momentum',Math.round(w.mom))}${tile('Worth per show',money(worth(w)),0)}${(()=>{const f=fameOf(w),nx=PTIERS.find(x=>x[0]>f);if(!nx)return tile('Status','Hall of Famer',0,'<div class="sub">The highest status there is</div>');const cur=tierOf(w);return tile('Next status',nx[1],0,`<div class="meter" style="margin:6px 0 0"><i style="width:${Math.round((f-cur[0])/(nx[0]-cur[0])*100)}%"></i></div><div class="sub">${Math.round(f).toLocaleString('en-US')} / ${nx[0].toLocaleString('en-US')}${nx[2]?' · ascended tiers need less booking to stay popular':''}${w.legend?'<br>Legend: worth +25%, bigger crowds, never below 1,000':''}</div>`)})()}</div>
      ${profGlance(w)}
      ${profSheet(w)}
      ${profCareer(w)}
      <h3 style="margin-top:16px">Recent matches</h3>${(w.hist||[]).length?`<div><table class="stack"><thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Finish</th><th class="n">Rating</th></tr></thead><tbody>${w.hist.map(h=>`<tr><td style="white-space:nowrap">${fmtDate(h.date)}</td><td>${esc(h.vs)}${h.main?' <span class="k me">Main</span>':''}${h.major?' <span class="k of">Major</span>':''}</td><td class="${h.r==='w'?'pos':h.r==='l'?'neg':''}">${RL[h.r]}</td><td>${esc(h.fin)}</td><td class="n">${stars(h.st)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty" style="padding:12px">No matches yet.</div>'}
-     ${profActs(w)}</div>
-     <div class="panel" style="margin-top:20px"><h3>Edit superstar (full form)</h3>${gmsg?`<div class="msg" style="margin:0 0 12px">${esc(gmsg)}</div>`:''}${gwForm(w)}
-     <label style="margin-top:12px"><input type="checkbox" id="gsb" ${G.opts.sandbox?'checked':''}>Sandbox: allow editing stats and contracts</label></div>`
-   :'<div class="panel empty">Pick a wrestler on the left.</div>'}</div></div>`;
+     ${profActs(w)}</div>`
+   :'<div class="panel empty">Pick a wrestler below.</div>'}</div>
+   <div class="panel" style="margin-top:16px"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px"><div class="seg2">${[['mine','My Roster'],['active','All Active'],['all','Everyone']].map(([k,l])=>`<button data-sf="${k}" class="${sf===k?'on':''}">${l}</button>`).join('')}</div><input id="sq" placeholder="Search" value="${esc(sq)}" style="flex:1;min-width:140px;margin:0"></div>
+   <div class="slist3">${L.slice(0,sq?300:150).map(x=>`<button data-ss="${x.id}" class="${x.id===gsel?'sel':''}">${headImg(x,20)}<span>${esc(x.name)}</span></button>`).join('')||'<div class="empty">Nobody here.</div>'}</div>${L.length>(sq?300:150)?`<p class="sub">Showing the top ${sq?300:150} of ${L.length}. Search to find anyone else.</p>`:''}</div>`}`;
 }
 /* Top rivals (owner, 26 Nov): up to 3, and only pairings whose rivalry score reaches RIVAL_MIN. TODO(ASK OWNER) threshold. */
 const RIVAL_MIN=120;
@@ -2878,7 +2915,7 @@ function profGlance(w){
   const box=(t,inner)=>`<div class="panel"><h4>${t}</h4>${inner}</div>`,none=t=>`<div class="sub">${t}</div>`,link=x=>`<button class="ed" style="border:0;padding:0;font-weight:800;color:var(--blue)" data-star="${x.id}">${esc(x.name)}</button>`;
   return `<div class="glance">
    ${F.length?`<div class="panel" style="grid-column:1/-1;background:linear-gradient(135deg,#f6d26b33,#c9a22722)"><h4>★★★★★ Five-star matches (${F.length})</h4><ul>${F.slice().reverse().map(f=>`<li>${esc(f.txt)} <span class="sub">${esc(f.ev)} (${esc(f.co)}), ${fmtDate(f.d)}</span></li>`).join('')}</ul></div>`:''}
-   ${box(`Title history (${rs.length})`,rs.length?`<ul>${rs.slice(0,5).map(({t,r})=>`<li>🏆 ${esc(t.name)} <span class="sub">${r.won?fmtDate(r.won):''}${r.lost?' to '+fmtDate(r.lost):r.pre?'':' · current'}</span></li>`).join('')}</ul>${rs.length>5?none('Full list under Career below.'):''}`:none('No title reigns yet.'))}
+   ${box(`Title history (${rs.length})`,rs.length?`<ul>${rs.slice(0,5).map(({t,r})=>`<li>${medal(t)} ${esc(t.name)} <span class="sub">${r.won?fmtDate(r.won):''}${r.lost?' to '+fmtDate(r.lost):r.pre?'':' · current'}</span></li>`).join('')}</ul>${rs.length>5?none('Full list under Career below.'):''}`:none('No title reigns yet.'))}
    ${box('Recent matches',H.length?`<ul>${H.map(h=>`<li><b class="${h.r==='w'?'pos':h.r==='l'?'neg':''}">${{w:'W',l:'L',d:'D'}[h.r]}</b> vs ${esc(h.vs)} <span class="sub">${stars(h.st)} · ${fmtDate(h.date)}</span></li>`).join('')}</ul>`:none('No matches yet.'))}
    ${box('Current feuds',fs.length?`<ul>${fs.map(f=>`<li>vs ${f.p.filter(p=>!p.includes(w.id)).flat().map(id=>W(id)).filter(Boolean).map(link).join(', ')} <span class="sub">heat ${Math.round(f.heat)}</span></li>`).join('')}</ul>`:none('Not in a feud.'))}
    ${box('Top rivals',rv.length?`<ul>${rv.map(x=>`<li>${link(x.w)} <span class="sub">${isRival(w.id,x.w.id)?'rival · ':''}${x.o.n?`${x.o.n} feud${x.o.n>1?'s':''}`:''}${x.o.m?`${x.o.n?' · ':''}${x.o.m} recent match${x.o.m>1?'es':''}`:''} · score ${Math.min(999,x.score)}</span></li>`).join('')}</ul>`:none(`No rivals yet. A rivalry needs a score of ${RIVAL_MIN} from feuds, feud heat and matches against each other.`))}
@@ -2893,7 +2930,7 @@ function profCareer(w){
    ${kv('Main events',`${cr.main||0} <span class="sub">${cr.mainW||0} won</span>`)}${kv('Opening matches',cr.open||0)}${kv('Major Event matches',`${cr.maj||0} <span class="sub">${cr.majW||0} won</span>`)}${kv('Title matches',cr.tm||0)}
    ${kv('Longest win streak',w.best||0)}${kv('Longest losing streak',w.worstL||0)}${kv('Title reigns',rs.length)}${kv('Days as champion',rs.reduce((t,x)=>t+(days(x.r)||0),0))}
    <div class="kv" style="grid-column:1/-1"><span>Best match</span><b>${w.bm?`${stars(w.bm.st)} <span class="sub">${w.bm.r==='w'?'beat':w.bm.r==='l'?'lost to':'vs'} ${esc(w.bm.vs)}${w.bm.ev?`, ${esc(w.bm.ev)}`:''} (${esc(w.bm.co)}), ${fmtDate(w.bm.d)}</span>`:'<span class="sub">None yet</span>'}</b></div></div>
-   ${rs.length?`<h3 style="margin-top:14px;font-size:19px">Title reigns</h3><table class="stack"><thead><tr><th>Title</th><th>Won</th><th>Lost</th><th class="n">Days</th><th class="n">Defences</th></tr></thead><tbody>${rs.map(({t,r})=>`<tr><td><b>🏆 ${esc(t.name)}</b><div class="sub">${esc(G.cos[t.co]?.short||'')}${r.h&&r.h.length>1?` · with ${esc(r.h.filter(id=>id!==w.id).map(id=>W(id).name).join(' & '))}`:''}</div></td><td data-l="Won">${r.won?fmtDate(r.won):'–'}${r.wonAt?`<div class="sub">${esc(r.wonAt)}</div>`:''}</td><td data-l="Lost">${r.lost?fmtDate(r.lost):'<b>Current</b>'}</td><td class="n" data-l="Days">${days(r)??'–'}</td><td class="n" data-l="Defences">${defs(r)}</td></tr>`).join('')}</tbody></table>`:''}
+   ${rs.length?`<h3 style="margin-top:14px;font-size:19px">Title reigns</h3><table class="stack"><thead><tr><th>Title</th><th>Won</th><th>Lost</th><th class="n">Days</th><th class="n">Defences</th></tr></thead><tbody>${rs.map(({t,r})=>`<tr><td><b>${medal(t)} ${esc(t.name)}</b><div class="sub">${esc(G.cos[t.co]?.short||'')}${r.h&&r.h.length>1?` · with ${esc(r.h.filter(id=>id!==w.id).map(id=>W(id).name).join(' & '))}`:''}</div></td><td data-l="Won">${r.won?fmtDate(r.won):'–'}${r.wonAt?`<div class="sub">${esc(r.wonAt)}</div>`:''}</td><td data-l="Lost">${r.lost?fmtDate(r.lost):'<b>Current</b>'}</td><td class="n" data-l="Days">${days(r)??'–'}</td><td class="n" data-l="Defences">${defs(r)}</td></tr>`).join('')}</tbody></table>`:''}
    ${profStyles(w)}${profStats(w)}${acc.length?`<h3 style="margin-top:14px;font-size:19px">Accomplishments</h3><ul style="margin:4px 0 0;padding-left:20px">${acc.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`:''}`;
 }
 const PRON={he:'He / him',she:'She / her',they:'They / them'};
@@ -2903,7 +2940,7 @@ function profSheet(w){
   const met=(v,c)=>`<span class="bar" style="width:70px"><i style="width:${v}%;background:${c}"></i></span>`;
   const ch=holds(w);
   return `<div class="sheet">
-   ${kv('Champion',ch.length?ch.map(t=>`🏆 ${esc(t.name)} <span class="sub">since ${fmtDate(reignOf(t).won)}, ${reignOf(t).def.length} defence${reignOf(t).def.length===1?'':'s'}</span>`).join('<br>'):'<span class="sub">No title</span>')}
+   ${kv('Champion',ch.length?ch.map(t=>`${medal(t)} ${esc(t.name)} <span class="sub">since ${fmtDate(reignOf(t).won)}, ${reignOf(t).def.length} defence${reignOf(t).def.length===1?'':'s'}</span>`).join('<br>'):'<span class="sub">No title</span>')}
    ${kv('Manager',w.mgr||clientsOf(w).length?`${w.mgonly?'Manager only':w.mgr?'Manager':'Wrestler'}${clientsOf(w).length?` · manages ${clientsOf(w).map(x=>esc(x.name)).join(', ')}`:' · no clients yet'}`:mgrOf(w)?`Managed by ${esc(mgrOf(w).name)}`:'<span class="sub">None</span>')}
    <div class="kv" style="grid-column:1/-1;display:block"><span>Traits</span><div style="margin-top:4px">${trOf(w).map(k=>`<div style="margin:3px 0">${trTag(k)} <span class="sub">${TRAITS[k].h}</span></div>`).join('')}${w.grow?`<div class="sub" style="margin-top:4px">Growth since the start: ${w.grow>0?'+':''}${w.grow} stat point${Math.abs(w.grow)===1?'':'s'}</div>`:''}</div></div>
    ${kv('Specialties',specOf(w).map(k=>`${SPECS[k].name} <span class="sub">(${PSTATS.find(x=>x.k===SPECS[k].stat).name} ${pst(w,SPECS[k].stat)})</span>`).join(', '))}
@@ -3048,15 +3085,15 @@ function vBiz(){const m=me(),D=dif(),S=m.staff=m.staff||{};m.items=m.items||{};
   const pct=k=>Math.round(stf(m,k)*100);
   $('#app').innerHTML=`<div class="head"><div><h2>Staff and store</h2><p>Staff are paid every show and each does one job. The store sells big one-time upgrades for when the money piles up.</p></div><div class="tile"><div class="sub">Bank</div><b>${money(m.cash)}</b></div></div>
   <div class="panel"><h3>Staff <span class="sub" style="font-family:inherit;font-size:14px">· ${money(r10(staffPay(m)*D.cost))} per show</span></h3>
-   <div class="ccards" style="margin-top:10px">${Object.entries(CREW).map(([k,v])=>{const L=crewOf(m,k);return `<div class="fcard" style="--hc:${L.length?'var(--face)':'var(--line)'}"><b>${v.name} <span class="sub">(${L.length} of ${CREW_MAX})</span></b><span class="sub">${v.fx} Assign them on the Book screen.</span>
+   <div class="ccards bizc" style="margin-top:10px">${Object.entries(CREW).map(([k,v])=>{const L=crewOf(m,k);return `<div class="fcard" style="--hc:${L.length?'var(--face)':'var(--line)'}"><b>${v.name} <span class="sub">(${L.length} of ${CREW_MAX})</span></b><span class="sub">${v.fx} Assign them on the Book screen.</span>
      ${L.map((x,i)=>`<div class="kv"><span>${esc(x.name)} · skill ${x.sk} · ${money(r10(x.pay*D.cost))}</span><b><button class="sm" data-cfire="${k}:${i}" aria-label="Let ${esc(x.name)} go">✕</button></b></div>`).join('')||'<div class="sub">Nobody hired.</div>'}
      <div class="btns"><button class="sm go" data-hire="${k}" ${L.length>=CREW_MAX?'disabled':''}>Hire</button></div></div>`}).join('')}${Object.entries(STAFF).map(([k,v])=>{const x=stfOf(m,k);return `<div class="fcard" style="--hc:${x?'var(--face)':'var(--line)'}"><b>${v.name}</b><span class="sub">${v.fx}</span>
      ${x?`<div class="kv"><span>${esc(x.name)}${x.w?' (wrestler)':''}</span><b>Skill ${x.sk}</b></div><div class="kv"><span>Pay</span><b>${x.w?'Already on your roster':money(r10(x.pay*D.cost))+' per show'}</b></div><div class="kv"><span>Effect now</span><b>${pct(k)}% of the maximum</b></div>`:'<div class="sub">Nobody in this role.</div>'}
-     ${x?`<div class="btns">${STF_ACT[k].map(([a,l])=>`<button class="sm ab" data-sact="${k}:${a}" ${stfRec(m,k)?.wk===G.week?'disabled title="Already used this week"':''}>${l}</button>`).join('')}</div>`:''}<div class="btns"><button class="sm ${x?'':'go'}" data-hire="${k}">${x?'Replace':'Hire'}</button>${x?`<button class="sm" data-fire="${k}">${x.w?'Step down':'Let go'}</button>`:''}</div></div>`}).join('')}</div>
+     <div class="btns">${x?STF_ACT[k].map(([a,l])=>`<button class="sm ab" data-sact="${k}:${a}" ${stfRec(m,k)?.wk===G.week?'disabled title="Already used this week"':''}>${l}</button>`).join(''):''}<button class="sm ${x?'':'go'}" data-hire="${k}">${x?'Replace':'Hire'}</button>${x?`<button class="sm" data-fire="${k}">${x.w?'Step down':'Let go'}</button>`:''}</div></div>`}).join('')}</div>
    <p class="hint">Announcer and General Manager can be one of your wrestlers. They still wrestle, and their skill comes from charisma${''} (General Manager also uses psychology).</p></div>
-  <div class="panel" style="margin-top:16px"><h3>Promote a wrestler</h3><div class="ccards" style="margin-top:10px">${Object.entries(PROMOS).map(([k,v])=>`<div class="fcard"><b>${v.name}</b><span class="sub">${v.fx}</span><div class="kv"><span>From</span><b>${money(r10(v.cost*dif().cost))}</b></div><div class="btns"><button class="sm go" data-promo="${k}">Pick a wrestler</button></div></div>`).join('')}</div>
+  <div class="panel" style="margin-top:16px"><h3>Promote a wrestler</h3><div class="ccards bizc" style="margin-top:10px">${Object.entries(PROMOS).map(([k,v])=>`<div class="fcard"><b>${v.name}</b><span class="sub">${v.fx}</span><div class="kv"><span>From</span><b>${money(r10(v.cost*dif().cost))}</b></div><div class="btns"><button class="sm go" data-promo="${k}">Pick a wrestler</button></div></div>`).join('')}</div>
    <p class="hint">Price grows with the wrestler's popularity. ${roster(G.me).filter(w=>w.promo).map(w=>`${esc(w.name)}: ${PROMOS[w.promo.k].name.toLowerCase()}, ${w.promo.left} week(s) left`).join(' · ')}</p></div>
-  ${pcBox()}<div class="panel" style="margin-top:16px"><h3>Store</h3><div class="ccards" style="margin-top:10px">${Object.entries(STORE).filter(([k])=>!(k==='sbx'&&G.opts.sandbox&&!m.items.sbx)).map(([k,v])=>{const c=r10(v.cost*D.cost),has=m.items[k];return `<div class="fcard" style="--hc:${has?'var(--gold,#c9a227)':'var(--line)'}"><b>${v.name}</b><span class="sub">${v.fx}</span>
+  ${pcBox()}<div class="panel" style="margin-top:16px"><h3>Store</h3><div class="ccards bizc" style="margin-top:10px">${Object.entries(STORE).filter(([k])=>!(k==='sbx'&&G.opts.sandbox&&!m.items.sbx)).map(([k,v])=>{const c=r10(v.cost*D.cost),has=m.items[k];return `<div class="fcard" style="--hc:${has?'var(--gold,#c9a227)':'var(--line)'}"><b>${v.name}</b><span class="sub">${v.fx}</span>
      ${has?`<div class="kv"><span>Owned since</span><b>${fmtDate(has)}</b></div>`:`<div class="kv"><span>Price</span><b>${money(c)}</b></div><div class="btns"><button class="sm go" data-buy="${k}" ${m.cash<c?'disabled title="Not enough money"':''}>Buy</button></div>`}</div>`}).join('')}</div>
    <p class="hint">Upgrades are yours for good. Rival owners don't buy them.</p></div>`}
 const STF_ACT={ann:[['hype','Hype a feud'],['over','Put over a wrestler']],gm:[['shot','Grant a title shot'],['match','Make a feud match']],scout:[['find','Scout for talent']],doc:[['fat','Treat fatigue'],['heal','Speed up recovery']],trainer:[['pick','Pick trainees']],agent:[['fa','Approach a free agent']],tr:[['sit','Sit-down with a wrestler']]};
@@ -3084,6 +3121,22 @@ function dStfAct(k,a){const m=me(),x=stfOf(m,k),sk=x.sk/100,R=roster(G.me).filte
       if(a==='fa'){if(Math.random()<.45+sk*.45){signW(w,G.me,r10(worth(w)*(1-sk*.1)),6);news(`${x.name} signed ${w.name} for ${m.short}.`,'sg')}else{w.refused=G.week;news(`${w.name} turned down ${x.name}'s approach.`,'me')}}
       if(a==='sit'){w.mor=clamp(morOf(w)+6+sk*10,0,100);w.unh=0;news(`${x.name} sat down with ${w.name}. ${cap(pr(w,'he'))} feels better about things.`,'me')}}
     save();closeD();renderHdr();vBiz()}}
+/* Generated wrestlers (§4.69): fill rosters to their size and keep the Indies stocked. Generic names only. */
+const GEN_F=['Duke','Rex','Tony','Buck','Chuck','Vic','Hank','Jimmy','Rocco','Sal','Max','Lars','Kenji','Diego','Ray','Billy','Ace','Mack','Otis','Gus','Nico','Bobby','Dutch','Moose','Rico','Lenny','Clint','Jet','Brick','Hiro','Pablo','Seamus','Kai','Dex','Rio','Tank','Jace','Nash','Zeke','Bo','Cruz','Marco','Ty','Wade','Cash','Axel','Boone','Cole','Damon','Eli','Finn','Grady','Hugo','Ivan','Jojo','Koa','Leon','Milo','Nate','Omar','Pete','Quincy','Reggie','Sid','Taz','Ulric','Vince','Wes','Xavi','Yuki','Zane','Bruno','Colt','Deacon','Emil','Felix','Gino','Hector','Iggy','Jonah'],
+GEN_FW=['Dolly','Rita','Vera','Gail','Trixie','Mae','Lola','Kitty','Sunny','Babs','Nova','Skye','Jade','Raven','Tess','Lux','Ava','Bree','Cleo','Dana','Esme','Faye','Gia','Hana','Iris','Juno','Kira','Lena','Mira','Nia','Opal','Pia','Quinn','Rae','Sasha','Tori','Uma','Vida','Wren','Yara','Zola','Belle','Coco','Dixie','Ember','Fifi','Goldie','Holly'],
+GEN_L=['Malone','Riker','Vance','Dalton','Cruz','Brennan','Hayes','Stone','Mercer','Valdez','Kowal','Rourke','Sato','Mendez','Ford','Blaze','Kincaid','Holt','Graves','Sloan','Drake','Thorne','Bishop','Navarro','Doyle','Farrell','Okada','Lund','Petrov','Quinn','Steele','Rivers','Knox','Vega','Hart','Ruiz','Banks','Wolfe','Ash','Booker','Carver','Dunn','Easton','Flynn','Garza','Hollis','Irons','Jett','Kane','Lowe','Marsh','Nolan','Ortega','Pike','Reyes','Shaw','Tate','Ulman','Voss','Wilder','York','Zamora','Barrow','Cain','Delgado','Fuentes','Gage','Huxley','Ingram','Jagger','Kemp','Lyle','Moreno','Nakamura','Osei','Price','Rocha','Silva','Tanaka','Underhill','Vargas','Webb'];
+let _gs=null,_gsG=null;
+function genW(o){o=o||{};const f=o.f!=null?o.f:Math.random()<(o.fs??.3),seen=(_gsG===G&&_gs)||(_gsG=G,delete G._gseen,_gs=new Set(Object.values(G.ws).map(w=>w.name)));let n,k=0;do{n=pick(f?GEN_FW:GEN_F)+' '+pick(GEN_L);if(++k>40)n+=' '+pick(['Jr.','II','III','Sr.'])}while(seen.has(n)&&k<60);seen.add(n);
+  G.genN=Math.max(G.genN||0,Object.keys(G.ws).filter(k=>/^g\d+$/.test(k)).reduce((m,k)=>Math.max(m,+k.slice(1)+1),0));const id='g'+(G.genN++),y=+G.date.slice(0,4)-ri(o.a0||20,o.a1||38);
+  const w=G.ws[id]={id,name:n,gender:f?'F':'M',birth:`${y}-${pad(ri(1,12))}-${pad(ri(1,28))}`,debut:'',retire:'',al:pick([-80,-60,60,80,0]),align:'F',gim:'None',wt:f?ri(120,170):ri(195,320),cha:ri(o.c0||30,o.c1||70),wrk:ri(o.w0||30,o.w1||75),pop:ri(o.p0||5,o.p1||40),mom:50,status:'active',co:null,wage:0,left:0,next:null,riv:{},last:0,gm:0,gen:1};
+  w.align=alLetter(w.al);if(o.co)signW(w,o.co,worth(w),ri(3,10));return w}
+/* Fill each company to about DEPTH_FILL of its suggested roster with generated depth talent, then stock the Indies. TODO(ASK OWNER) numbers. */
+const DEPTH_FILL=.85;
+function fillRosters(){for(const c of Object.values(G.cos)){if(!c.active)continue;if(c.owner==='player'&&!roster(c.id).length)continue;const R=roster(c.id),fs=R.length?R.filter(w=>w.gender==='F').length/R.length:.3,need=Math.round(target(c)*DEPTH_FILL)-R.length;
+    for(let i=0;i<need;i++)genW({co:c.id,fs:fs>.85?1:fs<.05?0:Math.max(.2,fs),p0:5,p1:Math.round(25+c.pop/4)})}
+  stockIndies(99)}
+const indieNeed=()=>Math.max(40,Math.round(Object.values(G.ws).filter(w=>w.co&&w.status==='active').length*.12));
+function stockIndies(max){const fa=freeAgents().filter(w=>!w.mgonly).length;let n=Math.min(max,indieNeed()-fa);for(let i=0;i<n;i++)genW(max<99?{a0:19,a1:25,p0:3,p1:20}:{})}
 function scoutFind(sk){const F=['Ace','Kai','Dex','Rio','Tank','Jace','Nash','Zeke','Bo','Cruz'],Fw=['Nova','Skye','Jade','Raven','Tess','Lux'],L=['Steele','Rivers','Knox','Vega','Cole','Hart','Ruiz','Banks','Wolfe','Ash'];
   const f=Math.random()<.3,id='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),y=+G.date.slice(0,4)-ri(19,25),q=sk*30;
   const w=G.ws[id]={id,name:pick(f?Fw:F)+' '+pick(L),gender:f?'F':'M',birth:`${y}-${pad(ri(1,12))}-${pad(ri(1,28))}`,debut:G.date,retire:'',al:pick([-70,70]),align:'F',gim:'None',wt:f?ri(120,170):ri(190,300),cha:clamp(ri(30,55)+Math.round(q*rnd(.3,1)),1,95),wrk:clamp(ri(35,60)+Math.round(q*rnd(.3,1)),1,95),pop:ri(5,20),mom:55,status:'active',co:null,wage:0,left:0,next:null,riv:{},last:0,gm:0,fresh:true};
@@ -3098,7 +3151,7 @@ function dHire(k){const m=me(),v=STAFF[k]||{name:CREW[k].one,fx:CREW[k].fx},D=di
    ${v.w?`<label style="margin-top:12px">Or one of your wrestlers (no extra pay)</label><div class="chips">${R.slice(0,12).map(w=>`<button data-hw="${w.id}">${esc(w.name)}<small>Skill ${stfW(k,w)}</small></button>`).join('')||'<span class="sub">Nobody free.</span>'}</div>`:''}
    <div class="dfoot"><button data-x="1">Close</button></div></div>`);
   dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.x){closeD();return}
-    m.staff=m.staff||{};if(d.hp!=null){const p=pool[+d.hp];if(CREW[k]){const L=crewOf(m,k);if(L.length>=CREW_MAX||L.some(y=>y.name===p.name))return;L.push({name:p.name,sk:p.sk,pay:p.pay})}else m.staff[k]={name:p.name,sk:p.sk,pay:p.pay};news(`You hired ${p.name} as ${v.name}.`,'me')}
+    m.staff=m.staff||{};if(d.hp!=null){const p=pool[+d.hp];if(!cfm(`Hire ${p.name} as ${v.name} for ${money(r10(p.pay*D.cost))} per show?`,'Hire'))return;if(CREW[k]){const L=crewOf(m,k);if(L.length>=CREW_MAX||L.some(y=>y.name===p.name))return;L.push({name:p.name,sk:p.sk,pay:p.pay})}else m.staff[k]={name:p.name,sk:p.sk,pay:p.pay};news(`You hired ${p.name} as ${v.name}.`,'me')}
     else if(d.hw){const w=W(d.hw);m.staff[k]={w:w.id};news(`${w.name} is now your ${v.name}.`,'me')}else return;
     save();closeD();vBiz()}}
 document.addEventListener('click',e=>{if(!G||!['business','calendar'].includes(tab))return;const b=e.target.closest('[data-hire],[data-fire],[data-buy],[data-sact],[data-cfire],[data-promo],[data-bsave],[data-draft],[data-bclear]');if(!b)return;const d=b.dataset,m=me();
@@ -3110,7 +3163,7 @@ document.addEventListener('click',e=>{if(!G||!['business','calendar'].includes(t
   if(d.sact){const[k,a]=d.sact.split(':');return dStfAct(k,a)}
   if(d.cfire){const[k,i]=d.cfire.split(':'),L=crewOf(m,k),x=L[+i];if(!x||!cfm(`Let ${x.name} go?`))return;L.splice(+i,1);G.card.forEach(y=>{if(y.cr!=null)delete y.cr});save();render();return}
   if(d.fire){const x=stfOf(m,d.fire);if(!x)return;if(!cfm(`${x.w?'Have':'Let'} ${x.name} ${x.w?'step down as':'go as'} ${STAFF[d.fire].name}?`))return;delete m.staff[d.fire];save();render();return}
-  if(d.buy){const v=STORE[d.buy],c=r10(v.cost*dif().cost);if(m.cash<c||!cfm(d.buy==='sbx'?`Buy the Sandbox key for ${money(c)}? This save switches to Sandbox mode for good. You can't switch it back.`:`Buy the ${v.name.toLowerCase()} for ${money(c)}?`,d.buy==='sbx'?'Switch to Sandbox':'Buy'))return;m.cash-=c;(m.items=m.items||{})[d.buy]=G.date;if(d.buy==='sbx'){G.opts.sandbox=true;G.opts.mode='sandbox';G.over=false}news(`${m.short} bought a ${v.name.toLowerCase()}.`,'me');save();renderHdr();vBiz()}});
+  if(d.buy){const v=STORE[d.buy],c=r10(v.cost*dif().cost);if(m.cash<c||!cfm(d.buy==='sbx'?`Buy the Sandbox key for ${money(c)}? This save switches to Sandbox mode for good. You can't switch it back.`:`Buy the ${v.name} for ${money(c)}? Your bank goes from ${money(m.cash)} to ${money(m.cash-c)}.`,d.buy==='sbx'?'Switch to Sandbox':'Buy'))return;m.cash-=c;(m.items=m.items||{})[d.buy]=G.date;if(d.buy==='sbx'){G.opts.sandbox=true;G.opts.mode='sandbox';G.over=false}news(`${m.short} bought a ${v.name.toLowerCase()}.`,'me');save();renderHdr();vBiz()}});
 function profActs(w){
   const mine=w.co===G.me&&w.status==='active',edit=mine||G.opts.sandbox&&w.status!=='retired';
   const B=(c,k,l,dis)=>`<button class="sm ${c}" data-pa="${k}" ${dis?`disabled title="${dis}"`:''}>${l}</button>`;
@@ -3139,13 +3192,13 @@ function profAct(k,id){
   if(k==='promo'){openD(`<div class="dh b"><h3>Promote ${esc(w.name)}</h3></div><div class="db"><div class="chips">${Object.entries(PROMOS).map(([q,v])=>`<button data-pk="${q}" ${m.cash<promoCost(q,w)?'disabled':''}>${v.name}<small>${money(promoCost(q,w))} · ${v.fx}</small></button>`).join('')}</div><div class="dfoot"><button data-x="1">Close</button></div></div>`);dlg.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.x){closeD();return}if(b.dataset.pk)dPromo(b.dataset.pk,w)};return}
   if(k==='mgp')return dMgr(w);
   if(k==='gim')return dGimmick(id);
-  if(k==='back'){location.hash=prevTab&&prevTab!=='superstars'&&!HOME.includes(prevTab)?prevTab:'roster';return}
+  if(k==='back'){location.hash=prevTab&&prevTab!=='wrestlers'&&!HOME.includes(prevTab)?prevTab:'roster';return}
   if(k==='name')return simple('Change name',`<label>Ring name<input id="pn" maxlength="40" value="${esc(w.name)}"></label><p class="hint">Records, title history and feuds keep working under the new name.</p>`,()=>{const v=$('#pn').value.trim();if(!v)return false;if(v!==w.name){news(`${w.name} will now be known as ${v}.`,'me');w.name=v}});
   if(k==='look')return dLook(w);
   if(k==='pron')return simple('Pronouns',`<div class="chips">${Object.entries(PRON).map(([p,l])=>`<button data-pv="${p}" class="${pronK(w)===p?'sel':''}">${l}</button>`).join('')}</div><p class="hint">Used in news, offers and match write-ups.</p>`,()=>{const b=dlg.querySelector('[data-pv].sel');if(b)w.pron=b.dataset.pv});
   if(k==='brand'){const bs=[...new Set([wkName(m),m.majorName,...roster(G.me).map(x=>x.brand).filter(Boolean)])];
     return simple('Brand',`<label>Brand or show<input id="pbr" list="pbrl" maxlength="40" value="${esc(w.brand||'')}" placeholder="All shows"><datalist id="pbrl">${bs.map(b=>`<option value="${esc(b)}">`).join('')}</datalist></label><p class="hint">Leave blank for All shows. Brands are labels for now; brand-only shows come later.</p>`,()=>{w.brand=$('#pbr').value.trim()})}
-  if(k==='al'){let v=w.al??0;simple('Alignment',`<label>Alignment: <b id="alv">${alName(v)}</b></label>${alBar('pal',v)}<p class="hint">Crossing into a new third is a turn: a popularity jolt if they're hot, a dip if they're cold.</p>`,()=>{const al=alLetter(v);if(al!==w.align){gainPop(w,w.mom>=60?3:-2);news(`${w.name} turned ${al==='F'?'face':al==='H'?'heel':'tweener'}.`,'me')}w.al=v;w.align=al});
+  if(k==='al'){let v=w.al??0;simple('Alignment',`<label>Alignment <b id="alv" hidden>${alName(v)}</b>${alBar('pal',v)}</label><p class="hint">Crossing into a new third is a turn: a popularity jolt if they're hot, a dip if they're cold.</p>`,()=>{const al=alLetter(v);if(al!==w.align){gainPop(w,w.mom>=60?3:-2);news(`${w.name} turned ${al==='F'?'face':al==='H'?'heel':'tweener'}.`,'me')}w.al=v;w.align=al});
     dlg.oninput=e=>{if(e.target.id==='pal'){v=+e.target.value;$('#alv').textContent=alName(v)}};return}
   if(k==='train'){const cost=r10(Math.max(300,worth(w)*1.5)*dif().cost*(own(m,'gym')?.7:1));let st='wrk';
     const draw=(msg)=>openD(`<div class="dh" style="background:var(--face)"><h3>Train ${esc(w.name)}</h3><div>Costs ${money(cost)} and adds fatigue. Once a week.</div></div><div class="db">
@@ -3160,9 +3213,9 @@ function profAct(k,id){
   if(k==='mgr'){if(!w.mgr){if(!cfm(`Move ${w.name} to a manager role? ${cap(pr(w,'he'))} won't wrestle, but can still do segments. You can bring ${pr(w,'him')} back later.`))return;w.mgr=true;G.card=G.card.filter(x=>x.t!=='m'||!x.sides.flat().includes(w.id));news(`${w.name} moves into a manager role.`,'me')}else{w.mgr=false;news(`${w.name} returns to the ring.`,'me')}rerender();return}
   if(k==='rel'){if(!cfm(`Release ${w.name}? It costs a ${money(w.wage*2)} release fee and ${pr(w,'he')} goes to the Indies.`))return;m.cash-=w.wage*2;news(`You released ${w.name}.`,'me');freeW(w);w.refused=G.week;rerender();return}
 }
-document.addEventListener('input',e=>{if(tab!=='superstars'||e.target.id!=='sq')return;const t=e.target;sq=t.value;const p=t.selectionStart;vStar();const j=$('#sq');j.focus();j.setSelectionRange(p,p)});
-document.addEventListener('click',e=>{if(tab!=='superstars'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
-  if(d.sf){sf=d.sf;gsel=null;vStar()}else if(d.ss){gsel=d.ss;gmsg='';vStar()}else if(d.sct)dContract(d.sct);else if(d.sgm)dGimmick(d.sgm);else if(d.pa)profAct(d.pa,gsel);else if(d.tgo){tsel=d.tgo;tselKeep=true;gmsg2='';location.hash='teams'}else if(d.pfa)dFeudAdd(d.pfa)});
+document.addEventListener('input',e=>{if(tab!=='wrestlers'||e.target.id!=='sq')return;const t=e.target;sq=t.value;const p=t.selectionStart;vStar();const j=$('#sq');j.focus();j.setSelectionRange(p,p)});
+document.addEventListener('click',e=>{if(tab!=='wrestlers'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
+  if(d.sedit!=null){sEdit=d.sedit==='1';gmsg='';vStar();window.scrollTo(0,0)}else if(d.sf){sf=d.sf;gsel=null;vStar()}else if(d.ss){gsel=d.ss;gmsg='';sEdit=false;vStar();window.scrollTo({top:0,behavior:'smooth'})}else if(d.sct)dContract(d.sct);else if(d.sgm)dGimmick(d.sgm);else if(d.pa)profAct(d.pa,gsel);else if(d.tgo){tsel=d.tgo;tselKeep=true;gmsg2='';location.hash='teams'}else if(d.pfa)dFeudAdd(d.pfa)});
 /* ----- feuds ----- */
 let fq='',fco='me',fsort='new';
 function vFeud(){
@@ -3190,7 +3243,7 @@ function vFeud(){
 }
 document.addEventListener('click',e=>{if(tab!=='feuds'||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset,F=id=>FE().find(f=>f.id===id);
   if(t.id==='fadd')dFeudAdd();
-  else if(d.fw){gcat='w';gsel=d.fw;gmsg='';location.hash='superstars'}
+  else if(d.fw){gcat='w';gsel=d.fw;gmsg='';location.hash='wrestlers'}
   else if(d.fe){const f=F(d.fe);endFeud(f,'Ended by you');f.wi=null;save();dResolve(f)}
   else if(d.fs){const f=F(d.fs);startFeud(f.p,f.why,f.heat,'you',f.g);rerender()}
   else if(d.fx){const f=F(d.fx);endFeud(f,'Dismissed');G.feuds=FE().filter(x=>x!==f);rerender()}});
@@ -3357,7 +3410,7 @@ function vTeams(){const KIND=tab==='factions'?'faction':'tag';
 }
 document.addEventListener('click',e=>{if((tab!=='teams'&&tab!=='factions')||!G)return;const t=e.target.closest('button');if(!t||!$('#app').contains(t))return;const d=t.dataset;
   if(t.id==='tnew'||t.id==='tnewf')dTeam(null,d.k);
-  else if(d.tw){gcat='w';gsel=d.tw;gmsg='';location.hash='superstars'}
+  else if(d.tw){gcat='w';gsel=d.tw;gmsg='';location.hash='wrestlers'}
   else if(d.tgo){tsel=d.tgo;gmsg2='';vTeams();window.scrollTo(0,0)}
   else if(d.tback){tsel=null;vTeams()}
   else if(d.td){const g=grp(d.td);if(cfm(`Split up ${g.name}?`)){g.st='past';g.end=G.date;gLog(g,'Split up');news(`${g.name} split up.`,'fd');rerender()}}
@@ -3375,12 +3428,12 @@ function groupHistory(g){
   tw.sort((a,b)=>a.r.won<b.r.won?-1:1);const days=r=>daysBetween(r.won,r.lost||G.date);
   const team=g.kind==='tag'?tw.filter(x=>x.r.h.length===g.m.length&&x.r.h.every(id=>g.m.includes(id))):[];
   const kv=(l,v)=>`<div class="kv"><span>${l}</span><b>${v}</b></div>`;
-  const log=[...(g.log||[]),...tw.map(x=>({d:x.r.won,t:`🏆 ${x.r.hn} won the ${x.t.name}${x.r.wonAt?` at ${x.r.wonAt}`:''}`})),...FE().filter(f=>f.st==='past'&&f.g?.includes(g.id)).map(f=>({d:f.d1,t:`Feud ended: ${fName(f)} (grade ${feudGrade(f).g[0]}${f.res&&f.res!==OUTS.none?`, ${f.res}`:''})`})),...FE().filter(f=>f.g?.includes(g.id)).map(f=>({d:f.d0,t:`Feud began: ${fName(f)} (${f.why})`}))].sort((x,y)=>x.d<y.d?1:-1);
+  const log=[...(g.log||[]),...tw.map(x=>({d:x.r.won,t:`${medal(x.t)} ${x.r.hn} won the ${x.t.name}${x.r.wonAt?` at ${x.r.wonAt}`:''}`})),...FE().filter(f=>f.st==='past'&&f.g?.includes(g.id)).map(f=>({d:f.d1,t:`Feud ended: ${fName(f)} (grade ${feudGrade(f).g[0]}${f.res&&f.res!==OUTS.none?`, ${f.res}`:''})`})),...FE().filter(f=>f.g?.includes(g.id)).map(f=>({d:f.d0,t:`Feud began: ${fName(f)} (${f.why})`}))].sort((x,y)=>x.d<y.d?1:-1);
   return `<h3 style="margin-top:18px">History</h3><div class="sheet" style="margin-top:6px">
    ${kv('Titles won by members while in the group',tw.length)}${g.kind==='tag'?kv('Titles won as a team',team.length):''}${kv('Days with a title in the group',tw.reduce((t,x)=>t+days(x.r),0))}
    ${g.kind==='tag'?kv('Main events as a team',g.car?.main||0)+kv('Major Event matches as a team',g.car?.maj||0):''}${kv('Members over time',mem.length)}
    ${g.kind==='tag'?`<div class="kv" style="grid-column:1/-1"><span>Best match as a team</span><b>${g.bm?`${stars(g.bm.st)} <span class="sub">${g.bm.r==='w'?'beat':g.bm.r==='l'?'lost to':'vs'} ${esc(g.bm.vs)}${g.bm.ev?`, ${esc(g.bm.ev)}`:''}, ${fmtDate(g.bm.d)}</span>`:'<span class="sub">None yet</span>'}</b></div>`:''}</div>
-   ${tw.length?`<h3 style="margin-top:14px;font-size:19px">Championships won while in the group</h3><table class="stack"><thead><tr><th>Title</th><th>Won by</th><th>Won</th><th>Lost</th><th class="n">Days</th></tr></thead><tbody>${tw.map(({t,r})=>`<tr><td><b>🏆 ${esc(t.name)}</b>${team.some(x=>x.r===r)?' <span class="k of">As a team</span>':''}</td><td data-l="Won by">${esc(r.hn)}</td><td data-l="Won">${fmtDate(r.won)}${r.wonAt?`<div class="sub">${esc(r.wonAt)}</div>`:''}</td><td data-l="Lost">${r.lost?fmtDate(r.lost):'<b>Current</b>'}</td><td class="n" data-l="Days">${days(r)}</td></tr>`).join('')}</tbody></table>`:''}
+   ${tw.length?`<h3 style="margin-top:14px;font-size:19px">Championships won while in the group</h3><table class="stack"><thead><tr><th>Title</th><th>Won by</th><th>Won</th><th>Lost</th><th class="n">Days</th></tr></thead><tbody>${tw.map(({t,r})=>`<tr><td><b>${medal(t)} ${esc(t.name)}</b>${team.some(x=>x.r===r)?' <span class="k of">As a team</span>':''}</td><td data-l="Won by">${esc(r.hn)}</td><td data-l="Won">${fmtDate(r.won)}${r.wonAt?`<div class="sub">${esc(r.wonAt)}</div>`:''}</td><td data-l="Lost">${r.lost?fmtDate(r.lost):'<b>Current</b>'}</td><td class="n" data-l="Days">${days(r)}</td></tr>`).join('')}</tbody></table>`:''}
    <h3 style="margin-top:14px;font-size:19px">Members over time</h3><table><tbody>${mem.map(x=>`<tr><td><button class="ed" style="border:0;padding:0;font-weight:700;font-size:15px;color:var(--ink)" data-tw="${x.id}">${esc(W(x.id).name)}</button>${g.m.includes(x.id)&&roleOf(g,x.id)!=='Member'?` <span class="k ${roleOf(g,x.id)==='Leader'?'of':'co'}">${esc(roleOf(g,x.id))}</span>`:''}</td><td class="sub">${fmtDate(x.from)} to ${x.to?fmtDate(x.to):'now'}</td></tr>`).join('')}</tbody></table>
    ${log.length?`<h3 style="margin-top:14px;font-size:19px">Notable events</h3><ul class="tl">${log.map(e=>`<li><time style="font-size:14px">${fmtDate(e.d)}</time><div>${esc(e.t)}</div></li>`).join('')}${tw.length?'':''}</ul>`:''}`;
 }
@@ -3539,7 +3592,7 @@ function vEditor(){
   const wForm=w=>`<div class="form">
    <label class="wide">Ring name<input data-f="name" value="${esc(w.name)}"></label>
    <label>Gender<select data-f="gender">${['M','F',''].map(g=>`<option ${w.gender===g?'selected':''} value="${g}">${g==='M'?'Male':g==='F'?'Female':'Other'}</option>`).join('')}</select></label>
-   <label class="wide">Alignment: <b data-alv>${alName(w.al??alDefault(w.align))}</b>${alBar('',w.al??alDefault(w.align),'data-f="al"')}</label>
+   <label>Alignment<b data-alv hidden></b>${alBar('',w.al??alDefault(w.align),'data-f="al"')}</label>
    <label>Birth date<input type="date" data-f="birth" value="${esc(w.birth)}"></label>
    <label>Debut date<input type="date" data-f="debut" value="${esc(w.debut)}"></label>
    <label>Retired by (date)<input type="date" data-f="retire" value="${esc(w.retire)}"></label>
@@ -3576,7 +3629,7 @@ function vEditor(){
    <label>Company<select data-f="co">${ED.companies.map(c=>`<option ${t.co===c.short?'selected':''}>${esc(c.short)}</option>`).join('')}</select></label>
    <label>Tier<select data-f="tier">${[1,2,3].map(k=>`<option value="${k}" ${(+t.tier||1)===k?'selected':''}>${TIERS[k]}</option>`).join('')}</select></label>
    <label>Division<select data-f="div"><option value="singles" ${t.div!=='tag'?'selected':''}>Singles</option><option value="tag" ${t.div==='tag'?'selected':''}>Tag team</option></select></label>
-   <label>Who can hold it<select data-f="gen">${[['','Anyone'],['M','Men'],['F','Women']].map(([k,l])=>`<option value="${k}" ${titleGen(t)===k?'selected':''}>${l}${!t.gen&&k&&titleGen(t)===k?' (from the name)':''}</option>`).join('')}</select></label>
+   <label>Who can hold it<select data-f="gen">${[['','Anyone'],['M','Men'],['F','Women']].map(([k,l])=>`<option value="${k}" ${titleGen(t)===k?'selected':''}>${l}${!t.gen&&k&&titleGen(t)===k?' (from the name)':''}</option>`).join('')}</select></label><label>Weight Class<select data-f="wc"><option value="">Open (any weight)</option>${WCLASS.map(([x,n])=>`<option ${t.wc===n?'selected':''}>${n}</option>`).join('')}</select></label>
    <label class="wide">Champion on the start date (blank = vacant; tag teams as Name &amp; Name)<input data-f="champ" list="ewl" value="${esc(t.champ||'')}"><datalist id="ewl">${ED.wrestlers.filter(w=>w.home===t.co).map(w=>`<option value="${esc(w.name)}">`).join('')}</datalist></label>
    <label>Champion since<input type="date" data-f="since" value="${esc(t.since||'')}"></label>
    <label class="wide">Past reigns before the start, one per line as won | lost | champion<textarea data-f="past" rows="4" placeholder="1963-05-17 | 1971-01-18 | Example Champion">${esc(t.past||'')}</textarea></label>
@@ -3611,6 +3664,7 @@ document.addEventListener('input',e=>{
   else if(['cha','wrk','pop'].includes(f))x[f]=clamp(+t.value||0,0,100);
   else if(f==='al'){x.al=clamp(+t.value,-100,100);x.align=alLetter(x.al);const l=document.querySelector('[data-alv]');if(l)l.textContent=alName(x.al)}
   else if(f==='gen')x.gen=t.value||'any';
+  else if(f==='wc'){if(t.value)x.wc=t.value;else delete x.wc}
   else if(f==='trx')x.trx=t.value.split(',').map(n=>n.trim().toLowerCase()).map(n=>Object.keys(TRAITS).find(k=>TRAITS[k].n.toLowerCase()===n||k===n)).filter(Boolean).slice(0,2);
   else if(['wage','left','cash'].includes(f))x[f]=t.value===''?'':+t.value;
   else if(f==='wt')x.wt=clamp(+t.value||0,0,700);
@@ -3725,7 +3779,7 @@ function tcEl(el){if(el.closest('[data-notc],.nwsite'))return;const tw=document.
   while((n=tw.nextNode())){const p=n.parentElement;if(p!==el&&p.closest(TC_SKIP)&&el.contains(p.closest(TC_SKIP))){continue}
     const v=n.nodeValue;if(!v.trim())continue;if(el.tagName==='LABEL'&&p!==el&&!p.matches('b,strong,span:not(.sub):not(.hint)'))continue;
     const nv=tcText(v,first);first=false;if(nv!==v)n.nodeValue=nv}}
-function tcAll(root){(root||document).querySelectorAll(TC_SEL).forEach(tcEl)}
+function tcAll(root){(root||document).querySelectorAll(TC_SEL).forEach(tcEl);(root||document).querySelectorAll('.tile b').forEach(b=>b.classList.toggle('long',b.textContent.trim().length>12))}
 let tcQ=false;new MutationObserver(()=>{if(tcQ)return;tcQ=true;requestAnimationFrame(()=>{tcQ=false;tcAll()})}).observe(document.documentElement,{childList:true,subtree:true});
 addEventListener('hashchange',()=>{applySub();render()});
 const sv=store.get('ro_save');if(sv&&sv.v===1&&!sv.over)G=sv;

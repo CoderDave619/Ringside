@@ -11,7 +11,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   for (let i = 0; i < 4; i++) { await p.click('#auto'); await p.click('#run'); await p.click('#cont'); await p.waitForTimeout(50); }
   const check = async (w) => {
     await p.setViewportSize({ width: w, height: 900 });
-    for (const t of ['book', 'roster', 'superstars', 'companies', 'calendar', 'edit', 'editor', 'new']) {
+    for (const t of ['book', 'roster', 'wrestlers', 'companies', 'calendar', 'edit', 'editor', 'new']) {
       await p.goto('file:///home/user/game/index.html#' + t); await p.waitForTimeout(150);
       const r = await p.evaluate(() => {
         const out = []; const W = document.documentElement.clientWidth;

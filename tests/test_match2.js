@@ -7,12 +7,12 @@ const ids=await p.$$eval('.bw:not(.used):not(.out)',x=>x.slice(0,14).map(e=>e.da
 const C=()=>p.evaluate(()=>__ro.run('JSON.stringify(G.card.map(x=>[x.t,x.mt||x.g,x.pre?1:0,x.t==="m"?x.sides.map(s=>s.length).join("v"):(x.who||[]).length]))'));
 // singles: 2 then free-for-all
 await p.click('#addm');for(const id of ids.slice(0,2)){await p.click(`[data-bw="${id}"]`);await p.waitForTimeout(40)}
-await p.click('.bm >> nth=0 >> .bslot');await p.click(`[data-bw="${ids[2]}"]`);await p.waitForTimeout(40);
-await p.click('.bm >> nth=0 >> .bslot');await p.click(`[data-bw="${ids[3]}"]`);await p.waitForTimeout(40);
+await p.click('.bm .bslot >> nth=-1');await p.click(`[data-bw="${ids[2]}"]`);await p.waitForTimeout(40);
+await p.click('.bm .bslot >> nth=-1');await p.click(`[data-bw="${ids[3]}"]`);await p.waitForTimeout(40);
 console.log(vw[0],'ffa',await C());
 await p.click(`.bm >> nth=0 >> [data-rmw$=":${ids[3]}"]`);await p.waitForTimeout(40);console.log('removed one',await C());
 // tag with 3 teams
-await p.click('#addm');await p.waitForTimeout(40);await p.click('.bm >> nth=1 >> [data-bmode$=":t"]');await p.waitForTimeout(40);await p.click('.bm >> nth=1 >> [data-btk$=":1"]');await p.waitForTimeout(40);
+await p.click('#addm');await p.waitForTimeout(40);await p.click('.bm.cur [data-bmode$=":t"]');await p.waitForTimeout(40);await p.click('.bm.cur [data-btk$=":1"]');await p.waitForTimeout(40);
 for(const id of ids.slice(4,10)){await p.click(`[data-bw="${id}"]`);await p.waitForTimeout(40)}
 console.log('tag3',await C());
 // pre-show

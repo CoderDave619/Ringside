@@ -5,7 +5,7 @@ await p.click('input[value=c0]');await p.click('#nstartbtn');await p.waitForTime
 await p.goto('file:///home/user/game/index.html#roster');await p.waitForTimeout(200);
 await p.screenshot({path:`/tmp/lk_roster_${W}.png`});
 const id=await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).find(w=>w.co===G.me).id});
-await p.goto('file:///home/user/game/index.html#superstars');await p.waitForTimeout(150);await p.click(`[data-ss=${id}]`);await p.waitForTimeout(150);
+await p.goto('file:///home/user/game/index.html#wrestlers');await p.waitForTimeout(150);await p.click(`[data-ss=${id}]`);await p.waitForTimeout(150);
 await p.screenshot({path:`/tmp/lk_prof_${W}.png`});
 await p.click('[data-pa=look]');await p.waitForTimeout(150);
 await p.click('[data-st="1"][data-k=build]');await p.click('[data-pal=skin]');await p.click('.pal .sw >> nth=3');

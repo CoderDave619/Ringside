@@ -9,7 +9,7 @@ await p.click('#nav [data-ng=History]');await p.click('#nav a[href="#history/yr"
 console.log('YEAR',await p.locator('h2').last().innerText());
 await p.click('[data-hy]');await p.waitForTimeout(100);console.log('PREV',await p.locator('main h2').last().innerText());await p.screenshot({path:'/tmp/h_yr.png',fullPage:true});
 await p.click('main summary');await p.waitForTimeout(60);await p.click('main details[open] [data-hev]');await p.waitForTimeout(100);console.log('OPENED',await p.locator('main .panel h2').first().innerText());
-await p.goto('file:///home/user/game/index.html#superstars');await p.waitForTimeout(150);await p.click('[data-sf=all]');await p.waitForTimeout(100);await p.evaluate(()=>window.scrollTo(0,900));await p.screenshot({path:'/tmp/h_prof.png'});
+await p.goto('file:///home/user/game/index.html#wrestlers');await p.waitForTimeout(150);await p.click('[data-sf=all]');await p.waitForTimeout(100);await p.evaluate(()=>window.scrollTo(0,900));await p.screenshot({path:'/tmp/h_prof.png'});
 await p.setViewportSize({width:390,height:844});await p.goto('file:///home/user/game/index.html#history/tt');await p.waitForTimeout(150);console.log('SCROLLX',await p.evaluate(()=>document.documentElement.scrollWidth));
 await p.goto('file:///home/user/game/index.html#history/yr');await p.waitForTimeout(150);console.log('SCROLLX yr',await p.evaluate(()=>document.documentElement.scrollWidth));
 console.log('ERRS',errs);await b.close()})();

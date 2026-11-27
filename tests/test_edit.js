@@ -10,6 +10,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   await p.click('[data-nver="1"]');await p.waitForTimeout(150);await p.click('input[value=c0]'); await p.click('#nstartbtn'); await p.waitForTimeout(200);
   await p.goto('file:///home/user/game/index.html#edit'); await p.waitForTimeout(200);
   await p.fill('#gq', 'flair'); await p.click('[data-gs]');
+  await p.check('#gsb'); await p.waitForTimeout(100);
   await p.fill('[data-g=pop]', '77'); await p.fill('[data-g=debut]', '1969-01-01'); await p.dispatchEvent('[data-g=debut]', 'change');
   await p.waitForTimeout(100);
   console.log('flair status:', await p.textContent('.panel .hint'));

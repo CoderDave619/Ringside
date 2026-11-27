@@ -16,7 +16,7 @@ await p.click(`[data-bw="${ids[1]}"]`);await p.waitForTimeout(200);
 // third tap creates a new match
 await p.click(`[data-bw="${ids[2]}"]`);await p.waitForTimeout(100);
 // change match 2 to tag team
-await p.click('.bm >> nth=1 >> [data-bmode$=":t"]');await p.waitForTimeout(100);
+await p.click('.bm.cur [data-bmode$=":t"]');await p.waitForTimeout(100);
 for(const k of [4,5,6])await p.click(`[data-bw="${ids[k]}"]`).then(()=>p.waitForTimeout(80));
 card=await p.evaluate(()=>JSON.stringify(__ro.G().card.map(x=>({mt:x.mt,s:x.sides}))));console.log('after tag',card);
 // segment
@@ -27,7 +27,7 @@ console.log('run blocked:',await p.$eval('#cfm',d=>d.open&&d.innerText).catch(()
 await p.screenshot({path:`/tmp/ob2_${vw[0]}.png`,fullPage:vw[0]>500});
 await p.click('[data-rm="3"]');await p.waitForTimeout(100);
 // remove a person, then title select
-await p.click(`[data-win="0:0"]`);await p.waitForTimeout(100);
+console.log('compact rows',await p.$$eval('.bmc',x=>x.map(e=>e.innerText.replace(/\s+/g,' ').slice(0,70))));await p.click('[data-bopen="0"]');await p.waitForTimeout(100);await p.click(`[data-win="0:0"]`);await p.waitForTimeout(100);
 console.log('win',await p.evaluate(()=>__ro.G().card[0].win));
 await p.click('#run');await p.waitForTimeout(500);console.log('show ran',await p.evaluate(()=>__ro.run('myShows().length')));
 await p.evaluate(()=>{location.hash='roster'});await p.waitForTimeout(300);
