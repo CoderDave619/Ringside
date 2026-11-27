@@ -28,8 +28,8 @@
     bg: ['#1d2a52', '#7c1f24', '#222226', '#127a68', '#6a2bd9', '#e8e3da', '#d7263d', '#1e88e5', '#3a2a1e', '#ff5fa2']
   };
 
-  const SHAPE_LIST = ['oval', 'round', 'shield', 'rectangle', 'cushion', 'octagon', 'hexagon', 'diamond', 'star', 'crest', 'arch', 'winged', 'sunburst', 'quatrefoil', 'tablet'];
-  const EMBLEM_LIST = ['none', 'globe', 'star', 'crown', 'eagle', 'skull', 'bolt', 'flame', 'ring', 'laurel', 'mask', 'sun', 'heart', 'gem', 'trophy', 'swords', 'fist', 'monogram'];
+  const SHAPE_LIST = ['oval', 'round', 'shield', 'rectangle', 'cushion', 'octagon', 'hexagon', 'diamond', 'star', 'crest', 'arch', 'winged', 'sunburst', 'quatrefoil', 'tablet', 'butterfly', 'maltese', 'pentagon', 'flared', 'pill', 'compass', 'stepped'];
+  const EMBLEM_LIST = ['none', 'globe', 'star', 'crown', 'eagle', 'skull', 'bolt', 'flame', 'ring', 'laurel', 'mask', 'sun', 'heart', 'gem', 'trophy', 'swords', 'fist', 'butterfly', 'maltese', 'sunrise', 'calendar', 'twostars', 'monogram'];
 
   // key: [label, list of values | palette name, default]
   const OPTIONS = {
@@ -41,7 +41,7 @@
     rimWidth: ['Rim width', ['thin', 'normal', 'thick'], 'normal'],
     field: ['Plate face', ['metal', 'enamel', 'inset'], 'metal'],
     fieldColor: ['Enamel colour', 'enamel', PAL.enamel[0]],
-    engrave: ['Engraving', ['plain', 'rays', 'lines', 'dots', 'scales', 'checker', 'rings', 'chevron', 'hammered', 'stars'], 'rays'],
+    engrave: ['Engraving', ['plain', 'rays', 'lines', 'dots', 'scales', 'checker', 'rings', 'chevron', 'hammered', 'stars', 'crosshatch', 'scroll'], 'rays'],
     emblem: ['Emblem', EMBLEM_LIST, 'globe'],
     emblemFinish: ['Emblem finish', ['metal', 'trim', 'colour'], 'metal'],
     emblemColor: ['Emblem colour', 'enamel', PAL.enamel[1]],
@@ -53,17 +53,19 @@
     bottomBanner: ['Bottom banner', ['none', 'ribbon', 'bar', 'arch'], 'ribbon'],
     bannerColor: ['Banner colour', 'enamel', PAL.enamel[0]],
     textColor: ['Letter colour', 'text', PAL.text[0]],
-    topper: ['Topper', ['none', 'crown', 'eagle', 'wings', 'star', 'horns', 'spikes', 'flame', 'orb', 'gem', 'fan', 'wreath'], 'none'],
+    topper: ['Topper', ['none', 'crown', 'eagle', 'wings', 'star', 'horns', 'spikes', 'flame', 'orb', 'gem', 'fan', 'wreath', 'butterfly', 'halo', 'rays'], 'none'],
     sideCount: ['Side plates', [0, 1, 2, 3], 2],
-    sideShape: ['Side plate shape', ['round', 'rectangle', 'shield', 'oval', 'diamond', 'hexagon', 'octagon', 'star', 'arch', 'crest'], 'round'],
+    sideShape: ['Side plate shape', ['round', 'rectangle', 'shield', 'oval', 'diamond', 'hexagon', 'octagon', 'star', 'arch', 'crest', 'butterfly', 'maltese', 'pentagon', 'pill', 'compass'], 'round'],
     sideSize: ['Side plate size', ['small', 'medium', 'large'], 'medium'],
-    sideEmblem: ['Side emblem', ['none', 'match', 'star', 'gem', 'letter', 'number', 'stripes', 'globe', 'crown', 'skull', 'bolt', 'flame', 'heart', 'eagle', 'sun', 'fist'], 'star'],
+    sideEmblem: ['Side emblem', ['none', 'match', 'star', 'gem', 'letter', 'number', 'stripes', 'globe', 'crown', 'skull', 'bolt', 'flame', 'heart', 'eagle', 'sun', 'fist', 'dot', 'mask', 'butterfly', 'maltese', 'calendar', 'laurel'], 'star'],
     sideField: ['Side plate face', ['metal', 'enamel'], 'metal'],
+    sideRim: ['Side plate rim', ['plain', 'beaded', 'double', 'none'], 'plain'],
+    sideSpacing: ['Side plate spacing', ['tight', 'normal', 'wide'], 'normal'],
     sideColor: ['Side enamel colour', 'enamel', PAL.enamel[0]],
     strapColor: ['Strap colour', 'strap', PAL.strap[0]],
-    strapTexture: ['Strap texture', ['smooth', 'croc', 'snake', 'tooled', 'studded', 'suede', 'carbon', 'striped', 'quilted'], 'croc'],
+    strapTexture: ['Strap texture', ['smooth', 'croc', 'snake', 'tooled', 'studded', 'suede', 'carbon', 'striped', 'quilted', 'patent', 'leopard', 'flames', 'barbed', 'woven', 'diamondplate'], 'croc'],
     strapWidth: ['Strap width', ['thin', 'standard', 'wide'], 'standard'],
-    strapEdge: ['Strap edge', ['none', 'stitch', 'piping', 'metal'], 'stitch'],
+    strapEdge: ['Strap edge', ['none', 'stitch', 'piping', 'metal', 'studs', 'lace'], 'stitch'],
     strap2: ['Stitch and trim colour', 'strap', PAL.strap[8]],
     wear: ['Condition', ['new', 'worn', 'battered'], 'new'],
     shine: ['Shine', ['matte', 'polished', 'dazzling'], 'polished'],
@@ -203,9 +205,33 @@
     quatrefoil: (u, v) => circ(u, v, -0.45, 0, 0.56) || circ(u, v, 0.45, 0, 0.56) || circ(u, v, 0, -0.45, 0.56) || circ(u, v, 0, 0.45, 0.56) || (Math.abs(u) < 0.5 && Math.abs(v) < 0.5),
     tablet: (u, v) => Math.abs(u) <= 1 && Math.abs(v) <= 1 && !(Math.abs(u) > 0.78 && Math.abs(v) > 0.7 && (Math.abs(u) - 0.78) ** 2 / 0.22 ** 2 + (Math.abs(v) - 0.7) ** 2 / 0.3 ** 2 < 1 === false && (Math.abs(u) - 1) ** 2 + (Math.abs(v) - 1) ** 2 < 0.09)
   };
+  const PENT = starPts(5, 1.06, 1.06 * Math.cos(Math.PI / 5), 0, 0.12);
+  const FLARED = [-1, 0, -0.62, -0.72, -0.34, -1, 0.34, -1, 0.62, -0.72, 1, 0, 0.62, 0.72, 0.34, 1, -0.34, 1, -0.62, 0.72];
+  const COMPASS = starPts(8, 1.04, 0.74);
+  function butterfly(u, v) {
+    const au = Math.abs(u);
+    if (ell(u, v, 0, 0, 0.16, 0.92)) return 'b';
+    const up = ((au - 0.52) * 0.8 + (v + 0.3) * 0.6) / 0.5, uq = (-(au - 0.52) * 0.6 + (v + 0.3) * 0.8) / 0.62;
+    if (up * up + uq * uq <= 1) return 'w';
+    if (ell(au, v, 0.36, 0.5, 0.34, 0.44)) return 'l';
+    return null;
+  }
+  function maltese(u, v) {
+    const a = Math.max(Math.abs(u), Math.abs(v)), b = Math.min(Math.abs(u), Math.abs(v)), hw = 0.14 + 0.56 * a;
+    return b <= hw && a <= 0.74 + 0.28 * (b / hw) && a <= 1;
+  }
+  Object.assign(SHAPES, {
+    butterfly: (u, v) => !!butterfly(u, v),
+    maltese,
+    pentagon: (u, v) => inPoly(PENT, u, v),
+    flared: (u, v) => inPoly(FLARED, u, v),
+    pill: (u, v) => (Math.max(0, Math.abs(u) - 0.45) / 0.55) ** 2 + v * v <= 1,
+    compass: (u, v) => inPoly(COMPASS, u, v) || u * u + v * v <= 0.6,
+    stepped: (u, v) => { const av = Math.abs(v); return av <= 1 && Math.abs(u) <= [1, 0.84, 0.68, 0.52][Math.min(3, Math.floor(av / 0.25))]; }
+  });
   const STAR_SHAPE = starPts(5, 1.08, 0.55, 0, 0.1);
   // plate box multipliers: [width factor, height factor]
-  const SHAPE_BOX = { round: 'sq', star: 'sq', crest: 'sq', sunburst: 'sq', quatrefoil: 'sq', shield: [0.82, 1.05], arch: [0.82, 1], diamond: [1.15, 1.1], winged: [1.35, 0.92], hexagon: [1.08, 1] };
+  const SHAPE_BOX = { round: 'sq', star: 'sq', crest: 'sq', sunburst: 'sq', quatrefoil: 'sq', shield: [0.82, 1.05], arch: [0.82, 1], diamond: [1.15, 1.1], winged: [1.35, 0.92], hexagon: [1.08, 1], maltese: 'sq', compass: 'sq', pentagon: 'sq', butterfly: [1.3, 1], flared: [1.3, 1], pill: [1.3, 0.78], stepped: [1.1, 1] };
   const PLATE = { small: [36, 28], medium: [44, 34], large: [52, 40], huge: [60, 46] };
   const SIDE = { small: [8, 8], medium: [10, 10], large: [12, 12] };
   function boxFor(shape, w, h) {
@@ -242,6 +268,11 @@
     trophy: (u, v) => { if (inPoly(CUP, u, v)) return v < -0.75 ? 'l' : 'm'; if ((circ(u, v, -0.7, -0.5, 0.3) && !circ(u, v, -0.7, -0.5, 0.15) && u < -0.6) || (circ(u, v, 0.7, -0.5, 0.3) && !circ(u, v, 0.7, -0.5, 0.15) && u > 0.6)) return 'm'; if (Math.abs(u) < 0.12 && v >= 0.1 && v < 0.62) return 'd'; if (Math.abs(u) < 0.52 && v >= 0.62 && v <= 0.95) return v < 0.72 ? 'l' : 'm'; return null; },
     swords: (u, v) => { for (const s of [1, -1]) { const a = (u * s + v) / 1.414, b = (u * s - v) / 1.414; if (Math.abs(b) < 0.1 && a > -0.95 && a < 0.5) return 'l'; if (Math.abs(a - 0.52) < 0.07 && Math.abs(b) < 0.3) return 'm'; if (Math.abs(b) < 0.08 && a >= 0.52 && a < 0.95) return 'd'; } return null; },
     fist: (u, v) => { if (!inPoly(FIST, u, v) && !(circ(u, v, -0.72, -0.05, 0.25))) return null; if (v < 0.1 && v > -0.5 && Math.abs(((u + 0.7) / 1.4 * 4) % 1 - 0) < 0.1 && u > -0.4) return 'd'; if (v > -0.12 && v < -0.02 && u > -0.55) return 'd'; if (v < -0.38) return 'l'; return 'm'; },
+    butterfly: (u, v) => { const r = butterfly(u, v); if (!r) return null; if (r === 'b') return 'd'; if (r === 'w') return circ(Math.abs(u), v, 0.55, -0.38, 0.16) ? 'g' : 'm'; return circ(Math.abs(u), v, 0.38, 0.52, 0.1) ? 'l' : 'm'; },
+    maltese: (u, v) => { if (!maltese(u, v)) return null; if (circ(u, v, 0, 0, 0.24)) return 'g'; return maltese(u / 0.7, v / 0.7) && Math.min(Math.abs(u), Math.abs(v)) > 0.04 ? 'm' : 'l'; },
+    sunrise: (u, v) => { if (v > 0.55) return Math.abs(v - 0.72) < 0.08 && Math.abs(u) < 1 ? 'd' : null; const r = Math.hypot(u, v - 0.55), a = Math.atan2(v - 0.55, u); if (r < 0.5) return r < 0.34 ? 'g' : 'G'; if (r <= 1.12 && Math.cos(a * 9) > 0.4 && v < 0.5) return 'm'; return null; },
+    calendar: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1) return null; if (r > 0.82) return Math.cos(a * 16) > 0 ? 'm' : 'd'; if (r > 0.74) return 'd'; if (r > 0.5) return Math.cos(a * 8) > 0.3 ? 'l' : 'm'; if (r > 0.42) return 'd'; if (r < 0.2) return 'g'; return inPoly(starPts(4, 0.42, 0.14), u, v) ? 'l' : 'm'; },
+    twostars: (u, v) => { for (const s of [-1, 1]) { const x = (u - s * 0.48) / 0.56, y = (v + s * 0.12) / 0.62; if (inPoly(STAR5, x, y)) return inPoly(starPts(5, 0.45, 0.2, 0, 0.08), x, y) ? 'l' : 'm'; } return null; },
     // side-plate extras
     dot: (u, v) => circ(u, v, 0, 0, 0.55) ? 'm' : null,
     stripes: (u, v) => Math.floor((v + 1) * 2.5) % 2 ? 'g' : 'm',
@@ -256,6 +287,9 @@
     flame: (u, v) => { const au = Math.abs(u); const xs = [0.12, 0.34, 0.56, 0.78], hs = [1, 0.75, 0.9, 0.55]; for (let i = 0; i < 4; i++) { const top = 1 - 2 * hs[i]; if (v < top || v > 1) continue; const k = (v - top) / (2 * hs[i]); const hw = 0.13 * Math.sqrt(k); if (Math.abs(au - xs[i] - 0.04 * Math.sin(k * 6)) <= hw) return k < 0.3 ? 'G' : k > 0.7 ? 'D' : 'g'; } return null; },
     orb: (u, v) => { if (circ(u, v, 0, -0.3, 0.62)) return circ(u, v, -0.2, -0.5, 0.18) ? 'l' : Math.abs(v + 0.3) < 0.08 ? 'd' : 'm'; if (Math.abs(u) < 0.25 && v > 0.3 && v < 1) return 'd'; return null; },
     fan: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1) return null; return Math.cos(a * 14) > 0 ? 'm' : 'd'; },
+    butterfly: (u, v) => { const au = Math.abs(u); if (au < 0.28) return null; const r = butterfly(u, v); if (!r || r === 'b') return null; if (r === 'w') return circ(au, v, 0.6, -0.4, 0.13) ? 'g' : (Math.floor(au * 9) % 3 === 0 ? 'd' : 'm'); return 'l'; },
+    halo: (u, v) => { const r = Math.hypot(u, v); if (r > 1 || r < 0.84) return null; const a = Math.atan2(v, u); return Math.cos(a * 12) > 0.6 ? 'l' : r > 0.93 ? 'm' : 'd'; },
+    rays: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1 || v > 0.3) return null; return Math.cos(a * 14) > 0.35 ? (r > 0.9 ? 'd' : 'm') : null; },
     wreath: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, Math.abs(u)); if (a < -1.25 || r > 1) return null; for (let i = 0; i < 12; i++) { const t = -1.15 + i * 0.24, side = i % 2 ? 0.94 : 0.8; if (circ(Math.abs(u), v, Math.cos(t) * side, Math.sin(t) * side, 0.09)) return i % 3 ? 'm' : 'l'; } return Math.abs(r - 0.87) < 0.025 ? 'd' : null; }
   };
 
@@ -365,12 +399,20 @@
         else if (tex === 'suede') { const h = hash(x, r, 9); if (h < 0.22) col = sh(S, -0.1); else if (h > 0.9) col = sh(S, 0.08); }
         else if (tex === 'carbon') { col = ((x >> 1) + (r >> 1)) % 2 ? sh(S, -0.15) : sh(S, 0.06); }
         else if (tex === 'striped') { if (r >= Math.floor(sw / 3) && r < sw - Math.floor(sw / 3)) col = S2; }
+        else if (tex === 'patent') { if (r === 2 || (r === 3 && x % 9 < 6)) col = sh(S, lum(S) > 0.8 ? -0.06 : 0.32); else if (r >= sw - 3) col = sh(S, -0.12); }
+        else if (tex === 'leopard') { const cx4 = x >> 2, ry = r + (cx4 % 2) * 2, cy4 = ry >> 2, lx = x & 3, ly = ry & 3, h = hash(cx4, cy4, 21); if (h < 0.55 && lx > 0 && ly > 0) col = (lx === 2 && ly === 2) || h < 0.2 && !(lx === 3 || ly === 3) ? S2 : sh(S, -0.55); }
+        else if (tex === 'flames') { const t = (sw - 1 - r) / sw, f = 0.42 + 0.22 * Math.sin(x * 0.55) + 0.14 * Math.sin(x * 1.37 + 1); if (t < f) col = t < f * 0.45 ? sh(S2, 0.3) : t > f - 0.12 ? sh(S2, -0.25) : S2; }
+        else if (tex === 'barbed') { const mid = (sw - 1) / 2, a = Math.round(mid + Math.sin(x * 0.5) * (mid - 1.5)), b2 = Math.round(mid - Math.sin(x * 0.5) * (mid - 1.5)); if (r === a || r === b2) col = r === a ? '#c9ced6' : '#8a919c'; else if (x % 8 === 0 && Math.abs(r - mid) < 2) col = '#e2e6ec'; else if (x % 8 === 0 && Math.abs(r - mid) < 3) col = '#6d7480'; }
+        else if (tex === 'woven') { const on = ((x >> 2) + (r >> 2)) % 2; if (on ? x % 4 === 0 : r % 4 === 0) col = SD; else if (on ? x % 4 === 1 : r % 4 === 1) col = SL; }
+        else if (tex === 'diamondplate') { const q = (x + (Math.floor(r / 3) % 2) * 3) % 6; if (r % 3 === 1 && (q === 0 || q === 1)) col = q ? SD : sh(S, 0.3); }
         else if (tex === 'quilted') { if ((x + r) % 6 === 0 || (x - r + 600) % 6 === 0) col = (x % 2 ? S2 : SD); }
         if (y === t) col = r === 0 ? SL : col;
         if (y === b) col = SD;
         if (L.strapEdge === 'stitch' && (r === 1 || r === sw - 2) && x % 2 && x > 12) col = S2;
         if (L.strapEdge === 'piping' && (r === 0 || r === sw - 1)) col = r ? sh(S2, -0.2) : S2;
         if (L.strapEdge === 'metal' && (r === 0 || r === sw - 1)) col = r ? TT.d : TT.l;
+        if (L.strapEdge === 'studs' && (r === 1 || r === sw - 2) && x > 12 && x % 3 < 2) col = x % 3 ? TT.d : TT.ll;
+        if (L.strapEdge === 'lace' && x > 12 && ((r === 0 || r === sw - 1) && (x >> 1) % 2 || (r === 1 || r === sw - 2) && ((x >> 1) + 1) % 2)) col = S2;
         set(x, y, col, 1);
       }
     }
@@ -443,6 +485,8 @@
         if (e === 'chevron') p = (mx + y) % 4 === 0 ? 1 : 0;
         if (e === 'hammered') { const hh = hash(mx, y, 5); p = hh < 0.16 ? 1 : hh > 0.9 ? 2 : 0; }
         if (e === 'stars') p = hash(mx, y, 11) < 0.05 ? 2 : 0;
+        if (e === 'crosshatch') p = (mx + y) % 4 === 0 || (mx - y + 400) % 4 === 0 ? 1 : 0;
+        if (e === 'scroll') { const q = (y + Math.round(Math.sin(mx * 0.55) * 2) + 40) % 5; p = q === 0 ? 1 : q === 1 ? 2 : 0; }
         if (p === 1) c = sh(base, -0.16);
         if (p === 2) c = sh(base, lum(base) > 0.85 ? -0.08 : 0.14);
         set(x, y, c, kind);
@@ -472,7 +516,7 @@
     if (L.sideShape === 'oval') { sidesBox[0] = Math.max(6, ssw - 2); sidesBox[1] = ssh + 2; }
     const sideSpots = [];
     for (let i = 0; i < L.sideCount; i++) {
-      const off = pw / 2 + 4 + sidesBox[0] / 2 + i * (sidesBox[0] + 3);
+      const gap = { tight: 1, normal: 3, wide: 6 }[L.sideSpacing]; const off = pw / 2 + 1 + gap + sidesBox[0] / 2 + i * (sidesBox[0] + gap);
       sideSpots.push(CX + off, CX - off);
     }
     sideSpots.forEach((sx, n) => {
@@ -490,7 +534,7 @@
       if (se === 'stripes') { sPal.g = L.sideColor; sPal.m = T; }
       const inner = Math.max(4, sidesBox[0] - 4);
       const P = plate(sx, sy, sidesBox[0], sidesBox[1], {
-        shape: L.sideShape === 'oval' ? 'oval' : L.sideShape, rimW: 1, rim: 'plain', metal: M, metal2: T, field: L.sideField, fieldColor: L.sideColor, engrave: 'plain',
+        shape: L.sideShape === 'oval' ? 'oval' : L.sideShape, rimW: L.sideRim === 'none' ? 0 : L.sideRim === 'plain' ? 1 : 2, rim: L.sideRim === 'none' ? 'plain' : L.sideRim, metal: M, metal2: T, field: L.sideField, fieldColor: L.sideColor, engrave: 'plain',
         emblem: fn || txt ? { fn, text: txt, cx: sx, cy: sy, w: se === 'stripes' ? sidesBox[0] : inner, h: se === 'stripes' ? sidesBox[1] : Math.max(4, sidesBox[1] - 4), pal: sPal } : null
       });
       sideEdge(sx, sy, P.mask);
@@ -511,6 +555,9 @@
     if (tp === 'spikes') topMask = paintFn(TOP.spikes, CX, topAt - 3, pw * 0.95, 22, topPal);
     if (tp === 'flame') topMask = paintFn(TOP.flame, CX, CY - ph * 0.35, pw * 1.25, ph * 0.75, Object.assign({}, topPal, { g: sh(L.gemColor, 0.1) }));
     if (tp === 'fan') topMask = paintFn(TOP.fan, CX, CY, pw * 1.28, ph * 1.24, TT);
+    if (tp === 'butterfly') topMask = paintFn(TOP.butterfly, CX, CY - 1, pw * 1.9, ph * 1.12, Object.assign({}, topPal, { l: TT.l }));
+    if (tp === 'halo') topMask = paintFn(TOP.halo, CX, CY, Math.max(pw, ph) * 1.22, ph * 1.22, TT);
+    if (tp === 'rays') topMask = paintFn(TOP.rays, CX, CY, pw * 1.6, ph * 1.4, TT);
     if (tp === 'wreath') topMask = paintFn(TOP.wreath, CX, CY + 1, pw * 1.32, ph * 1.24, Object.assign({}, MM, { m: sh(T, -0.05) }));
 
     // ---- banners geometry (needed for emblem space)
@@ -764,5 +811,55 @@
     return '<img class="bl-img" src="' + wornDataURL(wLook, bLook, Object.assign({ scale: 1 }, opt, { size: undefined })) + '" width="' + size + '" height="' + h + '" alt="" style="image-rendering:pixelated">';
   }
 
-  root.BeltLook = { W, H, CROPS, PAL, OPTIONS, TEXT_FIELDS, FONT, defaults, normalize, random, pixels, draw, toDataURL, img, wornPixels, drawWorn, wornDataURL, wornImg, mix, shade: sh, cleanText };
+
+  // ---- templates: original designs, one per broad family of championship belt.
+  // Each is a full look minus the text fields, so applying one keeps the title's lettering.
+  // PARTS lists the keys of each part, so a UI can take only the plate, sides or strap of a template.
+  const PARTS = {
+    plate: ['shape', 'size', 'metal', 'metal2', 'rim', 'rimWidth', 'field', 'fieldColor', 'engrave', 'emblem', 'emblemFinish', 'emblemColor', 'gems', 'gemSize', 'gemColor', 'gemColor2', 'topBanner', 'bottomBanner', 'bannerColor', 'textColor', 'topper', 'shine'],
+    sides: ['sideCount', 'sideShape', 'sideSize', 'sideEmblem', 'sideField', 'sideColor', 'sideRim', 'sideSpacing'],
+    strap: ['strapColor', 'strapTexture', 'strapWidth', 'strapEdge', 'strap2', 'wear'],
+    display: ['bg', 'bgColor']
+  };
+  const G = '#e8b923', GL = '#f6d67a', SV = '#c8ccd4', SVL = '#eceef3', BR = '#c27a3a', CU = '#d0703c', RG = '#e6a594', GM = '#4a4a55', ST = '#7d8a99';
+  const TPL = {
+    'Grand plate': { shape: 'flared', size: 'huge', metal: G, metal2: GL, rim: 'filigree', rimWidth: 'thick', engrave: 'scroll', emblem: 'globe', gems: 'ring', gemColor: '#e0182d', gemColor2: '#1f6feb', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: G, sideCount: 2, sideShape: 'rectangle', sideSize: 'large', sideEmblem: 'globe', sideRim: 'beaded', strapTexture: 'croc', strapWidth: 'wide', strapEdge: 'stitch', strap2: '#d4a017', bg: 'velvet', bgColor: '#7c1f24' },
+    'Spread wings': { shape: 'winged', size: 'huge', metal: G, metal2: SV, rim: 'beaded', field: 'metal', engrave: 'lines', emblem: 'eagle', emblemFinish: 'trim', gems: 'top', gemColor: '#1f6feb', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1d2a52', topper: 'none', sideCount: 2, sideShape: 'oval', sideEmblem: 'eagle', strapColor: '#1b1b1f', strapTexture: 'tooled', bg: 'spotlight', bgColor: '#1d2a52' },
+    'Monarch butterfly': { shape: 'butterfly', size: 'huge', metal: SV, metal2: '#ff5fa2', rim: 'jeweled', rimWidth: 'normal', field: 'enamel', fieldColor: '#ff5fa2', engrave: 'dots', emblem: 'heart', emblemFinish: 'metal', gems: 'none', gemColor: '#ff4fa0', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#6a2bd9', sideCount: 2, sideShape: 'butterfly', sideField: 'enamel', sideColor: '#ff5fa2', sideEmblem: 'none', strapColor: '#f5f5f5', strapTexture: 'patent', strapEdge: 'piping', strap2: '#ff5fa2', shine: 'dazzling', bg: 'spotlight', bgColor: '#ff5fa2' },
+    'Silk wings': { shape: 'oval', size: 'medium', metal: SVL, metal2: SV, rim: 'jeweled', field: 'inset', fieldColor: '#6a2bd9', engrave: 'stars', emblem: 'butterfly', emblemFinish: 'metal', gems: 'none', gemColor: '#9b30e0', gemColor2: '#f5f7ff', topper: 'butterfly', topBanner: 'none', bottomBanner: 'arch', bannerColor: '#6a2bd9', sideCount: 2, sideShape: 'oval', sideEmblem: 'gem', strapColor: '#5b2a86', strapTexture: 'suede', strapEdge: 'stitch', strap2: '#f5f5f5', shine: 'dazzling', bg: 'velvet', bgColor: '#6a2bd9' },
+    'Twin stars': { shape: 'pill', size: 'large', metal: G, metal2: G, rim: 'double', field: 'enamel', fieldColor: '#1f6feb', engrave: 'plain', emblem: 'twostars', emblemFinish: 'metal', gems: 'sides', gemColor: '#f5f7ff', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#d7263d', sideCount: 3, sideShape: 'round', sideSize: 'medium', sideEmblem: 'star', sideField: 'enamel', sideColor: '#d7263d', strapColor: '#1f3f9a', strapTexture: 'smooth', strapEdge: 'metal', bg: 'stripes', bgColor: '#1d2a52' },
+    'Linked partners': { shape: 'hexagon', size: 'large', metal: SV, metal2: G, rim: 'studs', field: 'inset', fieldColor: '#1b1b1f', engrave: 'checker', emblem: 'ring', emblemFinish: 'trim', gems: 'corners', gemColor: '#18b35a', topBanner: 'ribbon', bottomBanner: 'ribbon', bannerColor: '#127a68', sideCount: 3, sideShape: 'hexagon', sideSize: 'small', sideEmblem: 'number', sideSpacing: 'tight', strapColor: '#1e7a4c', strapTexture: 'carbon', strapEdge: 'stitch', bg: 'ring', bgColor: '#127a68' },
+    'Barbed wire': { shape: 'shield', size: 'large', metal: GM, metal2: ST, rim: 'notched', rimWidth: 'thick', field: 'metal', engrave: 'hammered', emblem: 'fist', emblemFinish: 'trim', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#7c1f24', topper: 'spikes', sideCount: 2, sideShape: 'octagon', sideEmblem: 'skull', strapColor: '#1b1b1f', strapTexture: 'barbed', strapEdge: 'none', wear: 'battered', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Street brawl': { shape: 'cushion', size: 'large', metal: BR, metal2: CU, rim: 'studs', field: 'metal', engrave: 'hammered', emblem: 'fist', gems: 'none', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#1b1b1f', textColor: BR, sideCount: 2, sideShape: 'rectangle', sideEmblem: 'stripes', sideColor: '#d7263d', strapColor: '#3c4752', strapTexture: 'studded', strapEdge: 'metal', wear: 'worn', bg: 'stripes', bgColor: '#222226' },
+    'Cruiser bolt': { shape: 'pill', size: 'medium', metal: SV, metal2: SVL, rim: 'plain', rimWidth: 'thin', field: 'enamel', fieldColor: '#127a68', engrave: 'chevron', emblem: 'bolt', emblemFinish: 'metal', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', topper: 'wings', sideCount: 2, sideShape: 'diamond', sideEmblem: 'bolt', sideField: 'enamel', sideColor: '#127a68', strapColor: '#1b1b1f', strapTexture: 'carbon', strapEdge: 'piping', strap2: '#00c2d1', shine: 'dazzling', bg: 'spotlight', bgColor: '#127a68' },
+    'Prime time TV': { shape: 'tablet', size: 'large', metal: SV, metal2: SVL, rim: 'double', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'lines', emblem: 'monogram', emblemFinish: 'trim', gems: 'corners', gemColor: '#1f6feb', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#d7263d', sideCount: 2, sideShape: 'rectangle', sideField: 'enamel', sideColor: '#1b1b1f', sideEmblem: 'letter', strapColor: '#1b1b1f', strapTexture: 'smooth', strapEdge: 'metal', bg: 'plain', bgColor: '#1e88e5' },
+    'Rising sun': { shape: 'round', size: 'large', metal: G, metal2: G, rim: 'rope', field: 'enamel', fieldColor: '#f5f5f5', engrave: 'plain', emblem: 'sunrise', emblemFinish: 'metal', gems: 'none', gemColor: '#e0182d', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#d7263d', topper: 'rays', sideCount: 2, sideShape: 'round', sideEmblem: 'sun', strapColor: '#1b1b1f', strapTexture: 'woven', strapEdge: 'stitch', strap2: '#d7263d', bg: 'plain', bgColor: '#e8e3da' },
+    'Dragon gate': { shape: 'octagon', size: 'large', metal: G, metal2: '#d0703c', rim: 'double', field: 'inset', fieldColor: '#7c1f24', engrave: 'scales', emblem: 'flame', emblemFinish: 'metal', gems: 'cross', gemColor: '#ffb000', topBanner: 'arch', bottomBanner: 'none', bannerColor: '#1b1b1f', textColor: G, sideCount: 3, sideShape: 'octagon', sideSize: 'small', sideEmblem: 'sun', sideSpacing: 'tight', strapColor: '#d7263d', strapTexture: 'snake', strapEdge: 'metal', bg: 'velvet', bgColor: '#7c1f24' },
+    'Sol azteca': { shape: 'stepped', size: 'huge', metal: G, metal2: '#127a68', rim: 'notched', field: 'metal', engrave: 'checker', emblem: 'calendar', emblemFinish: 'metal', gems: 'sides', gemColor: '#18b35a', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#127a68', sideCount: 2, sideShape: 'compass', sideEmblem: 'calendar', strapColor: '#1e7a4c', strapTexture: 'woven', strapEdge: 'lace', strap2: '#e8b923', bg: 'velvet', bgColor: '#127a68' },
+    'Máscara': { shape: 'compass', size: 'large', metal: SV, metal2: G, rim: 'beaded', field: 'enamel', fieldColor: '#1f6feb', engrave: 'rays', emblem: 'mask', emblemFinish: 'trim', emblemColor: '#f5f5f5', gems: 'ring', gemSize: 'small', gemColor: '#ffb000', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#d7263d', topper: 'flame', sideCount: 2, sideShape: 'round', sideField: 'enamel', sideColor: '#d7263d', sideEmblem: 'mask', strapColor: '#1f3f9a', strapTexture: 'flames', strap2: '#e86a10', strapEdge: 'none', shine: 'dazzling', bg: 'stripes', bgColor: '#1e88e5' },
+    'Crown jewel': { shape: 'maltese', size: 'huge', metal: G, metal2: GL, rim: 'jeweled', rimWidth: 'thick', field: 'enamel', fieldColor: '#6a2bd9', engrave: 'plain', emblem: 'crown', emblemFinish: 'metal', gems: 'none', gemColor: '#e0182d', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#6a2bd9', topper: 'halo', sideCount: 2, sideShape: 'maltese', sideEmblem: 'gem', strapColor: '#5b2a86', strapTexture: 'quilted', strap2: '#d4a017', strapEdge: 'metal', shine: 'dazzling', bg: 'case', bgColor: '#6a2bd9' },
+    'Order of valor': { shape: 'shield', size: 'large', metal: SV, metal2: G, rim: 'beaded', field: 'enamel', fieldColor: '#1d2a52', engrave: 'plain', emblem: 'maltese', emblemFinish: 'trim', gems: 'none', gemColor: '#e0182d', topBanner: 'ribbon', bottomBanner: 'none', bannerColor: '#7c1f24', topper: 'wreath', sideCount: 2, sideShape: 'shield', sideField: 'enamel', sideColor: '#1d2a52', sideEmblem: 'maltese', strapColor: '#1b1b1f', strapTexture: 'tooled', strapEdge: 'stitch', strap2: '#c8ccd4', bg: 'velvet', bgColor: '#1d2a52' },
+    'Old territory': { shape: 'cushion', size: 'medium', metal: SV, metal2: SV, rim: 'rope', rimWidth: 'thin', field: 'metal', engrave: 'lines', emblem: 'star', gems: 'center', gemColor: '#e0182d', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#3a2a1e', textColor: SV, sideCount: 1, sideShape: 'round', sideSize: 'small', sideEmblem: 'star', strapColor: '#4a2c1c', strapTexture: 'tooled', strapWidth: 'thin', strapEdge: 'stitch', strap2: '#d4a017', wear: 'worn', shine: 'matte', bg: 'case', bgColor: '#3a2a1e' },
+    'Neon nights': { shape: 'octagon', size: 'large', metal: SV, metal2: '#a8e0ec', rim: 'plain', field: 'enamel', fieldColor: '#ff5fa2', engrave: 'chevron', emblem: 'bolt', emblemFinish: 'colour', emblemColor: '#f4c20d', gems: 'ring', gemSize: 'small', gemColor: '#00c2d1', gemColor2: '#ff4fa0', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: '#f4c20d', sideCount: 2, sideShape: 'diamond', sideField: 'enamel', sideColor: '#127a68', sideEmblem: 'bolt', strapColor: '#1b1b1f', strapTexture: 'leopard', strap2: '#ff5fa2', strapEdge: 'piping', shine: 'dazzling', bg: 'stripes', bgColor: '#6a2bd9' },
+    'Steel works': { shape: 'rectangle', size: 'large', metal: ST, metal2: SV, rim: 'studs', field: 'inset', fieldColor: '#2a2a30', engrave: 'crosshatch', emblem: 'bolt', emblemFinish: 'trim', gems: 'corners', gemColor: '#ffb000', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#2a2a30', textColor: '#f4c20d', sideCount: 2, sideShape: 'hexagon', sideEmblem: 'stripes', sideColor: '#f4c20d', sideRim: 'double', strapColor: '#3c4752', strapTexture: 'diamondplate', strapEdge: 'studs', strapWidth: 'wide', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Olympian': { shape: 'round', size: 'medium', metal: G, metal2: G, rim: 'plain', field: 'metal', engrave: 'rings', emblem: 'laurel', gems: 'none', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1f6feb', topper: 'wreath', sideCount: 1, sideShape: 'round', sideEmblem: 'laurel', strapColor: '#f5f5f5', strapTexture: 'smooth', strapEdge: 'piping', strap2: '#1f3f9a', bg: 'spotlight', bgColor: '#1e88e5' },
+    'Inferno': { shape: 'crest', size: 'large', metal: GM, metal2: '#e86a10', rim: 'notched', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'plain', emblem: 'flame', emblemFinish: 'colour', emblemColor: '#ff7a00', gems: 'none', gemColor: '#ffb000', topper: 'flame', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#d7263d', sideCount: 2, sideShape: 'shield', sideEmblem: 'flame', strapColor: '#1b1b1f', strapTexture: 'flames', strap2: '#e86a10', strapEdge: 'none', bg: 'spotlight', bgColor: '#7c1f24' },
+    'World tour': { shape: 'compass', size: 'huge', metal: G, metal2: SV, rim: 'double', field: 'inset', fieldColor: '#1f6feb', engrave: 'rays', emblem: 'globe', emblemFinish: 'metal', gems: 'cross', gemColor: '#f5f7ff', topBanner: 'arch', bottomBanner: 'arch', bannerColor: '#1d2a52', sideCount: 3, sideShape: 'compass', sideSize: 'small', sideEmblem: 'globe', strapColor: '#1f3f9a', strapTexture: 'croc', strapEdge: 'stitch', strap2: '#d4a017', bg: 'velvet', bgColor: '#1d2a52' },
+    'Prospect': { shape: 'round', size: 'small', metal: SV, metal2: SV, rim: 'plain', rimWidth: 'thin', field: 'enamel', fieldColor: '#d7263d', engrave: 'dots', emblem: 'star', emblemFinish: 'metal', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', sideCount: 1, sideShape: 'round', sideSize: 'small', sideEmblem: 'dot', strapColor: '#1b1b1f', strapTexture: 'smooth', strapWidth: 'thin', strapEdge: 'none', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Hall of legends': { shape: 'arch', size: 'large', metal: G, metal2: GL, rim: 'filigree', field: 'enamel', fieldColor: '#7c1f24', engrave: 'plain', emblem: 'trophy', emblemFinish: 'metal', gems: 'top', gemColor: '#f5f7ff', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: G, topper: 'star', sideCount: 2, sideShape: 'arch', sideField: 'enamel', sideColor: '#7c1f24', sideEmblem: 'star', sideRim: 'beaded', strapColor: '#4a2c1c', strapTexture: 'croc', strapEdge: 'stitch', strap2: '#d4a017', bg: 'case', bgColor: '#7c1f24' },
+    'Monster heavyweight': { shape: 'pentagon', size: 'huge', metal: GM, metal2: '#d7263d', rim: 'double', rimWidth: 'thick', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'scales', emblem: 'skull', emblemFinish: 'trim', gems: 'top', gemColor: '#e0182d', topper: 'horns', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#7c1f24', sideCount: 2, sideShape: 'pentagon', sideEmblem: 'skull', sideField: 'enamel', sideColor: '#1b1b1f', strapColor: '#1b1b1f', strapTexture: 'snake', strapEdge: 'studs', strapWidth: 'wide', bg: 'spotlight', bgColor: '#222226' },
+    'Diamond cut': { shape: 'diamond', size: 'large', metal: SVL, metal2: SV, rim: 'jeweled', field: 'inset', fieldColor: '#1d2a52', engrave: 'crosshatch', emblem: 'gem', emblemFinish: 'metal', gems: 'none', gemColor: '#00c2d1', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1d2a52', topper: 'gem', sideCount: 3, sideShape: 'diamond', sideSize: 'small', sideEmblem: 'gem', sideSpacing: 'wide', strapColor: '#1b1b1f', strapTexture: 'patent', strapEdge: 'metal', shine: 'dazzling', bg: 'spotlight', bgColor: '#1d2a52' },
+    'Rose gold': { shape: 'quatrefoil', size: 'large', metal: '#d98c7a', metal2: SVL, rim: 'beaded', field: 'metal', engrave: 'scroll', emblem: 'butterfly', emblemFinish: 'trim', gems: 'ring', gemSize: 'small', gemColor: '#f5f7ff', gemColor2: '#ff4fa0', topBanner: 'none', bottomBanner: 'arch', bannerColor: '#f5f5f5', textColor: '#1b1b1f', sideCount: 2, sideShape: 'round', sideEmblem: 'heart', strapColor: '#ff5fa2', strapTexture: 'suede', strapEdge: 'stitch', strap2: '#f5f5f5', bg: 'plain', bgColor: '#e8e3da' }
+  };
+  const TEMPLATES = {};
+  for (const k in TPL) { const o = normalize(Object.assign(defaults(), TPL[k])); for (const t in TEXT_FIELDS) delete o[t]; TEMPLATES[k] = o; }
+  // apply a template, or one part of it ('plate', 'sides', 'strap', 'display'), keeping the rest of look
+  function applyTemplate(look, name, part) {
+    const t = TEMPLATES[name], L = normalize(look); if (!t) return L;
+    const keys = part && PARTS[part] ? PARTS[part] : Object.keys(t);
+    keys.forEach(k => { if (k in t) L[k] = t[k]; });
+    return normalize(L);
+  }
+
+  root.BeltLook = { W, H, CROPS, PAL, OPTIONS, TEXT_FIELDS, FONT, defaults, normalize, random, pixels, draw, toDataURL, img, wornPixels, drawWorn, wornDataURL, wornImg, mix, shade: sh, cleanText, TEMPLATES, PARTS, applyTemplate };
 })(typeof window !== 'undefined' ? window : globalThis);

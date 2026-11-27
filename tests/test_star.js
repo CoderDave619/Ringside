@@ -26,7 +26,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
   await p.click('.slist3 [data-ss]:nth-child(2)'); await p.waitForTimeout(100);
   await p.click('.slist3 [data-ss]:nth-child(1)'); await p.waitForTimeout(100);
   console.log('cha kept', await p.evaluate(()=>{const G=JSON.parse(localStorage.ro_save);return Object.values(G.ws).some(w=>w.cha===91)}));
-  await p.click('[data-sgm]'); await p.click('[data-g=Monster]'); await p.click('#gok'); await p.waitForTimeout(100);
+  await p.click('[data-sgm]'); await p.click('[data-gct=Style]');await p.click('[data-gch=power]'); await p.click('#gok'); await p.waitForTimeout(100);
   await p.screenshot({ path: '/tmp/shot_star.png', fullPage: true });
   console.log('ERRS', errs);
   await b.close();

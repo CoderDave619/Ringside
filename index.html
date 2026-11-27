@@ -158,6 +158,7 @@ td,th{overflow-wrap:break-word}
 .seg2{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg2 button{border:0;border-radius:0;min-height:40px}
 .seg2 button.on{background:var(--ink);color:var(--bg)}
+dialog.full{position:fixed;inset:0;width:auto;max-width:none;height:auto;max-height:none;border-radius:0;margin:0}dialog.full .beltpv{position:sticky;top:0;z-index:2;background:var(--panel);padding:6px 0}
 dialog{border:0;border-radius:16px;padding:0;width:min(620px,94vw);max-height:90vh;background:var(--panel);color:var(--ink);box-shadow:0 20px 60px #0007}
 dialog::backdrop{background:#000a}
 dialog.wide{width:min(980px,96vw)}
@@ -184,7 +185,7 @@ dialog.wide{width:min(980px,96vw)}
 .lk .gal button{padding:4px;min-height:0;display:grid;justify-items:center;gap:2px;font-size:11px}
 .lk .gal button.sel{border-color:var(--blue);background:var(--bluebg)}
 .lk .gal img{width:48px;height:auto;image-rendering:pixelated}
-@media (max-width:700px){.lk{grid-template-columns:1fr}.lk .pv{position:static}.lk .pv canvas{max-width:180px}.lk .row{grid-template-columns:90px 1fr auto}}
+@media (max-width:700px){.lk{grid-template-columns:1fr}.lk .pv{position:sticky;top:0;z-index:2;background:var(--panel);padding:6px 0}.lk .pv canvas{max-width:130px}.lk .row{grid-template-columns:90px 1fr auto}}
 
 .dh{background:var(--red);color:#fff;padding:16px 20px;position:sticky;top:0;z-index:1}.dh h3{font-size:26px}.dh div{font-size:14px;opacity:.9}
 .dh.b{background:var(--blue)}
@@ -244,6 +245,10 @@ dialog.wide{width:min(980px,96vw)}
 .bizc .fcard{grid-template-columns:1fr auto;column-gap:12px}.bizc .fcard>*{grid-column:1}.bizc .fcard>.btns{grid-column:2;grid-row:1/span 3;align-self:center;display:flex;flex-direction:column;align-items:stretch;gap:6px;margin:0}.bizc .fcard>.btns button{white-space:nowrap}
 .sedit .form{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 10px}.sedit .form .wide{grid-column:1/-1}
 .rexp td{background:var(--bluebg);white-space:normal}.rexpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 14px}.rexpg .kv b{text-align:right}.rexpg .kv{margin:0}
+.bcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:10px}.bcol{border:1px solid var(--line);border-radius:10px;padding:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:3px;align-content:start}.bcol h4,.bcol>span{grid-column:1/-1}.bcol h4{margin:0 0 4px}.bcol button{display:flex;justify-content:space-between;gap:6px;padding:4px 8px;min-height:0;font-size:13px;text-align:left;background:none;border:1px solid transparent;border-radius:6px}.bcol button:hover{border-color:var(--blue)}.bcol button small{color:var(--mute,#999)}
+.gimb h4{margin:12px 0 4px}.gopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:6px 0}.gopts button{justify-content:flex-start;text-align:left;padding:8px 10px;min-height:0}.gopts button.sel{border-color:var(--blue);background:var(--bluebg)}.gtab button{padding:4px 10px;min-height:0;font-size:13px}.gfit{color:var(--green,#3fb950);font-weight:800}
+.ftpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px;margin:4px 0 8px}.ftpls button{display:grid;gap:2px;text-align:left;justify-content:stretch;padding:7px 10px;min-height:0}.ftpls button small{font-weight:400;color:var(--mute,#aaa);font-size:12px}.ftpls button.sel{border-color:var(--blue);background:var(--bluebg)}
+.edhub{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px}.edt{display:grid;gap:2px;justify-items:start;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);text-decoration:none;min-height:0}.edt span{font-size:22px}.edt small{color:var(--mute,#aaa);font-weight:400;font-size:12px}.edt.on{border-color:var(--blue);background:var(--bluebg)}
 .slist3{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px}.slist3 button{display:flex;align-items:center;gap:4px;min-width:0;padding:5px 6px;min-height:0;font-size:13px;text-align:left;justify-content:flex-start;background:none;border:1px solid var(--line);border-radius:8px}.slist3 button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.slist3 button.sel{border-color:var(--blue);background:var(--bluebg)}@media (max-width:600px){.slist3{grid-template-columns:repeat(3,minmax(0,1fr))}.slist3 button{font-size:12px;padding:4px}.slist3 .head-img,.slist3 img{display:none}}
 .ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .ccard{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:10px;background:var(--panel);cursor:pointer;position:relative;min-width:0}
@@ -1305,8 +1310,8 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     bg: ['#1d2a52', '#7c1f24', '#222226', '#127a68', '#6a2bd9', '#e8e3da', '#d7263d', '#1e88e5', '#3a2a1e', '#ff5fa2']
   };
 
-  const SHAPE_LIST = ['oval', 'round', 'shield', 'rectangle', 'cushion', 'octagon', 'hexagon', 'diamond', 'star', 'crest', 'arch', 'winged', 'sunburst', 'quatrefoil', 'tablet'];
-  const EMBLEM_LIST = ['none', 'globe', 'star', 'crown', 'eagle', 'skull', 'bolt', 'flame', 'ring', 'laurel', 'mask', 'sun', 'heart', 'gem', 'trophy', 'swords', 'fist', 'monogram'];
+  const SHAPE_LIST = ['oval', 'round', 'shield', 'rectangle', 'cushion', 'octagon', 'hexagon', 'diamond', 'star', 'crest', 'arch', 'winged', 'sunburst', 'quatrefoil', 'tablet', 'butterfly', 'maltese', 'pentagon', 'flared', 'pill', 'compass', 'stepped'];
+  const EMBLEM_LIST = ['none', 'globe', 'star', 'crown', 'eagle', 'skull', 'bolt', 'flame', 'ring', 'laurel', 'mask', 'sun', 'heart', 'gem', 'trophy', 'swords', 'fist', 'butterfly', 'maltese', 'sunrise', 'calendar', 'twostars', 'monogram'];
 
   // key: [label, list of values | palette name, default]
   const OPTIONS = {
@@ -1318,7 +1323,7 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     rimWidth: ['Rim width', ['thin', 'normal', 'thick'], 'normal'],
     field: ['Plate face', ['metal', 'enamel', 'inset'], 'metal'],
     fieldColor: ['Enamel colour', 'enamel', PAL.enamel[0]],
-    engrave: ['Engraving', ['plain', 'rays', 'lines', 'dots', 'scales', 'checker', 'rings', 'chevron', 'hammered', 'stars'], 'rays'],
+    engrave: ['Engraving', ['plain', 'rays', 'lines', 'dots', 'scales', 'checker', 'rings', 'chevron', 'hammered', 'stars', 'crosshatch', 'scroll'], 'rays'],
     emblem: ['Emblem', EMBLEM_LIST, 'globe'],
     emblemFinish: ['Emblem finish', ['metal', 'trim', 'colour'], 'metal'],
     emblemColor: ['Emblem colour', 'enamel', PAL.enamel[1]],
@@ -1330,17 +1335,19 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     bottomBanner: ['Bottom banner', ['none', 'ribbon', 'bar', 'arch'], 'ribbon'],
     bannerColor: ['Banner colour', 'enamel', PAL.enamel[0]],
     textColor: ['Letter colour', 'text', PAL.text[0]],
-    topper: ['Topper', ['none', 'crown', 'eagle', 'wings', 'star', 'horns', 'spikes', 'flame', 'orb', 'gem', 'fan', 'wreath'], 'none'],
+    topper: ['Topper', ['none', 'crown', 'eagle', 'wings', 'star', 'horns', 'spikes', 'flame', 'orb', 'gem', 'fan', 'wreath', 'butterfly', 'halo', 'rays'], 'none'],
     sideCount: ['Side plates', [0, 1, 2, 3], 2],
-    sideShape: ['Side plate shape', ['round', 'rectangle', 'shield', 'oval', 'diamond', 'hexagon', 'octagon', 'star', 'arch', 'crest'], 'round'],
+    sideShape: ['Side plate shape', ['round', 'rectangle', 'shield', 'oval', 'diamond', 'hexagon', 'octagon', 'star', 'arch', 'crest', 'butterfly', 'maltese', 'pentagon', 'pill', 'compass'], 'round'],
     sideSize: ['Side plate size', ['small', 'medium', 'large'], 'medium'],
-    sideEmblem: ['Side emblem', ['none', 'match', 'star', 'gem', 'letter', 'number', 'stripes', 'globe', 'crown', 'skull', 'bolt', 'flame', 'heart', 'eagle', 'sun', 'fist'], 'star'],
+    sideEmblem: ['Side emblem', ['none', 'match', 'star', 'gem', 'letter', 'number', 'stripes', 'globe', 'crown', 'skull', 'bolt', 'flame', 'heart', 'eagle', 'sun', 'fist', 'dot', 'mask', 'butterfly', 'maltese', 'calendar', 'laurel'], 'star'],
     sideField: ['Side plate face', ['metal', 'enamel'], 'metal'],
+    sideRim: ['Side plate rim', ['plain', 'beaded', 'double', 'none'], 'plain'],
+    sideSpacing: ['Side plate spacing', ['tight', 'normal', 'wide'], 'normal'],
     sideColor: ['Side enamel colour', 'enamel', PAL.enamel[0]],
     strapColor: ['Strap colour', 'strap', PAL.strap[0]],
-    strapTexture: ['Strap texture', ['smooth', 'croc', 'snake', 'tooled', 'studded', 'suede', 'carbon', 'striped', 'quilted'], 'croc'],
+    strapTexture: ['Strap texture', ['smooth', 'croc', 'snake', 'tooled', 'studded', 'suede', 'carbon', 'striped', 'quilted', 'patent', 'leopard', 'flames', 'barbed', 'woven', 'diamondplate'], 'croc'],
     strapWidth: ['Strap width', ['thin', 'standard', 'wide'], 'standard'],
-    strapEdge: ['Strap edge', ['none', 'stitch', 'piping', 'metal'], 'stitch'],
+    strapEdge: ['Strap edge', ['none', 'stitch', 'piping', 'metal', 'studs', 'lace'], 'stitch'],
     strap2: ['Stitch and trim colour', 'strap', PAL.strap[8]],
     wear: ['Condition', ['new', 'worn', 'battered'], 'new'],
     shine: ['Shine', ['matte', 'polished', 'dazzling'], 'polished'],
@@ -1480,9 +1487,33 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     quatrefoil: (u, v) => circ(u, v, -0.45, 0, 0.56) || circ(u, v, 0.45, 0, 0.56) || circ(u, v, 0, -0.45, 0.56) || circ(u, v, 0, 0.45, 0.56) || (Math.abs(u) < 0.5 && Math.abs(v) < 0.5),
     tablet: (u, v) => Math.abs(u) <= 1 && Math.abs(v) <= 1 && !(Math.abs(u) > 0.78 && Math.abs(v) > 0.7 && (Math.abs(u) - 0.78) ** 2 / 0.22 ** 2 + (Math.abs(v) - 0.7) ** 2 / 0.3 ** 2 < 1 === false && (Math.abs(u) - 1) ** 2 + (Math.abs(v) - 1) ** 2 < 0.09)
   };
+  const PENT = starPts(5, 1.06, 1.06 * Math.cos(Math.PI / 5), 0, 0.12);
+  const FLARED = [-1, 0, -0.62, -0.72, -0.34, -1, 0.34, -1, 0.62, -0.72, 1, 0, 0.62, 0.72, 0.34, 1, -0.34, 1, -0.62, 0.72];
+  const COMPASS = starPts(8, 1.04, 0.74);
+  function butterfly(u, v) {
+    const au = Math.abs(u);
+    if (ell(u, v, 0, 0, 0.16, 0.92)) return 'b';
+    const up = ((au - 0.52) * 0.8 + (v + 0.3) * 0.6) / 0.5, uq = (-(au - 0.52) * 0.6 + (v + 0.3) * 0.8) / 0.62;
+    if (up * up + uq * uq <= 1) return 'w';
+    if (ell(au, v, 0.36, 0.5, 0.34, 0.44)) return 'l';
+    return null;
+  }
+  function maltese(u, v) {
+    const a = Math.max(Math.abs(u), Math.abs(v)), b = Math.min(Math.abs(u), Math.abs(v)), hw = 0.14 + 0.56 * a;
+    return b <= hw && a <= 0.74 + 0.28 * (b / hw) && a <= 1;
+  }
+  Object.assign(SHAPES, {
+    butterfly: (u, v) => !!butterfly(u, v),
+    maltese,
+    pentagon: (u, v) => inPoly(PENT, u, v),
+    flared: (u, v) => inPoly(FLARED, u, v),
+    pill: (u, v) => (Math.max(0, Math.abs(u) - 0.45) / 0.55) ** 2 + v * v <= 1,
+    compass: (u, v) => inPoly(COMPASS, u, v) || u * u + v * v <= 0.6,
+    stepped: (u, v) => { const av = Math.abs(v); return av <= 1 && Math.abs(u) <= [1, 0.84, 0.68, 0.52][Math.min(3, Math.floor(av / 0.25))]; }
+  });
   const STAR_SHAPE = starPts(5, 1.08, 0.55, 0, 0.1);
   // plate box multipliers: [width factor, height factor]
-  const SHAPE_BOX = { round: 'sq', star: 'sq', crest: 'sq', sunburst: 'sq', quatrefoil: 'sq', shield: [0.82, 1.05], arch: [0.82, 1], diamond: [1.15, 1.1], winged: [1.35, 0.92], hexagon: [1.08, 1] };
+  const SHAPE_BOX = { round: 'sq', star: 'sq', crest: 'sq', sunburst: 'sq', quatrefoil: 'sq', shield: [0.82, 1.05], arch: [0.82, 1], diamond: [1.15, 1.1], winged: [1.35, 0.92], hexagon: [1.08, 1], maltese: 'sq', compass: 'sq', pentagon: 'sq', butterfly: [1.3, 1], flared: [1.3, 1], pill: [1.3, 0.78], stepped: [1.1, 1] };
   const PLATE = { small: [36, 28], medium: [44, 34], large: [52, 40], huge: [60, 46] };
   const SIDE = { small: [8, 8], medium: [10, 10], large: [12, 12] };
   function boxFor(shape, w, h) {
@@ -1519,6 +1550,11 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     trophy: (u, v) => { if (inPoly(CUP, u, v)) return v < -0.75 ? 'l' : 'm'; if ((circ(u, v, -0.7, -0.5, 0.3) && !circ(u, v, -0.7, -0.5, 0.15) && u < -0.6) || (circ(u, v, 0.7, -0.5, 0.3) && !circ(u, v, 0.7, -0.5, 0.15) && u > 0.6)) return 'm'; if (Math.abs(u) < 0.12 && v >= 0.1 && v < 0.62) return 'd'; if (Math.abs(u) < 0.52 && v >= 0.62 && v <= 0.95) return v < 0.72 ? 'l' : 'm'; return null; },
     swords: (u, v) => { for (const s of [1, -1]) { const a = (u * s + v) / 1.414, b = (u * s - v) / 1.414; if (Math.abs(b) < 0.1 && a > -0.95 && a < 0.5) return 'l'; if (Math.abs(a - 0.52) < 0.07 && Math.abs(b) < 0.3) return 'm'; if (Math.abs(b) < 0.08 && a >= 0.52 && a < 0.95) return 'd'; } return null; },
     fist: (u, v) => { if (!inPoly(FIST, u, v) && !(circ(u, v, -0.72, -0.05, 0.25))) return null; if (v < 0.1 && v > -0.5 && Math.abs(((u + 0.7) / 1.4 * 4) % 1 - 0) < 0.1 && u > -0.4) return 'd'; if (v > -0.12 && v < -0.02 && u > -0.55) return 'd'; if (v < -0.38) return 'l'; return 'm'; },
+    butterfly: (u, v) => { const r = butterfly(u, v); if (!r) return null; if (r === 'b') return 'd'; if (r === 'w') return circ(Math.abs(u), v, 0.55, -0.38, 0.16) ? 'g' : 'm'; return circ(Math.abs(u), v, 0.38, 0.52, 0.1) ? 'l' : 'm'; },
+    maltese: (u, v) => { if (!maltese(u, v)) return null; if (circ(u, v, 0, 0, 0.24)) return 'g'; return maltese(u / 0.7, v / 0.7) && Math.min(Math.abs(u), Math.abs(v)) > 0.04 ? 'm' : 'l'; },
+    sunrise: (u, v) => { if (v > 0.55) return Math.abs(v - 0.72) < 0.08 && Math.abs(u) < 1 ? 'd' : null; const r = Math.hypot(u, v - 0.55), a = Math.atan2(v - 0.55, u); if (r < 0.5) return r < 0.34 ? 'g' : 'G'; if (r <= 1.12 && Math.cos(a * 9) > 0.4 && v < 0.5) return 'm'; return null; },
+    calendar: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1) return null; if (r > 0.82) return Math.cos(a * 16) > 0 ? 'm' : 'd'; if (r > 0.74) return 'd'; if (r > 0.5) return Math.cos(a * 8) > 0.3 ? 'l' : 'm'; if (r > 0.42) return 'd'; if (r < 0.2) return 'g'; return inPoly(starPts(4, 0.42, 0.14), u, v) ? 'l' : 'm'; },
+    twostars: (u, v) => { for (const s of [-1, 1]) { const x = (u - s * 0.48) / 0.56, y = (v + s * 0.12) / 0.62; if (inPoly(STAR5, x, y)) return inPoly(starPts(5, 0.45, 0.2, 0, 0.08), x, y) ? 'l' : 'm'; } return null; },
     // side-plate extras
     dot: (u, v) => circ(u, v, 0, 0, 0.55) ? 'm' : null,
     stripes: (u, v) => Math.floor((v + 1) * 2.5) % 2 ? 'g' : 'm',
@@ -1533,6 +1569,9 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     flame: (u, v) => { const au = Math.abs(u); const xs = [0.12, 0.34, 0.56, 0.78], hs = [1, 0.75, 0.9, 0.55]; for (let i = 0; i < 4; i++) { const top = 1 - 2 * hs[i]; if (v < top || v > 1) continue; const k = (v - top) / (2 * hs[i]); const hw = 0.13 * Math.sqrt(k); if (Math.abs(au - xs[i] - 0.04 * Math.sin(k * 6)) <= hw) return k < 0.3 ? 'G' : k > 0.7 ? 'D' : 'g'; } return null; },
     orb: (u, v) => { if (circ(u, v, 0, -0.3, 0.62)) return circ(u, v, -0.2, -0.5, 0.18) ? 'l' : Math.abs(v + 0.3) < 0.08 ? 'd' : 'm'; if (Math.abs(u) < 0.25 && v > 0.3 && v < 1) return 'd'; return null; },
     fan: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1) return null; return Math.cos(a * 14) > 0 ? 'm' : 'd'; },
+    butterfly: (u, v) => { const au = Math.abs(u); if (au < 0.28) return null; const r = butterfly(u, v); if (!r || r === 'b') return null; if (r === 'w') return circ(au, v, 0.6, -0.4, 0.13) ? 'g' : (Math.floor(au * 9) % 3 === 0 ? 'd' : 'm'); return 'l'; },
+    halo: (u, v) => { const r = Math.hypot(u, v); if (r > 1 || r < 0.84) return null; const a = Math.atan2(v, u); return Math.cos(a * 12) > 0.6 ? 'l' : r > 0.93 ? 'm' : 'd'; },
+    rays: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, u); if (r > 1 || v > 0.3) return null; return Math.cos(a * 14) > 0.35 ? (r > 0.9 ? 'd' : 'm') : null; },
     wreath: (u, v) => { const r = Math.hypot(u, v), a = Math.atan2(v, Math.abs(u)); if (a < -1.25 || r > 1) return null; for (let i = 0; i < 12; i++) { const t = -1.15 + i * 0.24, side = i % 2 ? 0.94 : 0.8; if (circ(Math.abs(u), v, Math.cos(t) * side, Math.sin(t) * side, 0.09)) return i % 3 ? 'm' : 'l'; } return Math.abs(r - 0.87) < 0.025 ? 'd' : null; }
   };
 
@@ -1642,12 +1681,20 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
         else if (tex === 'suede') { const h = hash(x, r, 9); if (h < 0.22) col = sh(S, -0.1); else if (h > 0.9) col = sh(S, 0.08); }
         else if (tex === 'carbon') { col = ((x >> 1) + (r >> 1)) % 2 ? sh(S, -0.15) : sh(S, 0.06); }
         else if (tex === 'striped') { if (r >= Math.floor(sw / 3) && r < sw - Math.floor(sw / 3)) col = S2; }
+        else if (tex === 'patent') { if (r === 2 || (r === 3 && x % 9 < 6)) col = sh(S, lum(S) > 0.8 ? -0.06 : 0.32); else if (r >= sw - 3) col = sh(S, -0.12); }
+        else if (tex === 'leopard') { const cx4 = x >> 2, ry = r + (cx4 % 2) * 2, cy4 = ry >> 2, lx = x & 3, ly = ry & 3, h = hash(cx4, cy4, 21); if (h < 0.55 && lx > 0 && ly > 0) col = (lx === 2 && ly === 2) || h < 0.2 && !(lx === 3 || ly === 3) ? S2 : sh(S, -0.55); }
+        else if (tex === 'flames') { const t = (sw - 1 - r) / sw, f = 0.42 + 0.22 * Math.sin(x * 0.55) + 0.14 * Math.sin(x * 1.37 + 1); if (t < f) col = t < f * 0.45 ? sh(S2, 0.3) : t > f - 0.12 ? sh(S2, -0.25) : S2; }
+        else if (tex === 'barbed') { const mid = (sw - 1) / 2, a = Math.round(mid + Math.sin(x * 0.5) * (mid - 1.5)), b2 = Math.round(mid - Math.sin(x * 0.5) * (mid - 1.5)); if (r === a || r === b2) col = r === a ? '#c9ced6' : '#8a919c'; else if (x % 8 === 0 && Math.abs(r - mid) < 2) col = '#e2e6ec'; else if (x % 8 === 0 && Math.abs(r - mid) < 3) col = '#6d7480'; }
+        else if (tex === 'woven') { const on = ((x >> 2) + (r >> 2)) % 2; if (on ? x % 4 === 0 : r % 4 === 0) col = SD; else if (on ? x % 4 === 1 : r % 4 === 1) col = SL; }
+        else if (tex === 'diamondplate') { const q = (x + (Math.floor(r / 3) % 2) * 3) % 6; if (r % 3 === 1 && (q === 0 || q === 1)) col = q ? SD : sh(S, 0.3); }
         else if (tex === 'quilted') { if ((x + r) % 6 === 0 || (x - r + 600) % 6 === 0) col = (x % 2 ? S2 : SD); }
         if (y === t) col = r === 0 ? SL : col;
         if (y === b) col = SD;
         if (L.strapEdge === 'stitch' && (r === 1 || r === sw - 2) && x % 2 && x > 12) col = S2;
         if (L.strapEdge === 'piping' && (r === 0 || r === sw - 1)) col = r ? sh(S2, -0.2) : S2;
         if (L.strapEdge === 'metal' && (r === 0 || r === sw - 1)) col = r ? TT.d : TT.l;
+        if (L.strapEdge === 'studs' && (r === 1 || r === sw - 2) && x > 12 && x % 3 < 2) col = x % 3 ? TT.d : TT.ll;
+        if (L.strapEdge === 'lace' && x > 12 && ((r === 0 || r === sw - 1) && (x >> 1) % 2 || (r === 1 || r === sw - 2) && ((x >> 1) + 1) % 2)) col = S2;
         set(x, y, col, 1);
       }
     }
@@ -1720,6 +1767,8 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
         if (e === 'chevron') p = (mx + y) % 4 === 0 ? 1 : 0;
         if (e === 'hammered') { const hh = hash(mx, y, 5); p = hh < 0.16 ? 1 : hh > 0.9 ? 2 : 0; }
         if (e === 'stars') p = hash(mx, y, 11) < 0.05 ? 2 : 0;
+        if (e === 'crosshatch') p = (mx + y) % 4 === 0 || (mx - y + 400) % 4 === 0 ? 1 : 0;
+        if (e === 'scroll') { const q = (y + Math.round(Math.sin(mx * 0.55) * 2) + 40) % 5; p = q === 0 ? 1 : q === 1 ? 2 : 0; }
         if (p === 1) c = sh(base, -0.16);
         if (p === 2) c = sh(base, lum(base) > 0.85 ? -0.08 : 0.14);
         set(x, y, c, kind);
@@ -1749,7 +1798,7 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     if (L.sideShape === 'oval') { sidesBox[0] = Math.max(6, ssw - 2); sidesBox[1] = ssh + 2; }
     const sideSpots = [];
     for (let i = 0; i < L.sideCount; i++) {
-      const off = pw / 2 + 4 + sidesBox[0] / 2 + i * (sidesBox[0] + 3);
+      const gap = { tight: 1, normal: 3, wide: 6 }[L.sideSpacing]; const off = pw / 2 + 1 + gap + sidesBox[0] / 2 + i * (sidesBox[0] + gap);
       sideSpots.push(CX + off, CX - off);
     }
     sideSpots.forEach((sx, n) => {
@@ -1767,7 +1816,7 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
       if (se === 'stripes') { sPal.g = L.sideColor; sPal.m = T; }
       const inner = Math.max(4, sidesBox[0] - 4);
       const P = plate(sx, sy, sidesBox[0], sidesBox[1], {
-        shape: L.sideShape === 'oval' ? 'oval' : L.sideShape, rimW: 1, rim: 'plain', metal: M, metal2: T, field: L.sideField, fieldColor: L.sideColor, engrave: 'plain',
+        shape: L.sideShape === 'oval' ? 'oval' : L.sideShape, rimW: L.sideRim === 'none' ? 0 : L.sideRim === 'plain' ? 1 : 2, rim: L.sideRim === 'none' ? 'plain' : L.sideRim, metal: M, metal2: T, field: L.sideField, fieldColor: L.sideColor, engrave: 'plain',
         emblem: fn || txt ? { fn, text: txt, cx: sx, cy: sy, w: se === 'stripes' ? sidesBox[0] : inner, h: se === 'stripes' ? sidesBox[1] : Math.max(4, sidesBox[1] - 4), pal: sPal } : null
       });
       sideEdge(sx, sy, P.mask);
@@ -1788,6 +1837,9 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     if (tp === 'spikes') topMask = paintFn(TOP.spikes, CX, topAt - 3, pw * 0.95, 22, topPal);
     if (tp === 'flame') topMask = paintFn(TOP.flame, CX, CY - ph * 0.35, pw * 1.25, ph * 0.75, Object.assign({}, topPal, { g: sh(L.gemColor, 0.1) }));
     if (tp === 'fan') topMask = paintFn(TOP.fan, CX, CY, pw * 1.28, ph * 1.24, TT);
+    if (tp === 'butterfly') topMask = paintFn(TOP.butterfly, CX, CY - 1, pw * 1.9, ph * 1.12, Object.assign({}, topPal, { l: TT.l }));
+    if (tp === 'halo') topMask = paintFn(TOP.halo, CX, CY, Math.max(pw, ph) * 1.22, ph * 1.22, TT);
+    if (tp === 'rays') topMask = paintFn(TOP.rays, CX, CY, pw * 1.6, ph * 1.4, TT);
     if (tp === 'wreath') topMask = paintFn(TOP.wreath, CX, CY + 1, pw * 1.32, ph * 1.24, Object.assign({}, MM, { m: sh(T, -0.05) }));
 
     // ---- banners geometry (needed for emblem space)
@@ -2041,7 +2093,57 @@ table.compact .cx{font-size:13px;color:var(--mute);white-space:nowrap}table.comp
     return '<img class="bl-img" src="' + wornDataURL(wLook, bLook, Object.assign({ scale: 1 }, opt, { size: undefined })) + '" width="' + size + '" height="' + h + '" alt="" style="image-rendering:pixelated">';
   }
 
-  root.BeltLook = { W, H, CROPS, PAL, OPTIONS, TEXT_FIELDS, FONT, defaults, normalize, random, pixels, draw, toDataURL, img, wornPixels, drawWorn, wornDataURL, wornImg, mix, shade: sh, cleanText };
+
+  // ---- templates: original designs, one per broad family of championship belt.
+  // Each is a full look minus the text fields, so applying one keeps the title's lettering.
+  // PARTS lists the keys of each part, so a UI can take only the plate, sides or strap of a template.
+  const PARTS = {
+    plate: ['shape', 'size', 'metal', 'metal2', 'rim', 'rimWidth', 'field', 'fieldColor', 'engrave', 'emblem', 'emblemFinish', 'emblemColor', 'gems', 'gemSize', 'gemColor', 'gemColor2', 'topBanner', 'bottomBanner', 'bannerColor', 'textColor', 'topper', 'shine'],
+    sides: ['sideCount', 'sideShape', 'sideSize', 'sideEmblem', 'sideField', 'sideColor', 'sideRim', 'sideSpacing'],
+    strap: ['strapColor', 'strapTexture', 'strapWidth', 'strapEdge', 'strap2', 'wear'],
+    display: ['bg', 'bgColor']
+  };
+  const G = '#e8b923', GL = '#f6d67a', SV = '#c8ccd4', SVL = '#eceef3', BR = '#c27a3a', CU = '#d0703c', RG = '#e6a594', GM = '#4a4a55', ST = '#7d8a99';
+  const TPL = {
+    'Grand plate': { shape: 'flared', size: 'huge', metal: G, metal2: GL, rim: 'filigree', rimWidth: 'thick', engrave: 'scroll', emblem: 'globe', gems: 'ring', gemColor: '#e0182d', gemColor2: '#1f6feb', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: G, sideCount: 2, sideShape: 'rectangle', sideSize: 'large', sideEmblem: 'globe', sideRim: 'beaded', strapTexture: 'croc', strapWidth: 'wide', strapEdge: 'stitch', strap2: '#d4a017', bg: 'velvet', bgColor: '#7c1f24' },
+    'Spread wings': { shape: 'winged', size: 'huge', metal: G, metal2: SV, rim: 'beaded', field: 'metal', engrave: 'lines', emblem: 'eagle', emblemFinish: 'trim', gems: 'top', gemColor: '#1f6feb', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1d2a52', topper: 'none', sideCount: 2, sideShape: 'oval', sideEmblem: 'eagle', strapColor: '#1b1b1f', strapTexture: 'tooled', bg: 'spotlight', bgColor: '#1d2a52' },
+    'Monarch butterfly': { shape: 'butterfly', size: 'huge', metal: SV, metal2: '#ff5fa2', rim: 'jeweled', rimWidth: 'normal', field: 'enamel', fieldColor: '#ff5fa2', engrave: 'dots', emblem: 'heart', emblemFinish: 'metal', gems: 'none', gemColor: '#ff4fa0', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#6a2bd9', sideCount: 2, sideShape: 'butterfly', sideField: 'enamel', sideColor: '#ff5fa2', sideEmblem: 'none', strapColor: '#f5f5f5', strapTexture: 'patent', strapEdge: 'piping', strap2: '#ff5fa2', shine: 'dazzling', bg: 'spotlight', bgColor: '#ff5fa2' },
+    'Silk wings': { shape: 'oval', size: 'medium', metal: SVL, metal2: SV, rim: 'jeweled', field: 'inset', fieldColor: '#6a2bd9', engrave: 'stars', emblem: 'butterfly', emblemFinish: 'metal', gems: 'none', gemColor: '#9b30e0', gemColor2: '#f5f7ff', topper: 'butterfly', topBanner: 'none', bottomBanner: 'arch', bannerColor: '#6a2bd9', sideCount: 2, sideShape: 'oval', sideEmblem: 'gem', strapColor: '#5b2a86', strapTexture: 'suede', strapEdge: 'stitch', strap2: '#f5f5f5', shine: 'dazzling', bg: 'velvet', bgColor: '#6a2bd9' },
+    'Twin stars': { shape: 'pill', size: 'large', metal: G, metal2: G, rim: 'double', field: 'enamel', fieldColor: '#1f6feb', engrave: 'plain', emblem: 'twostars', emblemFinish: 'metal', gems: 'sides', gemColor: '#f5f7ff', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#d7263d', sideCount: 3, sideShape: 'round', sideSize: 'medium', sideEmblem: 'star', sideField: 'enamel', sideColor: '#d7263d', strapColor: '#1f3f9a', strapTexture: 'smooth', strapEdge: 'metal', bg: 'stripes', bgColor: '#1d2a52' },
+    'Linked partners': { shape: 'hexagon', size: 'large', metal: SV, metal2: G, rim: 'studs', field: 'inset', fieldColor: '#1b1b1f', engrave: 'checker', emblem: 'ring', emblemFinish: 'trim', gems: 'corners', gemColor: '#18b35a', topBanner: 'ribbon', bottomBanner: 'ribbon', bannerColor: '#127a68', sideCount: 3, sideShape: 'hexagon', sideSize: 'small', sideEmblem: 'number', sideSpacing: 'tight', strapColor: '#1e7a4c', strapTexture: 'carbon', strapEdge: 'stitch', bg: 'ring', bgColor: '#127a68' },
+    'Barbed wire': { shape: 'shield', size: 'large', metal: GM, metal2: ST, rim: 'notched', rimWidth: 'thick', field: 'metal', engrave: 'hammered', emblem: 'fist', emblemFinish: 'trim', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#7c1f24', topper: 'spikes', sideCount: 2, sideShape: 'octagon', sideEmblem: 'skull', strapColor: '#1b1b1f', strapTexture: 'barbed', strapEdge: 'none', wear: 'battered', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Street brawl': { shape: 'cushion', size: 'large', metal: BR, metal2: CU, rim: 'studs', field: 'metal', engrave: 'hammered', emblem: 'fist', gems: 'none', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#1b1b1f', textColor: BR, sideCount: 2, sideShape: 'rectangle', sideEmblem: 'stripes', sideColor: '#d7263d', strapColor: '#3c4752', strapTexture: 'studded', strapEdge: 'metal', wear: 'worn', bg: 'stripes', bgColor: '#222226' },
+    'Cruiser bolt': { shape: 'pill', size: 'medium', metal: SV, metal2: SVL, rim: 'plain', rimWidth: 'thin', field: 'enamel', fieldColor: '#127a68', engrave: 'chevron', emblem: 'bolt', emblemFinish: 'metal', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', topper: 'wings', sideCount: 2, sideShape: 'diamond', sideEmblem: 'bolt', sideField: 'enamel', sideColor: '#127a68', strapColor: '#1b1b1f', strapTexture: 'carbon', strapEdge: 'piping', strap2: '#00c2d1', shine: 'dazzling', bg: 'spotlight', bgColor: '#127a68' },
+    'Prime time TV': { shape: 'tablet', size: 'large', metal: SV, metal2: SVL, rim: 'double', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'lines', emblem: 'monogram', emblemFinish: 'trim', gems: 'corners', gemColor: '#1f6feb', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#d7263d', sideCount: 2, sideShape: 'rectangle', sideField: 'enamel', sideColor: '#1b1b1f', sideEmblem: 'letter', strapColor: '#1b1b1f', strapTexture: 'smooth', strapEdge: 'metal', bg: 'plain', bgColor: '#1e88e5' },
+    'Rising sun': { shape: 'round', size: 'large', metal: G, metal2: G, rim: 'rope', field: 'enamel', fieldColor: '#f5f5f5', engrave: 'plain', emblem: 'sunrise', emblemFinish: 'metal', gems: 'none', gemColor: '#e0182d', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#d7263d', topper: 'rays', sideCount: 2, sideShape: 'round', sideEmblem: 'sun', strapColor: '#1b1b1f', strapTexture: 'woven', strapEdge: 'stitch', strap2: '#d7263d', bg: 'plain', bgColor: '#e8e3da' },
+    'Dragon gate': { shape: 'octagon', size: 'large', metal: G, metal2: '#d0703c', rim: 'double', field: 'inset', fieldColor: '#7c1f24', engrave: 'scales', emblem: 'flame', emblemFinish: 'metal', gems: 'cross', gemColor: '#ffb000', topBanner: 'arch', bottomBanner: 'none', bannerColor: '#1b1b1f', textColor: G, sideCount: 3, sideShape: 'octagon', sideSize: 'small', sideEmblem: 'sun', sideSpacing: 'tight', strapColor: '#d7263d', strapTexture: 'snake', strapEdge: 'metal', bg: 'velvet', bgColor: '#7c1f24' },
+    'Sol azteca': { shape: 'stepped', size: 'huge', metal: G, metal2: '#127a68', rim: 'notched', field: 'metal', engrave: 'checker', emblem: 'calendar', emblemFinish: 'metal', gems: 'sides', gemColor: '#18b35a', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#127a68', sideCount: 2, sideShape: 'compass', sideEmblem: 'calendar', strapColor: '#1e7a4c', strapTexture: 'woven', strapEdge: 'lace', strap2: '#e8b923', bg: 'velvet', bgColor: '#127a68' },
+    'Máscara': { shape: 'compass', size: 'large', metal: SV, metal2: G, rim: 'beaded', field: 'enamel', fieldColor: '#1f6feb', engrave: 'rays', emblem: 'mask', emblemFinish: 'trim', emblemColor: '#f5f5f5', gems: 'ring', gemSize: 'small', gemColor: '#ffb000', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#d7263d', topper: 'flame', sideCount: 2, sideShape: 'round', sideField: 'enamel', sideColor: '#d7263d', sideEmblem: 'mask', strapColor: '#1f3f9a', strapTexture: 'flames', strap2: '#e86a10', strapEdge: 'none', shine: 'dazzling', bg: 'stripes', bgColor: '#1e88e5' },
+    'Crown jewel': { shape: 'maltese', size: 'huge', metal: G, metal2: GL, rim: 'jeweled', rimWidth: 'thick', field: 'enamel', fieldColor: '#6a2bd9', engrave: 'plain', emblem: 'crown', emblemFinish: 'metal', gems: 'none', gemColor: '#e0182d', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#6a2bd9', topper: 'halo', sideCount: 2, sideShape: 'maltese', sideEmblem: 'gem', strapColor: '#5b2a86', strapTexture: 'quilted', strap2: '#d4a017', strapEdge: 'metal', shine: 'dazzling', bg: 'case', bgColor: '#6a2bd9' },
+    'Order of valor': { shape: 'shield', size: 'large', metal: SV, metal2: G, rim: 'beaded', field: 'enamel', fieldColor: '#1d2a52', engrave: 'plain', emblem: 'maltese', emblemFinish: 'trim', gems: 'none', gemColor: '#e0182d', topBanner: 'ribbon', bottomBanner: 'none', bannerColor: '#7c1f24', topper: 'wreath', sideCount: 2, sideShape: 'shield', sideField: 'enamel', sideColor: '#1d2a52', sideEmblem: 'maltese', strapColor: '#1b1b1f', strapTexture: 'tooled', strapEdge: 'stitch', strap2: '#c8ccd4', bg: 'velvet', bgColor: '#1d2a52' },
+    'Old territory': { shape: 'cushion', size: 'medium', metal: SV, metal2: SV, rim: 'rope', rimWidth: 'thin', field: 'metal', engrave: 'lines', emblem: 'star', gems: 'center', gemColor: '#e0182d', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#3a2a1e', textColor: SV, sideCount: 1, sideShape: 'round', sideSize: 'small', sideEmblem: 'star', strapColor: '#4a2c1c', strapTexture: 'tooled', strapWidth: 'thin', strapEdge: 'stitch', strap2: '#d4a017', wear: 'worn', shine: 'matte', bg: 'case', bgColor: '#3a2a1e' },
+    'Neon nights': { shape: 'octagon', size: 'large', metal: SV, metal2: '#a8e0ec', rim: 'plain', field: 'enamel', fieldColor: '#ff5fa2', engrave: 'chevron', emblem: 'bolt', emblemFinish: 'colour', emblemColor: '#f4c20d', gems: 'ring', gemSize: 'small', gemColor: '#00c2d1', gemColor2: '#ff4fa0', topBanner: 'bar', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: '#f4c20d', sideCount: 2, sideShape: 'diamond', sideField: 'enamel', sideColor: '#127a68', sideEmblem: 'bolt', strapColor: '#1b1b1f', strapTexture: 'leopard', strap2: '#ff5fa2', strapEdge: 'piping', shine: 'dazzling', bg: 'stripes', bgColor: '#6a2bd9' },
+    'Steel works': { shape: 'rectangle', size: 'large', metal: ST, metal2: SV, rim: 'studs', field: 'inset', fieldColor: '#2a2a30', engrave: 'crosshatch', emblem: 'bolt', emblemFinish: 'trim', gems: 'corners', gemColor: '#ffb000', topBanner: 'bar', bottomBanner: 'none', bannerColor: '#2a2a30', textColor: '#f4c20d', sideCount: 2, sideShape: 'hexagon', sideEmblem: 'stripes', sideColor: '#f4c20d', sideRim: 'double', strapColor: '#3c4752', strapTexture: 'diamondplate', strapEdge: 'studs', strapWidth: 'wide', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Olympian': { shape: 'round', size: 'medium', metal: G, metal2: G, rim: 'plain', field: 'metal', engrave: 'rings', emblem: 'laurel', gems: 'none', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1f6feb', topper: 'wreath', sideCount: 1, sideShape: 'round', sideEmblem: 'laurel', strapColor: '#f5f5f5', strapTexture: 'smooth', strapEdge: 'piping', strap2: '#1f3f9a', bg: 'spotlight', bgColor: '#1e88e5' },
+    'Inferno': { shape: 'crest', size: 'large', metal: GM, metal2: '#e86a10', rim: 'notched', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'plain', emblem: 'flame', emblemFinish: 'colour', emblemColor: '#ff7a00', gems: 'none', gemColor: '#ffb000', topper: 'flame', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#d7263d', sideCount: 2, sideShape: 'shield', sideEmblem: 'flame', strapColor: '#1b1b1f', strapTexture: 'flames', strap2: '#e86a10', strapEdge: 'none', bg: 'spotlight', bgColor: '#7c1f24' },
+    'World tour': { shape: 'compass', size: 'huge', metal: G, metal2: SV, rim: 'double', field: 'inset', fieldColor: '#1f6feb', engrave: 'rays', emblem: 'globe', emblemFinish: 'metal', gems: 'cross', gemColor: '#f5f7ff', topBanner: 'arch', bottomBanner: 'arch', bannerColor: '#1d2a52', sideCount: 3, sideShape: 'compass', sideSize: 'small', sideEmblem: 'globe', strapColor: '#1f3f9a', strapTexture: 'croc', strapEdge: 'stitch', strap2: '#d4a017', bg: 'velvet', bgColor: '#1d2a52' },
+    'Prospect': { shape: 'round', size: 'small', metal: SV, metal2: SV, rim: 'plain', rimWidth: 'thin', field: 'enamel', fieldColor: '#d7263d', engrave: 'dots', emblem: 'star', emblemFinish: 'metal', gems: 'none', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', sideCount: 1, sideShape: 'round', sideSize: 'small', sideEmblem: 'dot', strapColor: '#1b1b1f', strapTexture: 'smooth', strapWidth: 'thin', strapEdge: 'none', shine: 'matte', bg: 'plain', bgColor: '#222226' },
+    'Hall of legends': { shape: 'arch', size: 'large', metal: G, metal2: GL, rim: 'filigree', field: 'enamel', fieldColor: '#7c1f24', engrave: 'plain', emblem: 'trophy', emblemFinish: 'metal', gems: 'top', gemColor: '#f5f7ff', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#1b1b1f', textColor: G, topper: 'star', sideCount: 2, sideShape: 'arch', sideField: 'enamel', sideColor: '#7c1f24', sideEmblem: 'star', sideRim: 'beaded', strapColor: '#4a2c1c', strapTexture: 'croc', strapEdge: 'stitch', strap2: '#d4a017', bg: 'case', bgColor: '#7c1f24' },
+    'Monster heavyweight': { shape: 'pentagon', size: 'huge', metal: GM, metal2: '#d7263d', rim: 'double', rimWidth: 'thick', field: 'enamel', fieldColor: '#1b1b1f', engrave: 'scales', emblem: 'skull', emblemFinish: 'trim', gems: 'top', gemColor: '#e0182d', topper: 'horns', topBanner: 'none', bottomBanner: 'bar', bannerColor: '#7c1f24', sideCount: 2, sideShape: 'pentagon', sideEmblem: 'skull', sideField: 'enamel', sideColor: '#1b1b1f', strapColor: '#1b1b1f', strapTexture: 'snake', strapEdge: 'studs', strapWidth: 'wide', bg: 'spotlight', bgColor: '#222226' },
+    'Diamond cut': { shape: 'diamond', size: 'large', metal: SVL, metal2: SV, rim: 'jeweled', field: 'inset', fieldColor: '#1d2a52', engrave: 'crosshatch', emblem: 'gem', emblemFinish: 'metal', gems: 'none', gemColor: '#00c2d1', gemColor2: '#f5f7ff', topBanner: 'none', bottomBanner: 'ribbon', bannerColor: '#1d2a52', topper: 'gem', sideCount: 3, sideShape: 'diamond', sideSize: 'small', sideEmblem: 'gem', sideSpacing: 'wide', strapColor: '#1b1b1f', strapTexture: 'patent', strapEdge: 'metal', shine: 'dazzling', bg: 'spotlight', bgColor: '#1d2a52' },
+    'Rose gold': { shape: 'quatrefoil', size: 'large', metal: '#d98c7a', metal2: SVL, rim: 'beaded', field: 'metal', engrave: 'scroll', emblem: 'butterfly', emblemFinish: 'trim', gems: 'ring', gemSize: 'small', gemColor: '#f5f7ff', gemColor2: '#ff4fa0', topBanner: 'none', bottomBanner: 'arch', bannerColor: '#f5f5f5', textColor: '#1b1b1f', sideCount: 2, sideShape: 'round', sideEmblem: 'heart', strapColor: '#ff5fa2', strapTexture: 'suede', strapEdge: 'stitch', strap2: '#f5f5f5', bg: 'plain', bgColor: '#e8e3da' }
+  };
+  const TEMPLATES = {};
+  for (const k in TPL) { const o = normalize(Object.assign(defaults(), TPL[k])); for (const t in TEXT_FIELDS) delete o[t]; TEMPLATES[k] = o; }
+  // apply a template, or one part of it ('plate', 'sides', 'strap', 'display'), keeping the rest of look
+  function applyTemplate(look, name, part) {
+    const t = TEMPLATES[name], L = normalize(look); if (!t) return L;
+    const keys = part && PARTS[part] ? PARTS[part] : Object.keys(t);
+    keys.forEach(k => { if (k in t) L[k] = t[k]; });
+    return normalize(L);
+  }
+
+  root.BeltLook = { W, H, CROPS, PAL, OPTIONS, TEXT_FIELDS, FONT, defaults, normalize, random, pixels, draw, toDataURL, img, wornPixels, drawWorn, wornDataURL, wornImg, mix, shade: sh, cleanText, TEMPLATES, PARTS, applyTemplate };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>
 <script>
@@ -2128,6 +2230,28 @@ const tvDeal=(c,rating,major)=>target(c)*TV_PER_W*(.6+clamp(rating,0,5)/5*.8)*(m
 const estInc=c=>tvDeal(c,3,false)+(c=>{const cr=(800+c.pop*45+c.pop*30)*(ARENA[c.size]?.crowd||1);return cr*price(false,c)+viewersFor(c,3,false)*VIEW_PAY*(SIZES[c.size]?.tv||1)-showCost(c,false)})(c);
 /* ---------- feuds ---------- */
 const REASONS=['Disrespect','Backstage fight','Title chase','Lost the title','Dirty finish','Ambush','Called out','Contract signed','Unfinished business','Jealousy','Betrayal','Respect turned sour','Rookie vs veteran','Hero vs villain','Injury revenge','Family matter','Tag team rivalry','Faction war','Partners split','Personal'];
+/* Feud templates (owner, 27 Nov): the player picks one when starting a feud. No fixed length: weeks count naturally.
+   h = extra starting heat, g = how fast heat grows (x), b = story beats [setup, build, escalate, payoff], sg = suggested segments. TODO(ASK OWNER) numbers. */
+const FTPL={
+ betrayal:{n:'Betrayal',d:'Friends or partners, until one turns on the other.',h:12,g:1.15,b:['The turn: one attacks the other','The betrayed demands answers','Brawls and run-ins every week','Settle it in a grudge match'],sg:['Attack','Challenge']},
+ chase:{n:'Title Chase',d:'A contender hunts the champion.',h:6,g:1.05,b:['Contender earns a shot','Champion dodges and stalls','Contender beats the champion\'s allies','Title match with no excuses'],sg:['Challenge','Promo']},
+ underdog:{n:'Underdog Rise',d:'An overlooked wrestler fights up the ladder.',h:4,g:1.1,b:['Nobody gives them a chance','A surprise win','The favourite takes them seriously','The big upset, or a brave loss'],sg:['Promo','Show of respect']},
+ vetrookie:{n:'Veteran vs Rookie',d:'Experience against hunger.',h:5,g:1.05,b:['The veteran brushes off the rookie','The rookie keeps coming','The veteran bends the rules','Passing of the torch, or not'],sg:['Challenge','Promo']},
+ invasion:{n:'Invasion',d:'Outsiders storm the show.',h:14,g:1.1,b:['They hit the ring out of nowhere','Your locker room picks sides','Ambushes and backstage fights','Winner takes the show'],sg:['Attack','Challenge']},
+ triangle:{n:'Love Triangle',d:'A manager, valet or partner switches sides.',h:8,g:1.1,b:['A friendly face picks a side','Jealousy boils over','Interference in each other\'s matches','Loser leaves the picture'],sg:['Promo','Attack']},
+ jealousy:{n:'Jealousy',d:'One can\'t stand the other getting the spotlight.',h:6,g:1.1,b:['Snide remarks backstage','Stealing the spotlight','Costing each other matches','Prove who\'s better'],sg:['Promo','Challenge']},
+ respect:{n:'Respect Rivalry',d:'Two great wrestlers who just want to be the best.',h:4,g:1.0,b:['A handshake and a challenge','An even first meeting','Pushing each other to the limit','One more match to decide it'],sg:['Show of respect','Challenge']},
+ insult:{n:'Personal Insult',d:'Someone went too far on the microphone.',h:10,g:1.1,b:['The insult','The comeback promo','Words turn into fists','Make them take it back'],sg:['Promo','Attack']},
+ injury:{n:'Injury Angle',d:'One put the other on the shelf.',h:12,g:1.15,b:['The attack that caused the injury','Vowing revenge from the sidelines','The return','Revenge match'],sg:['Attack','Promo']},
+ mentor:{n:'Mentor vs Student',d:'The student wants to outgrow the teacher.',h:7,g:1.05,b:['Cracks in the partnership','The student goes solo','The mentor wants respect back','Teacher against student'],sg:['Promo','Challenge']},
+ faction:{n:'Faction War',d:'Two groups fight for control.',h:10,g:1.1,b:['A group makes a statement','The other group answers','Numbers games and ambushes','Everyone in one big match'],sg:['Attack','Challenge']},
+ contract:{n:'Contract on the Line',d:'A job, a spot or a career is at stake.',h:9,g:1.1,b:['Stakes are set','Contract signing','Dirty tricks before the match','Loser loses their spot'],sg:['Contract signing','Promo']},
+ pawn:{n:'Corporate Pawn',d:'The office backs one side against the other.',h:9,g:1.1,b:['The office picks a favourite','Unfair matches and rules','The fans rally behind the target','Beat the system'],sg:['Promo','Challenge']},
+ mask:{n:'Masked Mystery',d:'Who is behind the mask?',h:8,g:1.1,b:['A masked attacker appears','Clues and suspects','Close to unmasking','The reveal'],sg:['Attack','Promo']},
+ redemption:{n:'Redemption',d:'One wants to make up for the past.',h:5,g:1.05,b:['Old wounds reopen','A peace offering is refused','Proving they\'ve changed','Forgiveness, or the final burn'],sg:['Promo','Show of respect']},
+ hardcore:{n:'Hardcore Grudge',d:'No rules, just hate.',h:12,g:1.15,b:['A brawl that spills everywhere','Weapons come out','Bloodier every week','No disqualification decider'],sg:['Attack','Challenge']},
+ cross:{n:'Cross-Promotion',d:'Pride of two companies on the line.',h:10,g:1.1,b:['A visitor makes a challenge','Trading words across companies','Allies show up','One match for bragging rights'],sg:['Challenge','Promo']}};
+const fBeat=f=>{const t=FTPL[f.tpl];if(!t)return null;const wk=G.week-(f.w0||G.week),h=f.heat||0,i=wk<2?0:h<50?1:h<75?2:3;return {i,t:t.b[i],sg:t.sg[i%t.sg.length]}};
 /* groups: tag teams (2+ linked wrestlers) and factions (wrestlers and teams linked together) */
 const TM=()=>G.teams||(G.teams=[]);
 const gLog=(g,t)=>{(g.log=g.log||[]).push({d:G.date,t})};
@@ -2172,10 +2296,11 @@ function rivalCheck(f){if(f.p.length!==2)return;const a=f.p[0][0],b=f.p[1][0];if
 function rivalSpark(sides,src){if(sides.length!==2)return;const a=sides[0],b=sides[1];const r=a.some(x=>b.some(y=>isRival(x,y)));if(!r||feudIn(a,b))return;const f=startFeud([a.slice(),b.slice()],'Rivals reignite',0,'game');if(f&&f.co===G.me)news(`${src}: old rivals ${nm(a)} and ${nm(b)} are at it again.`,'fd')}
 const feudStartHeat=ps=>{const al=ps.map(p=>avg(p.map(id=>W(id).al??0))),pop=avg(ps.flat().map(id=>W(id).pop));return clamp(Math.round(15+(Math.max(...al)-Math.min(...al))/14+pop/5+(ps.length-2)*3),10,60)};
 const okSides=ps=>{const ids=ps.flat();return ps.length>=2&&ps.length<=4&&ps.every(p=>p.length)&&new Set(ids).size===ids.length};
-function startFeud(ps,why,heat,src='game',gs){ps=ps.map(p=>p.slice());if(!okSides(ps))return null;if(src==='you')(G.achF=G.achF||{}).feud=1;const cur=feudOf(ps);if(cur){feudHeat(cur,Math.max(4,(heat||0)/4));cur.lw=G.week;return cur}
+function startFeud(ps,why,heat,src='game',gs,tpl){ps=ps.map(p=>p.slice());if(!okSides(ps))return null;if(src==='you')(G.achF=G.achF||{}).feud=1;const cur=feudOf(ps);if(cur){feudHeat(cur,Math.max(4,(heat||0)/4));cur.lw=G.week;return cur}
   const pf=feudOf(ps,'pot'),x=W(ps[0][0]);if(src==='game'&&x.co&&FE().filter(f=>f.st==='cur'&&f.co===x.co).length>=Math.max(3,Math.ceil(roster(x.co).length/2)))return null;
   const f=pf||{id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),p:ps,g:gs||ps.map(p=>teamOf(p)?.id||null),why:why||'Personal',heat:0,co:x.co||null,m:0,sg:0,best:0};
   Object.assign(f,{st:'cur',d0:G.date,w0:G.week,lw:G.week,src,f10:1,pop0:Object.fromEntries(ps.flat().map(id=>[id,fameOf(W(id))])),rs:0});if(pf&&why&&src==='you')f.why=why;{const hs=feudHist(ps,f.why);f.hist=hs;f.hm=1+histPts(hs)/100;f.heat=Math.max(f.heat,clamp((heat||feudStartHeat(ps))+histPts(hs),0,90))}f.pk=Math.max(f.pk||0,f.heat);
+  if(tpl&&FTPL[tpl]){f.tpl=tpl;f.hm=(f.hm||1)*FTPL[tpl].g;f.heat=clamp(f.heat+FTPL[tpl].h,0,90);f.pk=Math.max(f.pk||0,f.heat)}
   if(!pf)FE().push(f);if(f.co===G.me)news(`New feud: ${fName(f)} (${f.why}).`,'fd');return f}
 function potFeud(ps,why,heat){ps=ps.map(p=>p.slice());if(!okSides(ps)||feudOf(ps)||feudOf(ps,'pot'))return;const cs=new Set(ps.flat().map(id=>W(id).co));if(cs.size!==1||cs.has(null))return;const c0=[...cs][0];
   if(FE().filter(f=>f.st==='pot'&&f.co===c0).length>=8)return;
@@ -2281,7 +2406,29 @@ const pronK=w=>w.pron||({M:'he',F:'she'})[w.gender]||'they';
 function traits(w){const a=age(w),t=[];if(w.legend)t.push('Legend');if(w.pop>=75)t.push('Crowd favourite');if(w.cha>=75)t.push('Great on the mic');if(w.wrk>=75)t.push('Ring technician');if(w.wrk>=60&&w.cha>=60&&w.pop>=60)t.push('Complete package');
   if(a!=null&&a<=24)t.push('Young prospect');if(a!=null&&a>=38)t.push('Veteran');if(w.wt>=280)t.push('Big body');if(w.wt&&w.wt<=215)t.push('High flyer build');if(gfit(w)&&w.gim&&w.gim!=='None')t.push('Gimmick fits');
   if((w.streak||0)>=3)t.push('On a hot streak');if(holds(w).length)t.push('Champion');if(w.mgr)t.push('Manager');if((w.rn||0)>=5&&avgRat(w)>=3.5)t.push('Show stealer');return t}
-const gfit=w=>{const g=w.gim||'None';return {Hero:w.align==='F',Villain:w.align==='H',Showman:w.cha>=70,Technician:w.wrk>=75,Monster:w.wt?w.wt>=270:w.wrk<65&&w.pop>=40,Brawler:w.wrk<75,Masked:true,Veteran:(age(w)||0)>=35,Rookie:(age(w)||99)<=25}[g]};
+/* Gimmick builder (owner, 27 Nov): a Character (who they are) plus a Personality (how they act), e.g. "Arrogant Celebrity".
+   Each Character maps to one of the older base types (b) so every existing effect keeps working. f = who it suits. Our own lists. */
+const GCH={
+ Standard:{hero:['Hero','Hero',w=>w.align==='F'],villain:['Villain','Villain',w=>w.align==='H'],showman:['Showman','Showman',w=>w.cha>=70],veteran:['Veteran','Veteran',w=>(age(w)||0)>=35],rookie:['Rookie','Rookie',w=>(age(w)||99)<=25],masked:['Masked Wrestler','Masked',()=>true]},
+ Style:{brawler:['Brawler','Brawler',w=>pst(w,'brw')>=55||w.wrk<75],flyer:['High-flyer','Technician',w=>pst(w,'fly')>=65||hiFly(w)],tech:['Technician','Technician',w=>w.wrk>=75||pst(w,'tec')>=70],power:['Powerhouse','Monster',w=>pst(w,'pow')>=65||(w.wt||0)>=260],giant:['Giant','Monster',w=>(w.wt||0)>=300],striker:['Striker','Brawler',w=>pst(w,'brw')>=60],subs:['Submission Specialist','Technician',w=>pst(w,'tec')>=65],hardcore:['Hardcore Fighter','Brawler',w=>pst(w,'brw')>=60]},
+ Lifestyle:{biker:['Biker','Brawler',w=>pst(w,'brw')>=50],surfer:['Surfer','Showman',w=>w.cha>=55],builder:['Bodybuilder','Monster',w=>(w.wt||0)>=240||pst(w,'pow')>=60],party:['Party Animal','Showman',w=>w.cha>=60],cowboy:['Cowboy','Brawler',()=>true],gamer:['Gamer','Showman',w=>(age(w)||40)<=32],rocker:['Rock Star','Showman',w=>w.cha>=70],street:['Street Fighter','Brawler',w=>pst(w,'brw')>=60]},
+ Career:{amateur:['Amateur Wrestler','Technician',w=>w.wrk>=70],martial:['Martial Artist','Technician',w=>w.wrk>=65||pst(w,'tec')>=60],soldier:['Soldier','Hero',w=>w.align!=='H'],doctor:['Doctor','Technician',w=>w.wrk>=60],tycoon:['Tycoon','Villain',w=>w.cha>=65],lawyer:['Lawyer','Villain',w=>w.cha>=60],athlete:['Former Athlete','Hero',w=>w.wrk>=60],celeb:['Celebrity','Showman',w=>w.cha>=70],trucker:['Trucker','Brawler',()=>true],rogueref:['Rogue Referee','Villain',w=>w.align==='H']},
+ Behavior:{bully:['Bully','Villain',w=>w.align==='H'],daredevil:['Daredevil','Brawler',w=>pst(w,'fly')>=55],prankster:['Prankster','Showman',w=>w.cha>=60],loner:['Loner','Brawler',()=>true],enforcer:['Enforcer','Monster',w=>(w.wt||0)>=250],underdog:['Underdog','Hero',w=>w.pop<55],rebel:['Rebel','Brawler',w=>w.align!=='F'],people:['People\'s Champion','Hero',w=>w.align==='F'&&w.cha>=60]},
+ Fantasy:{mystery:['Masked Mystery','Masked',()=>true],luchador:['Luchador','Masked',w=>pst(w,'fly')>=55],demon:['Demon','Monster',w=>w.align==='H'],vampire:['Vampire','Villain',w=>w.align==='H'],cult:['Cult Leader','Villain',w=>w.cha>=65],alien:['Alien','Masked',()=>true],superhero:['Superhero','Hero',w=>w.align==='F'],wizard:['Wizard','Showman',w=>w.cha>=60]}};
+const GPE={
+ Physical:{athletic:['Athletic',w=>w.wrk>=65],intimidating:['Intimidating',w=>(w.wt||0)>=260||pst(w,'pow')>=65],agile:['Agile',w=>pst(w,'fly')>=60],tough:['Tough',w=>pst(w,'brw')>=60],rugged:['Rugged',()=>true],flashy:['Flashy',w=>w.cha>=65]},
+ Mental:{calculating:['Calculating',w=>w.wrk>=70],unhinged:['Unhinged',w=>w.align==='H'],cunning:['Cunning',w=>w.align!=='F'],strategic:['Strategic',w=>pst(w,'tec')>=60],clueless:['Clueless',w=>w.cha>=55],paranoid:['Paranoid',()=>true]},
+ Emotional:{hothead:['Hot-headed',()=>true],passionate:['Passionate',w=>w.align==='F'],stoic:['Stoic',w=>w.cha<65],tormented:['Tormented',()=>true],jealous:['Jealous',w=>w.align==='H'],cheerful:['Cheerful',w=>w.align==='F']},
+ Positive:{honourable:['Honourable',w=>w.align==='F'],humble:['Humble',w=>w.align==='F'],inspiring:['Inspiring',w=>w.align==='F'&&w.cha>=60],loyal:['Loyal',w=>w.align!=='H'],fearless:['Fearless',()=>true],charming:['Charming',w=>w.cha>=65]},
+ Negative:{arrogant:['Arrogant',w=>w.align==='H'],cowardly:['Cowardly',w=>w.align==='H'],ruthless:['Ruthless',w=>w.align==='H'],greedy:['Greedy',w=>w.align==='H'],sneaky:['Sneaky',w=>w.align!=='F'],spoiled:['Spoiled',w=>w.align==='H']},
+ Social:{charismatic:['Charismatic',w=>w.cha>=70],outspoken:['Outspoken',w=>w.cha>=60],quiet:['Quiet',w=>w.cha<60],partier:['Party-loving',w=>w.cha>=55],lonewolf:['Lone Wolf',()=>true],favourite:['Crowd Favourite',w=>w.align==='F'&&w.pop>=60]}};
+const gchOf=k=>{for(const t in GCH)if(GCH[t][k])return GCH[t][k];return null};
+const gpeOf=k=>{for(const t in GPE)if(GPE[t][k])return GPE[t][k];return null};
+const gimName=w=>{if(w.gcn)return w.gcn;const c=gchOf(w.gch),p=gpeOf(w.gpe);if(c)return (p?p[0]+' ':'')+c[0];return w.gim&&w.gim!=='None'?w.gim:'None'};
+/* 2 = both parts suit them, 1 = one part does, 0 = neither */
+const gfitN=w=>{const c=gchOf(w.gch);if(!c)return gfit0(w)?2:0;const p=gpeOf(w.gpe),a=c[2](w)?1:0,b=p?(p[1](w)?1:0):a;return a+b};
+const gfit=w=>gfitN(w)===2;
+const gfit0=w=>{const g=w.gim||'None';return {Hero:w.align==='F',Villain:w.align==='H',Showman:w.cha>=70,Technician:w.wrk>=75,Monster:w.wt?w.wt>=270:w.wrk<65&&w.pop>=40,Brawler:w.wrk<75,Masked:true,Veteran:(age(w)||0)>=35,Rookie:(age(w)||99)<=25}[g]};
 const coName=c=>c.name;
 const pr=(w,k)=>(({he:{he:'he',him:'him',his:'his'},she:{he:'she',him:'her',his:'her'}})[pronK(w)]||{he:'they',him:'them',his:'their'})[k];
 const cap=t=>t[0].toUpperCase()+t.slice(1);
@@ -2652,7 +2799,7 @@ function rateMatch(m,finCount){
   const all=m.sides.flat().map(W);const wk=all.map(w=>w.wrk+champB(w));
   let s=(.65*Math.max(...wk)+.35*avg(wk))/20*.6;
   s+=(.4*avg(all.map(w=>w.cha+champB(w)))+.6*avg(all.map(w=>w.pop)))/100*1.4;
-  s+=all.reduce((t,w)=>t+(w.gim&&w.gim!=='None'?(gfit(w)?.15:-.1):0),0)/all.length;
+  s+=all.reduce((t,w)=>t+(w.gim&&w.gim!=='None'?[-.1,.04,.15][gfitN(w)]:0),0)/all.length;
   const al=m.sides.map(sd=>sd.map(id=>W(id).align));
   if((al[0].every(a=>a==='F')&&al[1].every(a=>a==='H'))||(al[0].every(a=>a==='H')&&al[1].every(a=>a==='F'))){const g=Math.abs(avg(m.sides[0].map(id=>W(id).al??0))-avg(m.sides[1].map(id=>W(id).al??0)));s+=.25*clamp(g/140,.5,1.2)}
   s+=all.filter(w=>w.legend).length*.2/all.length*2;
@@ -2838,7 +2985,11 @@ const mHeat=sides=>mFeud(sides)?.heat||0;
 /* Brands and draft (§4.43). With 2 or 3 brands, your weekly shows rotate between them and each brand's show only books
    its own wrestlers (plus anyone set to All shows). Major Events use everyone. Player company only. */
 const brandsOf=c=>(c&&c.id===G?.me&&(c.brands||[]).length>=2)?c.brands:null;
-const curBrand=c=>{const B=brandsOf(c);return B&&c.weeklyLeft!==0?B[(c.bri||0)%B.length]:null};
+/* Brand Major Events (owner, 27 Nov): a brand can have its own Major Events. They take turns with company-wide ones (if kept). */
+const majRot=c=>{const B=brandsOf(c);if(!B)return [null];const own=B.filter(b=>(c.bmaj||{})[b]);return own.length?[...own,...(c.bshared===false?[]:[null])]:[null]};
+const curMajBrand=c=>{const L=majRot(c);return L[(c.mri||0)%L.length]};
+const curBrand=c=>{const B=brandsOf(c);if(!B)return null;return c.weeklyLeft!==0?B[(c.bri||0)%B.length]:curMajBrand(c)};
+const majName=c=>{const b=c.id===G?.me?curMajBrand(c):null;return b?`${c.majorName} (${b})`:c.majorName};
 const canBrand=(w,c)=>{const b=curBrand(c);return !b||!w.brand||w.brand===b||!(c.brands||[]).includes(w.brand)};
 const wkName=c=>curBrand(c)||c.weeklyName||'Weekly Show';
 function pbpMatch(m,st){
@@ -2936,7 +3087,7 @@ const crewB=(c,x)=>{if(!c||c.id!==G.me||x.cr==null)return 0;const p=crewOf(c,x.t
 const own=(c,k)=>!!(c&&c.id===G.me&&(c.items||{})[k]);
 const stfMy=k=>G&&stf(G.cos[G.me],k);
 function runShow(cid,card,isPlayer){
-  const c=co(cid),major=c.weeklyLeft===0,evName=major?c.majorName:wkName(c);c._r0={...repOf(c)};
+  const c=co(cid),major=c.weeklyLeft===0,evName=major?majName(c):wkName(c);c._r0={...repOf(c)};
   card=card.filter(x=>x.t==='a'||(x.t==='m'?x.sides.flat():x.who).every(id=>W(id).co===cid&&W(id).status==='active'));
   if(!major)card.forEach(x=>{delete x.pre});
   const lastM=card.map(x=>x.t==='m'&&!x.pre).lastIndexOf(true),firstM=card.findIndex(x=>x.t==='m'&&!x.pre);
@@ -2974,7 +3125,7 @@ function runShow(cid,card,isPlayer){
   const res={name:evName,major,items,rating,crowd,gate,ads,bonus,wages,cost,profit,popDelta:c.pop-popBefore,buys,buyInc,viewers,viewInc};if(major)c.lastBuys=buys;if(window.__ro&&cid===G.me)(G.dbg=G.dbg||[]).push([major?1:0,Math.round(gate-buyInc),Math.round(buyInc),Math.round(ads-viewInc),Math.round(viewInc),Math.round(wages),Math.round(cost),Math.round(bonus),Math.round(profit)]);
   if(!isPlayer&&major&&rating>=4)news(`${c.short} held ${res.name}, rated ${stars(rating)}, ${crowd.toLocaleString('en-US')} fans.`,'mt');
   tpend.forEach(r=>{r.crowd=crowd;r.gate=Math.round(gate);r.profit=Math.round(profit)});
-  if(brandsOf(c)&&!major)c.bri=(c.bri||0)+1;
+  if(brandsOf(c)&&!major)c.bri=(c.bri||0)+1;if(brandsOf(c)&&major)c.mri=(c.mri||0)+1;
   logShow(c,res,card,isPlayer);if(isPlayer){tourAfter(card);dispMain(card);reqShow(card)}
   return res;
 }
@@ -3375,12 +3526,13 @@ const idbPut=(k,v)=>idbDo('readwrite',st=>st.put(v,k)),idbGet=k=>idbDo('readonly
 const slotMeta=()=>store.get('ro_slots')||{};
 function slotSum(g){const m=g.cos[g.me];return {name:m.name,short:m.short,col:m.col||'',date:g.date,week:g.week,cash:Math.round(m.cash),roster:Object.values(g.ws).filter(w=>w.co===g.me&&w.status==='active').length,over:!!g.over,scen:g.scenName||''}}
 function slotFlush(){if(!G)return Promise.resolve();clearTimeout(_slotT);_slotT=null;const n=G.slot||1;return idbPut('slot'+n,JSON.parse(JSON.stringify(G))).catch(()=>{})}
-const save=()=>{if(!G)return;if(!G.slot)G.slot=G.opts?.slot||1;store.set('ro_save',G);const M=slotMeta();M[G.slot]=slotSum(G);store.set('ro_slots',M);clearTimeout(_slotT);_slotT=setTimeout(slotFlush,600)};
-async function slotLoad(n){await slotFlush();const g=await idbGet('slot'+n);if(!g){say('That save could not be found.');return false}G=g;G.slot=n;store.set('ro_save',G);return true}
+/* Big games (bigger rosters) can outgrow browser storage. Then the game lives only in IndexedDB and ro_big says which slot. */
+const save=()=>{if(!G)return;if(!G.slot)G.slot=G.opts?.slot||1;if(store.set('ro_save',G)){try{localStorage.removeItem('ro_big')}catch(e){}}else{try{localStorage.removeItem('ro_save')}catch(e){}store.set('ro_big',G.slot);slotFlush()}const M=slotMeta();M[G.slot]=slotSum(G);store.set('ro_slots',M);clearTimeout(_slotT);_slotT=setTimeout(slotFlush,600)};
+async function slotLoad(n){await slotFlush();const g=await idbGet('slot'+n);if(!g){say('That save could not be found.');return false}G=g;G.slot=n;save();return true}
 async function slotDelete(n){await idbDel('slot'+n).catch(()=>{});const M=slotMeta();delete M[n];store.set('ro_slots',M);if(G&&G.slot===n){G=null;localStorage.removeItem('ro_save')}}
 
 /* ---------- rendering ---------- */
-const TABS=[['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['wrestlers','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Edit Game'],['editor','Scenario Editor'],['new','New Game'],['home','Home'],['draft','Draft']];
+const TABS=[['shows','My Shows'],['business','Staff and Store'],['dash','Inbox'],['company','Company Overview'],['titles','Championships'],['events','Events'],['book','Book the Show'],['roster','Roster'],['wrestlers','Wrestler Profiles'],['feuds','Feuds'],['war','Ratings War'],['teams','Tag Teams'],['factions','Factions'],['companies','Companies'],['calendar','Calendar and News'],['history','History'],['settings','Settings'],['office','Office'],['news','News'],['edit','Editor'],['editor','Scenario Editor'],['new','New Game'],['home','Home'],['draft','Draft']];
 const HOME=['home','new','editor'];
 let prevTab=null,navOpen=null,tselKeep=false;
 const NAVG=()=>[
@@ -3388,9 +3540,9 @@ const NAVG=()=>[
   ['Inbox',[['dash','Inbox','Messages and decisions']]],
   ['Book',[['book','Book the Show','Build and run this week\'s card']]],
   ['Roster',[['roster/mine','My Roster','Contracts, filters and champions'],['wrestlers','Wrestler Profiles','Stats, record, feuds and actions'],['feuds','Feuds','Current, potential and past'],['teams','Tag Teams','Pairs and trios who team up'],['factions','Factions','Bigger groups of wrestlers and teams'],['roster/fa','Indies','Pay someone for one show']]],
-  ['Business',[['company','Company Overview','Type, money, roster, titles and schedule'],['roster/sign','Sign Talent','Free agents to sign full time'],['titles','Championships','Every title, champion and prestige'],['events','Events','Upcoming and past Major Events'],['business','Staff and Store','Staff, wrestler promotion, upgrades'],['calendar','Calendar and News','Show names, schedule, brands, news'],['war','Ratings War','Who won each week'],['companies','Companies','Rival owners and their stats']]],
+  ['Business',[['company','Company Overview','Type, money, roster, titles and schedule'],['roster/sign','Sign Talent','Free agents to sign full time'],['titles','Championships','Every title, champion and prestige'],['events','Events','Upcoming and past Major Events'],['shows','My Shows','Show names, schedule and brands'],['business','Staff and Store','Staff, wrestler promotion, upgrades'],['calendar','Calendar and News','Show names, schedule, brands, news'],['war','Ratings War','Who won each week'],['companies','Companies','Rival owners and their stats']]],
   ['History',[['history/ev','Events','Every Major Event, card by card'],['history/rk','Rankings','Top 25 across the business'],['history/tt','Titles','Lineages, reigns and records'],['history/yr','Year by Year','Every company\'s shows by date'],['history/shows','All Shows'],['history/cos','Companies and Titles'],['history/wl','Win-Loss'],['history/time','Timeline'],['history/rec','Records'],['history/st','Stats','Matches, pairings, finishes, gimmicks'],['history/hof','Hall of Fame','Everyone who reached 2,300'],['history/aw','Awards']]],
-  ['Menu',[['settings','Settings','Difficulty, injuries, Hall of Fame'],['edit',G.opts.sandbox?'Edit Game (Sandbox)':'Edit Game','Change this game\'s copy'],['home','Main Menu','Save is kept'],['new','New Game'],['editor','Scenario Editor']]]];
+  ['Menu',[['settings','Settings','Difficulty, injuries, Hall of Fame'],['edit',G.opts.sandbox?'Editor (Sandbox)':'Editor','Edit wrestlers, teams, titles and more'],['home','Main Menu','Save is kept'],['new','New Game'],['editor','Scenario Editor']]]];
 function applySub(){const[h,sub]=location.hash.slice(1).split('/');if(!sub||!G)return;if(h==='roster'&&['mine','fa','other','off','inj','sign'].includes(sub))rview=['off','inj'].includes(sub)?'mine':sub;if(h==='history')hview=sub}
 function navHtml(){
   if(HOME.includes(tab))return [['home','Home'],...(G?[['office','Continue game']]:[]),['new','New game'],['editor','Scenario editor']].map(t=>`<a href="#${t[0]}" class="nb ${t[0]===tab?'on':''}">${t[1]}</a>`).join('');
@@ -3414,7 +3566,7 @@ function render(){
   if(!G&&!HOME.includes(tab))tab='home';if(G&&G.draft&&!HOME.includes(tab)&&tab!=='draft'){tab='draft';history.replaceState(null,'','#draft')}navOpen=null;
   $('#nav').innerHTML=navHtml();setTimeout(tabSels,0);
   renderHdr();
-  ({draft:vDraft,dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,office:vOffice,news:vNews,wrestlers:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
+  ({draft:vDraft,dash:vDash,company:vCompany,titles:vTitles,events:vEvents,business:vBiz,book:vBook,roster:vRoster,feuds:vFeud,teams:vTeams,factions:vTeams,war:vWar,companies:vCos,calendar:vCal,settings:vSet,shows:vShows,office:vOffice,news:vNews,wrestlers:vStar,history:vHist,editor:vEditor,edit:vEdit,new:vNew,home:vHome})[tab]();if(G&&!HOME.includes(tab)){hofCerPop();arcPop()}
   if(G&&['book','dash'].includes(tab)){const cb=campBox();if(cb)$('#app').insertAdjacentHTML('afterbegin',cb)}
 }
 function renderHdr(){
@@ -3499,7 +3651,7 @@ function vBook(){
   if(BK.w&&!G.ws[BK.w])BK.w=null;
   if(!major)card.forEach(x=>{delete x.pre});else card.sort((a,b)=>(!!b.pre)-(!!a.pre));
   const okc=card.filter(mFull),lastM=card.map((x,i)=>x.t==='m'&&!x.pre?i:-1).filter(i=>i>=0).pop();
-  const DF=dif(),crowd=crowdFor(m,okc,major),gate=crowd*price(major,m)*DF.inc,ads=card.filter(x=>x.t==='a').length*adPay(m)*DF.inc,wages=wageBill(G.me)*DF.cost,gcost=cardCost(okc)*DF.cost,cost=(showCost(m,major)+prodExtra(m,major))*DF.cost,tvx=viewersFor(m,3,major)*VIEW_PAY*DF.inc,bx=major?buysFor(m,3)*BUY_PRICE*DF.inc:0,pr=gate+ads+tvx+bx-wages-cost-gcost;
+  const DF=dif(),crowd=crowdFor(m,okc,major),gate=crowd*price(major,m)*DF.inc,ads=card.filter(x=>x.t==='a').length*adPay(m)*DF.inc,wages=wageBill(G.me)*DF.cost,gcost=cardCost(okc)*DF.cost,cost=(showCost(m,major)+prodExtra(m,major))*DF.cost,tvx=(viewersFor(m,3,major)*VIEW_PAY*(SIZES[m.size]?.tv||1)+tvDeal(m,3,major))*DF.inc,bx=major?buysFor(m,3)*BUY_PRICE*DF.inc:0,pr=gate+ads+tvx+bx-wages-cost-gcost;
   const wevB=G.wev&&G.wev.wk===G.week?`<div class="msg" style="margin-bottom:12px">🌩 This week: ${esc(WEVS[G.wev.k].t)}</div>`:'';
   const riv=bkRivals(BK.w);
   const chip=(id,i,si,canWin)=>{const w=W(id),h=riv.get(id);return `<span class="bchip${holds(w).length?' champ':''}${h!=null?' fe':''}${BK.w===id?' me':''}"${h!=null?` style="--fc:${bkFeudCol(h)}"`:''}><button class="w" ${canWin?`data-win="${i}:${si}"`:`data-bsel="${id}"`} title="${canWin?'Tap to set the winner':''}">${favMark(w)}${esc(w.name)}${holds(w).length?' '+wMedal(w):''}${wMk(w)}<small>${pd(w)}</small></button><button class="x" data-rmw="${i}:${si}:${id}" aria-label="Take ${esc(w.name)} off">✕</button></span>`};
@@ -3526,7 +3678,7 @@ function vBook(){
         ${tos.length?`<select id="btt${i}" aria-label="Title" class="${x.title?'gold':''}"><option value="">Non-title</option>${tos.map(t=>`<option value="${t.id}" ${x.title===t.id?'selected':''}>${medal(t)} ${esc(t.name)}</option>`).join('')}</select>`:''}
         ${fh?`<span class="sub" style="color:${heatCol(fh)};font-weight:700" title="Feud heat">🔥 ${Math.round(fh)}${featOn('flv')?` · Lv ${flvOf(fh)}`:''}</span>`:''}${ctl(x,i)}</div>
         <div class="vs">${sides}</div>
-        <div class="bmf">${tagT}${full?`<button class="sm" data-fin="${i}">Finish</button>`:''}${full?`<button class="sm go" data-bkdone="1" title="Fold it into the Booked Card">Done</button>`:''}${full&&mFeud(x.sides)?(flvTop(fh)&&!major?`<span class="sub" title="Top-level feuds can only end at a Major Event">Lv ${flvOf(fh)}: ends only at a Major Event</span>`:`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`):''}${full&&featOn('pcards')&&(pcN('spot')||x.pc)?`<button class="sm${x.pc?' go':''}" data-pcs="${i}" title="Use a Spotlight power card on this match">⚡ ${x.pc?'Spotlight on':'Spotlight'}</button>`:''}${crewOf(me(),'road').length?(()=>{const L=crewOf(me(),'road'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a road agent">${p?esc(p.name.split(' ').pop())+' +':'Road agent'}</button>`})():''}${k==='custom'?`<button class="sm" data-bcs="${i}:1" ${z.length>=MT_MAXSIDE?'disabled':''}>+ Side</button><button class="sm" data-bcs="${i}:-1" ${z.length<=2?'disabled':''}>− Side</button>`:''}${g.cost?`<span class="sub">${money(g.cost)}</span>`:''}</div></div>`}
+        <div class="bmf">${tagT}${full?`<button class="sm" data-fin="${i}">Finish</button>`:''}${full?`<button class="sm go" data-bkdone="1" title="Fold it into the Booked Card">Done</button>`:''}${full&&!mFeud(x.sides)&&!x.tour?`<button class="sm" data-sfeud="${i}" title="Start a feud between these wrestlers">Start Feud</button>`:''}${full&&mFeud(x.sides)?(flvTop(fh)&&!major?`<span class="sub" title="Top-level feuds can only end at a Major Event">Lv ${flvOf(fh)}: ends only at a Major Event</span>`:`<button class="sm${x.bo?' go':''}" data-bo="${i}" title="Ends the feud after this match, with a payoff based on heat">${x.bo?'Blowoff: ends feud':'Feud continues'}</button>`):''}${full&&featOn('pcards')&&(pcN('spot')||x.pc)?`<button class="sm${x.pc?' go':''}" data-pcs="${i}" title="Use a Spotlight power card on this match">⚡ ${x.pc?'Spotlight on':'Spotlight'}</button>`:''}${crewOf(me(),'road').length?(()=>{const L=crewOf(me(),'road'),p=x.cr!=null&&L[x.cr];return `<button class="sm${p?' go':''}" data-crw="${i}" title="Assign a road agent">${p?esc(p.name.split(' ').pop())+' +':'Road agent'}</button>`})():''}${k==='custom'?`<button class="sm" data-bcs="${i}:1" ${z.length>=MT_MAXSIDE?'disabled':''}>+ Side</button><button class="sm" data-bcs="${i}:-1" ${z.length<=2?'disabled':''}>− Side</button>`:''}${g.cost?`<span class="sub">${money(g.cost)}</span>`:''}</div></div>`}
     if(x.t==='s'){const outs=x.who.length?segOuts(x.g,x.who).filter(o=>o[0]):[];return `<div class="bm${BK.sel&&BK.sel.i===i?' cur':''}${x.who.length?'':' inc'}"><div class="bmh"><span class="no">${i+1}</span><span class="kind s">Segment</span><select id="bsg${i}" aria-label="Segment type">${Object.keys(SEG).map(t=>`<option ${t===x.g?'selected':''}>${t}</option>`).join('')}</select>${x.g==='Custom'?`<select id="bstn${i}" aria-label="Tone">${Object.entries(SEGTONE).map(([k,v])=>`<option value="${k}" ${(x.tone||'hype')===k?'selected':''}>${v.l}</option>`).join('')}</select>`:''}
         ${outs.length?`<select id="boc${i}" aria-label="Outcome"><option value="">Outcome: sim decides</option>${outs.map(([q,l])=>`<option value="${q}" ${x.oc===q?'selected':''}>${esc(l)}</option>`).join('')}</select>`:''}${ctl(x,i)}</div>
         ${x.g==='Custom'?`<input id="bstx${i}" class="bstx" maxlength="80" placeholder="What happens? e.g. Unveils a new faction" value="${esc(x.txt||'')}">`:''}<div class="vs"><span class="side">${x.who.map(id=>chip(id,i,0,false)).join('')}${x.who.length<8?empty(i,0,0):''}</span></div>
@@ -3543,7 +3695,7 @@ function vBook(){
   <details class="panel bkout"><summary><b>Show outlook</b> <span class="sub">expected profit</span> <b class="${pr<0?'neg':'pos'}">${money(pr)}</b></summary>${(()=>{const L=G.war||[],x=L[L.length-1];if(!x)return '';const mine=x.rows.find(r=>r.c===G.me);return `<div class="kv"><span>Last week's ratings war</span><b>${mine?`${ord(mine.rk)} of ${x.rows.length}`:'Sat out'}</b></div>`})()}
   <div class="kv"><span>Expected crowd</span><b>${crowd.toLocaleString('en-US')}</b></div>
   <div class="kv"><span>Ticket sales <small class="sub">(${crowd.toLocaleString('en-US')} at $${price(major,m).toFixed(2)}, set by popularity)</small></span><b>${money(gate)}</b></div>
-  <div class="kv"><span>Sponsor ads</span><b>${money(ads)}</b></div><div class="kv"><span>TV viewers <small class="sub">(about ${viewersFor(m,3,major).toLocaleString('en-US')} at 3 stars)</small></span><b>${money(tvx)}</b></div>${major?`<div class="kv"><span>Event buys <small class="sub">(about ${buysFor(m,3).toLocaleString('en-US')})</small></span><b>${money(bx)}</b></div>`:''}
+  <div class="kv"><span>Sponsor ads</span><b>${money(ads)}</b></div><div class="kv"><span>TV deal and viewers <small class="sub">(about ${viewersFor(m,3,major).toLocaleString('en-US')} at 3 stars)</small></span><b>${money(tvx)}</b></div>${major?`<div class="kv"><span>Event buys <small class="sub">(about ${buysFor(m,3).toLocaleString('en-US')})</small></span><b>${money(bx)}</b></div>`:''}
   <div class="kv"><span>Wages (${pl(r.length,'wrestler')})</span><b>-${money(wages)}</b></div>
   <div class="kv"><span>Show costs</span><b>-${money(cost)}</b></div>${gcost?`<div class="kv"><span>Match gimmicks</span><b>-${money(gcost)}</b></div>`:''}
   <div class="kv tot"><span>Expected profit</span><b class="${pr<0?'neg':'pos'}">${money(pr)}</b></div>
@@ -3572,6 +3724,7 @@ document.addEventListener('click',e=>{
   else if(d.btk){const[i,dv]=d.btk.split(':').map(Number);const x=card[i],z=mSz(x),per=Math.max(...z);bkTag(x,per,clamp(z.length+dv,2,6));const k=mOpenSide(x);BK.sel=k>=0?{i,s:k}:null;bkFix(x);rerender()}
   else if(d.bsel){BK.w=BK.w===d.bsel?null:d.bsel;rerender()}
   else if(d.bkdone){BK.sel=null;BK.openX=null;rerender()}
+  else if(d.sfeud){const x=card[+d.sfeud];if(!x)return;dFeudAdd(x.sides.slice(0,4).map(sd=>{const g=sd.length>1&&TM().find(t=>t.st!=='past'&&sd.every(id=>t.m.includes(id)));return g?'g:'+g.id:'w:'+sd[0]}))}
   else if(d.bopen){const x=card[+d.bopen];BK.openX=BK.openX===x?null:x;BK.sel=null;rerender();requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}))}
   else if(d.bkf){BKF.f=d.bkf;rerender()}
   else if(d.rmw){const[i,s,id]=d.rmw.split(':');const x=card[+i];if(x.t==='s'){x.who=x.who.filter(y=>y!==id);x.oc='';BK.sel={i:+i,s:0}}else{if(mMode(x)==='s'&&x.sides.length>2){x.sides=x.sides.filter(sd=>!sd.includes(id));bkSingles(x,Math.max(2,x.sides.length));BK.sel=null}else{x.sides[+s]=x.sides[+s].filter(y=>y!==id);BK.sel={i:+i,s:+s}}x.win=null;x.fin=null;bkFix(x)}rerender()}
@@ -3668,13 +3821,14 @@ function ask(q,yes,fn,danger,noCancel){let d=document.getElementById('cfm');if(!
   d.onclick=e=>{const b=e.target.closest('button');if(!b)return;d.close();if(b.dataset.y&&fn)fn()};if(!d.open)d.showModal()}
 const say=q=>ask(q,'OK',null,false,true);
 function cfm(q,yes){if(_cfmOK){_cfmOK=false;return true}const b=_lastBtn;ask(q,yes||'Yes, do it',()=>{if(!b)return;_cfmOK=true;b.click();_cfmOK=false},/release|fire|delete|let .* go|retire|sue|split|step down/i.test(q));return false}
+const openDF=html=>openD(html,'full');
 const openD=(html,cls)=>{$('#dlgc').innerHTML=html;dlg.className=cls||'';if(!dlg.open)dlg.showModal()};
 const closeD=()=>dlg.close();
 const used=()=>new Set(G.card.filter(x=>x.t==='m').flatMap(x=>x.sides.flat()));
 
 function feudCards(){const L=FE().filter(f=>f.st==='cur'&&f.co===G.me&&f.p.slice(0,2).every(p=>p.every(id=>canWork(W(id))))).sort((a,b)=>b.heat-a.heat);
   if(!L.length)return '';
-  return `<div class="fcards" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));margin:6px 0 10px">${L.map(f=>{const h=Math.round(f.heat),sl=staleOf(f);return `<button class="fcard" data-fm="${f.id}" style="--hc:${heatCol(h)};text-align:left;font-weight:500;min-height:0" title="Add this feud as a match"><span class="ft"><span class="fr">${esc(f.why)}</span><span class="fh" style="font-size:20px">🔥 ${h}${featOn('flv')?` <small style="font-size:13px">Lv ${flvOf(h)}</small>`:''}</span></span><span class="fn" style="font-size:15px">${esc(fName(f))}</span><span class="sub">Staleness ${sl} / 6 · ${feudLen(f)}${f.p.length>2?' · first two sides':''}</span></button>`}).join('')}</div>`}
+  return `<div class="fcards" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));margin:6px 0 10px">${L.map(f=>{const h=Math.round(f.heat),sl=staleOf(f);return `<button class="fcard" data-fm="${f.id}" style="--hc:${heatCol(h)};text-align:left;font-weight:500;min-height:0" title="Add this feud as a match"><span class="ft"><span class="fr">${esc(f.why)}</span><span class="fh" style="font-size:20px">🔥 ${h}${featOn('flv')?` <small style="font-size:13px">Lv ${flvOf(h)}</small>`:''}</span></span><span class="fn" style="font-size:15px">${esc(fName(f))}</span><span class="sub">Staleness ${sl} / 6 · ${feudLen(f)}${f.p.length>2?' · first two sides':''}</span>${fBeat(f)?`<span class="sub" style="color:var(--ink)">Next: ${esc(fBeat(f).t)} <i>(segment idea: ${esc(fBeat(f).sg)})</i></span>`:''}</button>`}).join('')}</div>`}
 function feudMatch(f){const ps=f.p.slice(0,2).map(p=>p.slice(0,2));const n=Math.min(ps[0].length,ps[1].length);return {t:'m',sides:[ps[0].slice(0,n),ps[1].slice(0,n)],win:null,fin:null}}
 /* Match types (§4.50). s = people on each side. Handicap and uneven matches are allowed; Custom lets you set any
    number of sides (2 to 8) and people per side (1 to 5). Battle royal is everyone for themselves, 5 or more. */
@@ -3928,18 +4082,28 @@ function dContract(id){
   draw();
 }
 function dGimmick(id){
-  const w=W(id);let g=w.gim||'None',name=w.name,alv=w.al??alDefault(w.align);
-  const draw=()=>openD(`<div class="dh"><h3>Gimmick: ${esc(w.name)}</h3><div>A gimmick that fits their stats gets a small crowd bonus</div></div><div class="db">
+  const w=W(id);let ch=w.gch||'',pe=w.gpe||'',cn=w.gcn||'',name=w.name,alv=w.al??alDefault(w.align),ct=Object.keys(GCH).find(t=>GCH[t][ch])||'Standard',pt=Object.keys(GPE).find(t=>GPE[t][pe])||'Physical';
+  const tmp=()=>({...w,gch:ch,gpe:pe,gcn:'',align:alLetter(alv)});
+  const draw=()=>{const T=tmp(),n=gchOf(ch)?gfitN(T):-1;openD(`<div class="dh"><h3>Gimmick: ${esc(w.name)}</h3><div>Pick who they are and how they act. A gimmick that suits them gets a crowd bonus.</div></div><div class="db gimb">
    <label>Ring name<input id="gn" maxlength="40" value="${esc(name)}"></label>
-   <label style="margin-top:10px">Alignment <b id="alv" hidden>${alName(alv)}</b></label>${alBar('gal',alv)}
-   <label>Gimmick type</label><div class="chips">${GIM.map(x=>`<button data-g="${x}" class="${g===x?'sel':''}">${x}</button>`).join('')}</div>
-   <p class="hint">Changing alignment is a turn: a one-time popularity jolt if they're hot, a dip if they're cold. A new gimmick resets momentum a little.</p>
-   <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="gok">Save</button></div></div>`);
-  dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;name=$('#gn').value;
-    if(d.g){g=d.g;draw()}else if(d.x)closeD();
+   <label>Alignment <b id="alv" hidden>${alName(alv)}</b>${alBar('gal',alv)}</label>
+   <h4 style="color:var(--green,#3fb950)">Character</h4><div class="chips gtab">${Object.keys(GCH).map(t=>`<button data-gct="${t}" class="${ct===t?'sel':''}">${t}</button>`).join('')}</div>
+   <div class="gopts">${Object.entries(GCH[ct]).map(([k,v])=>`<button data-gch="${k}" class="${ch===k?'sel':''}">${v[0]}${v[2](T)?' <span class="gfit" title="Suits them">✓</span>':''}</button>`).join('')}</div>
+   <h4 style="color:var(--gold)">Personality</h4><div class="chips gtab">${Object.keys(GPE).map(t=>`<button data-gpt="${t}" class="${pt===t?'sel':''}">${t}</button>`).join('')}</div>
+   <div class="gopts">${Object.entries(GPE[pt]).map(([k,v])=>`<button data-gpe="${k}" class="${pe===k?'sel':''}">${v[0]}${v[1](T)?' <span class="gfit" title="Suits them">✓</span>':''}</button>`).join('')}</div>
+   <label>Custom gimmick name <span class="sub">(optional)</span><input id="gcn" maxlength="40" value="${esc(cn)}" placeholder="${esc(gimName(T))}"></label>
+   <div class="kv"><span>Gimmick</span><b>${esc(cn||gimName(T))}</b></div><div class="kv"><span>Combination</span><b>${gchOf(ch)?`${pe?esc(gpeOf(pe)[0])+' + ':''}${esc(gchOf(ch)[0])}`:'None'}</b></div>
+   ${n>=0?`<div class="kv"><span>Fit</span><b class="${n===2?'pos':n===0?'neg':''}">${['Poor fit','Okay fit','Great fit'][n]}</b></div>`:''}
+   <p class="hint">✓ marks picks that suit their stats and alignment. A turn gives a popularity jolt if they're hot and a dip if they're cold. A new gimmick resets momentum a little.</p>
+   <div class="dfoot"><button data-x="1">Cancel</button>${ch?'<button data-gclr="1">No Gimmick</button>':''}<button class="go" id="gok">Save</button></div></div>`)};
+  const keep=()=>{name=$('#gn').value;cn=$('#gcn').value};
+  dlg.onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;keep();
+    if(d.gct){ct=d.gct;draw()}else if(d.gpt){pt=d.gpt;draw()}else if(d.gch){ch=ch===d.gch?'':d.gch;draw()}else if(d.gpe){pe=pe===d.gpe?'':d.gpe;draw()}
+    else if(d.gclr){ch='';pe='';cn='';draw()}else if(d.x)closeD();
     else if(b.id==='gok'){const al=alLetter(alv);if(al!==w.align){gainPop(w,w.mom>=60?3:-2);news(`${w.name} turned ${al==='F'?'face':al==='H'?'heel':'tweener'}.`,'me')}
-      if(g!==w.gim)w.mom=clamp(w.mom-8,0,100);w.al=alv;w.align=al;w.gim=g;w.name=name.trim()||w.name;closeD();rerender()}};
-  dlg.oninput=e=>{if(e.target.id==='gal'){alv=+e.target.value;$('#alv').textContent=alName(alv);e.target.nextElementSibling&&0}};
+      const before=gimName(w);w.gch=ch||undefined;w.gpe=ch&&pe?pe:undefined;w.gcn=ch&&cn.trim()?cn.trim().slice(0,40):undefined;w.gim=ch?gchOf(ch)[1]:'None';if(gimName(w)!==before)w.mom=clamp(w.mom-8,0,100);
+      w.al=alv;w.align=al;w.name=name.trim()||w.name;closeD();rerender()}};
+  dlg.oninput=e=>{if(e.target.id==='gal'){alv=+e.target.value;keep();draw()}};
   draw();
 }
 
@@ -4023,7 +4187,7 @@ function beltSeed(t){if(!BL)return null;const k=t.id+'|'+t.name+'|'+t.tier+'|'+t
   const v=BL.normalize(o);_blc.set(k,v);return v}
 const beltOf=t=>!BL?null:t.belt?BL.normalize(t.belt):beltSeed(t);
 const beltImg=(t,size,crop,bg)=>BL?BL.img(beltOf(t),{size,crop:crop||undefined,bg:bg??false}).replace('class="bl-img"','class="bl-img" style="image-rendering:pixelated;max-width:100%;height:auto;vertical-align:middle"'):'🏆';
-const BL_GROUPS=[['Plate',['shape','size','metal','metal2','rim','rimWidth','field','fieldColor','engrave']],['Emblem',['emblem','emblemFinish','emblemColor','gems','gemSize','gemColor','gemColor2']],['Lettering',['topBanner','bottomBanner','bannerColor','textColor']],['Side plates',['topper','sideCount','sideShape','sideSize','sideEmblem','sideField','sideColor']],['Strap',['strapColor','strapTexture','strapWidth','strapEdge','strap2','wear','shine']],['Display',['bg','bgColor']]];
+const BL_GROUPS=[['Plate',['shape','size','metal','metal2','rim','rimWidth','field','fieldColor','engrave']],['Emblem',['emblem','emblemFinish','emblemColor','gems','gemSize','gemColor','gemColor2']],['Lettering',['topBanner','bottomBanner','bannerColor','textColor']],['Side plates',['topper','sideCount','sideShape','sideSize','sideEmblem','sideField','sideColor','sideRim','sideSpacing']],['Strap',['strapColor','strapTexture','strapWidth','strapEdge','strap2','wear','shine']],['Display',['bg','bgColor']]];
 const BL_PRESETS={'Classic gold':{shape:'oval',size:'large',metal:'#e8b923',metal2:'#e8b923',field:'metal',engrave:'rays',emblem:'globe',rim:'beaded',gems:'ring',strapColor:'#1b1b1f',strapTexture:'croc',topper:'none',wear:'new'},
   'Big eagle':{shape:'winged',size:'huge',emblem:'eagle',topper:'eagle',metal:'#e8b923',field:'metal',engrave:'lines',gems:'top'},
   'Modern':{shape:'crest',field:'enamel',fieldColor:'#1b1b1f',emblem:'monogram',emblemFinish:'metal',strapTexture:'carbon',rim:'plain',gems:'none',topper:'none',shine:'dazzling'},
@@ -4032,16 +4196,18 @@ const BL_PRESETS={'Classic gold':{shape:'oval',size:'large',metal:'#e8b923',meta
   'Hardcore':{shape:'shield',emblem:'skull',metal:'#4a4a55',metal2:'#7d8a99',strapTexture:'studded',wear:'battered',gems:'none',topper:'spikes'},
   'Royal':{topper:'crown',emblem:'crown',gems:'scatter',strapColor:'#5b2a86',shape:'crest',metal:'#e8b923'},
   'Tag team':{sideCount:3,shape:'hexagon',emblem:'swords',bottomText:'CHAMPIONS',topText:'TAG TEAM'}};
-function dBelt(t,after){if(!BL)return;let L=JSON.parse(JSON.stringify(beltOf(t))),tab='Plate',gal=null;const hist=[];
+/* belt templates thread (27 Nov): 27 templates join the presets; a template's plate, side plates or strap can be used alone */
+let BL_ALL=null;const blAll=()=>BL_ALL||(BL_ALL=Object.assign({},BL_PRESETS,BL&&BL.TEMPLATES||{}));
+function dBelt(t,after){if(!BL)return;let L=JSON.parse(JSON.stringify(beltOf(t))),tab='Plate',gal=null,tpart='';const hist=[];
   const set=(k,v)=>{hist.push(JSON.stringify(L));if(hist.length>40)hist.shift();L[k]=k==='sideCount'?+v:v;L=BL.normalize(L)};
   const isCol=k=>!Array.isArray(BL.OPTIONS[k][1]);
   const row=k=>{const [lab,vals]=BL.OPTIONS[k];if(isCol(k))return `<div class="row"><span>${lab}</span><div class="pal" style="margin:0">${BL.PAL[vals].map(c=>`<button class="sw${L[k]===c?' sel':''}" style="--c:${c}" data-k="${k}" data-v="${c}" aria-label="${lab} ${c}"></button>`).join('')}<input type="color" data-k="${k}" value="${L[k]}" aria-label="Any ${lab.toLowerCase()}" style="width:52px;min-height:34px;padding:0"></div><span></span></div>`;
     const i=vals.indexOf(L[k]);return `<div class="row"><span>${lab}</span><div class="step"><button data-st="-1" data-k="${k}" aria-label="Previous ${lab}">‹</button><button data-gal="${k}" style="border:0;background:none;min-height:44px" aria-label="Show all ${lab} options"><b>${lkLab(L[k])}</b><small>${i+1} of ${vals.length} · all</small></button><button data-st="1" data-k="${k}" aria-label="Next ${lab}">›</button></div><span></span>
       ${gal===k?`<div class="gal">${vals.map(v=>`<button data-k="${k}" data-v="${v}" class="${L[k]===v?'sel':''}"><img src="${BL.toDataURL(Object.assign({},L,{[k]:v}),{scale:1,bg:false,crop:k.startsWith('strap')?'strap':k==='wear'||k==='shine'||k.startsWith('side')||k==='topper'||k==='bg'||k==='bgColor'?undefined:'plate'})}" alt="">${lkLab(v)}</button>`).join('')}</div>`:''}</div>`};
-  const draw=()=>{openD(`<div class="dh b"><h3>Belt designer: ${esc(t.name)}</h3><div>Only looks: the belt doesn't change prestige or matches.</div></div><div class="db">
+  const draw=()=>{openDF(`<div class="dh b"><h3>Belt Designer: ${esc(t.name)}</h3><div>Only looks: the belt doesn't change prestige or matches.</div></div><div class="db">
      <div class="beltpv"><canvas id="blc" aria-label="Belt preview"></canvas></div>
      <div class="btns" style="justify-content:center;margin:8px 0"><button data-rnd="1">🎲 Random belt</button><button data-undo="1" ${hist.length?'':'disabled'}>Undo</button>${t.belt?'<button data-gen="1">Back to the original</button>':''}</div>
-     <div class="chips" style="margin-bottom:8px">${Object.keys(BL_PRESETS).map(p=>`<button data-pre="${p}" class="sm">${p}</button>`).join('')}</div>
+     <div class="chips" style="margin-bottom:4px"><span class="sub" style="align-self:center">Use from a template:</span>${[['','Whole belt'],['plate','Plate'],['sides','Side plates'],['strap','Strap']].map(([k,l])=>`<button data-tpart="${k}" class="sm${tpart===k?' sel':''}">${l}</button>`).join('')}</div><div class="chips" style="margin-bottom:8px">${Object.keys(blAll()).map(p=>`<button data-pre="${esc(p)}" class="sm">${esc(p)}</button>`).join('')}</div>
      <div class="form" style="margin-bottom:8px"><label>Top text<input id="btop" maxlength="14" value="${esc(L.topText)}"></label><label>Bottom text<input id="bbot" maxlength="14" value="${esc(L.bottomText)}"></label><label>Monogram<input id="bmono" maxlength="3" value="${esc(L.monogram)}" style="max-width:120px"></label></div>
      <div class="lk" style="display:block"><div class="tabs" role="tablist">${BL_GROUPS.map(g=>`<button data-tab="${g[0]}" class="${tab===g[0]?'on':''}" role="tab" aria-selected="${tab===g[0]}">${g[0]}</button>`).join('')}</div>
       ${(BL_GROUPS.find(g=>g[0]===tab)||BL_GROUPS[0])[1].map(row).join('')}</div>
@@ -4050,7 +4216,7 @@ function dBelt(t,after){if(!BL)return;let L=JSON.parse(JSON.stringify(beltOf(t))
     if(d.x){closeD();return}
     if(d.tab){tab=d.tab;gal=null}else if(d.st){const vals=BL.OPTIONS[d.k][1];set(d.k,vals[(vals.indexOf(L[d.k])+ +d.st+vals.length)%vals.length])}
     else if(d.gal){gal=gal===d.gal?null:d.gal}
-    else if(d.pre){hist.push(JSON.stringify(L));L=BL.normalize(Object.assign({},L,BL_PRESETS[d.pre]))}
+    else if(d.tpart!=null){tpart=d.tpart;draw();return}else if(d.pre){hist.push(JSON.stringify(L));const P=blAll()[d.pre];L=BL.normalize(tpart&&BL.applyTemplate&&BL.TEMPLATES&&BL.TEMPLATES[d.pre]?BL.applyTemplate(L,d.pre,tpart):Object.assign({},L,P))}
     else if(d.rnd){hist.push(JSON.stringify(L));const r=BL.random();r.topText=L.topText;r.bottomText=L.bottomText;r.monogram=L.monogram;L=BL.normalize(r)}
     else if(d.undo){if(hist.length)L=BL.normalize(JSON.parse(hist.pop()))}
     else if(d.gen){hist.push(JSON.stringify(L));L=JSON.parse(JSON.stringify(beltSeed(t)))}
@@ -4062,6 +4228,13 @@ function dBelt(t,after){if(!BL)return;let L=JSON.parse(JSON.stringify(beltOf(t))
     const f={btop:'topText',bbot:'bottomText',bmono:'monogram'}[x.id];if(f){L[f]=x.value;L=BL.normalize(L);BL.draw($('#blc'),L,{scale:3})}};
   dlg.onclose=()=>{dlg.oninput=null;dlg.onclose=null};
   draw()}
+document.addEventListener('click',e=>{if(!G)return;const b=e.target.closest('[data-tact]');if(!b)return;const[a,id]=b.dataset.tact.split(':'),t=G.titles[id];if(!t)return;const r=reignOf(t);
+  if(a==='new')return dNewTitle();
+  if(a==='vac'){if(!r||!cfm(`Vacate the ${t.name}? ${r.hn||nm(r.h)} loses it without a match.`,'Vacate'))return;r.lost=G.date;r.vac='stripped';news(`${G.cos[t.co].short} vacated the ${t.name}. ${r.hn||nm(r.h)} was stripped of the title.`,'tt')}
+  else if(a==='ret'){if(!cfm(`Retire the ${t.name}? It stays in the history books but can't be defended again.`,'Retire'))return;if(r){r.lost=G.date;r.vac='title retired'}t.active=false;t.retired=G.date;news(`${G.cos[t.co].short} retired the ${t.name}.`,'tt')}
+  else if(a==='ren'){openD(`<div class="dh"><h3>Rebrand</h3><div>A new name keeps the full history.</div></div><div class="db"><label>New name<input id="trn" maxlength="60" value="${esc(t.name)}"></label><p class="hint" id="trerr"></p><div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="trok">Rebrand</button></div></div>`);
+    dlg.onclick=e2=>{const x=e2.target.closest('button');if(!x)return;if(x.dataset.x){closeD();return}if(x.id!=='trok')return;const n=$('#trn').value.trim().replace(/\s+/g,' ');if(n.length<3){$('#trerr').textContent='At least 3 letters.';return}if(n!==t.name){(t.names=t.names||[]).push({d:G.date,n:t.name});news(`The ${t.name} is now the ${n}.`,'tt');t.name=n}closeD();save();render()};return}
+  save();render()});
 /* Create a championship for your company (owner request, 27 Nov). It starts vacant: put it on the line in a match to crown the first champion. */
 function dNewTitle(){const m=me();
   openD(`<div class="dh"><h3>New Championship</h3><div>It starts vacant. Put it on the line in a match to crown the first champion.</div></div><div class="db"><div class="form">
@@ -4276,30 +4449,33 @@ function histEvents(shows,cos,yrs){
 function titlePage(t){
   const rs=t.reigns||[],cur=reignOf(t),days=r=>r.won?daysBetween(r.won,r.lost||G.date):null;
   const by={};rs.forEach(r=>{by[r.hn]=(by[r.hn]||0)+1});const most=Object.entries(by).sort((a,b)=>b[1]-a[1])[0];
-  const longest=rs.filter(r=>days(r)!=null).sort((a,b)=>days(b)-days(a))[0];
+  const longest=rs.filter(r=>days(r)!=null).sort((a,b)=>days(b)-days(a))[0],shortest=rs.filter(r=>days(r)!=null&&r.lost).sort((a,b)=>days(a)-days(b))[0],changes=rs.filter(r=>r.won&&!r.pre).length;
   const defs=r=>r.def.filter(x=>/retains/.test(x.res)).length;const mostDef=rs.slice().sort((a,b)=>defs(b)-defs(a))[0];
-  const all=rs.flatMap(r=>r.def.map(x=>({...x,hn:r.hn}))).sort((a,b)=>a.d<b.d?1:-1),avgR=all.length?avg(all.map(x=>x.st)):null,best=all.slice().sort((a,b)=>b.st-a.st)[0];
+  const all=rs.flatMap(r=>r.def.map(x=>({...x,hn:r.hn}))).sort((a,b)=>a.d<b.d?1:-1),avgR=all.length?avg(all.map(x=>x.st)):null,best=all.slice().sort((a,b)=>b.st-a.st)[0],worst=all.length>1?all.slice().sort((a,b)=>a.st-b.st)[0]:null;const mineT=t.co===G.me||G.opts.sandbox;
   const hn=r=>r.h&&r.h.length&&r.h.every(id=>G.ws[id])?r.h.map(id=>`<button class="ed" style="border:0;padding:0;font-weight:800;font-size:15px;color:var(--ink)" data-hw="${id}">${esc(W(id).name)}</button>`).join(' &amp; '):esc(r.hn);
-  return `<div class="panel"><div class="ph"><div><div class="sub">${esc(G.cos[t.co]?.name||'')} · ${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag Team':'Singles'}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(t.name)}</h2>${t.elite?'<span class="k of">Prestigious</span>':''}</div>
+  return `<div class="panel">   <div class="beltshow">${beltImg(t,528,null,true)}</div>
+<div class="ph"><div><div class="sub">${esc(G.cos[t.co]?.name||'')} · ${TIERS[t.tier||1]} · ${t.div==='tag'?'Tag Team':'Singles'}</div><h2 style="font-size:clamp(26px,4vw,40px)">${esc(t.name)}</h2>${t.elite?'<span class="k of">Prestigious</span>':''}</div>
    <div style="min-width:180px"><div class="sub">Prestige</div><b style="font:28px Anton,sans-serif">${Math.round(t.prestige??0)}</b><div class="meter" style="margin:4px 0 0"><i style="width:${clamp(t.prestige??0,0,100)}%;background:var(--gold)"></i></div></div></div>
-   <div class="beltshow">${beltImg(t,528,null,true)}${BL&&(t.co===G.me||G.opts.sandbox)?`<div class="btns" style="justify-content:center;margin-top:8px"><button data-belt="${t.id}">Design this belt</button></div>`:''}</div>
+   ${mineT&&t.active!==false?`<div class="btns tacts" style="margin:8px 0 12px"><button class="sm go" data-tact="new:${t.id}">+ Add Title</button>${cur?`<button class="sm" data-tact="vac:${t.id}">Vacate</button>`:''}<button class="sm" data-tact="ren:${t.id}">Rebrand</button>${BL?`<button class="sm" data-belt="${t.id}">Design Belt</button>`:''}<button class="sm" data-tact="ret:${t.id}">Retire</button></div>`:t.retired?`<div class="msg">Retired ${fmtDate(t.retired)}.</div>`:''}
    ${titleRulesBox(t)}<div class="msg" style="background:var(--goldbg);color:var(--gold)">${cur?`Champion: <b>${hn(cur)}</b> since ${fmtDate(cur.won)}${cur.wonAt?` (${esc(cur.wonAt)})`:''} · ${pl(days(cur),'day')} · ${defs(cur)} successful defence${defs(cur)===1?'':'s'}`:'Vacant'}</div>
-   <div class="tiles">${[['Reigns',rs.length],['Champions',Object.keys(by).length],['Title matches',all.length],['Average title match',avgR!=null?stars(clampQ(avgR)):'–']].map(([l,v])=>`<div class="tile"><div class="sub">${l}</div><b>${v}</b></div>`).join('')}</div>
+   <div class="tiles">${[['Reigns',rs.length],['Champions',Object.keys(by).length],['Title Changes',changes],['Title matches',all.length],['Average title match',avgR!=null?stars(clampQ(avgR)):'–']].map(([l,v])=>`<div class="tile"><div class="sub">${l}</div><b>${v}</b></div>`).join('')}</div>
    <div class="sheet" style="margin-top:12px">
     <div class="kv"><span>Longest reign</span><b>${longest?`${esc(longest.hn)} <span class="sub">${pl(days(longest),'day')}</span>`:'–'}</b></div>
+    <div class="kv"><span>Shortest reign</span><b>${shortest?`${esc(shortest.hn)} <span class="sub">${pl(days(shortest),'day')}</span>`:'–'}</b></div>
     <div class="kv"><span>Most reigns</span><b>${most?`${esc(most[0])} <span class="sub">${most[1]}×</span>`:'–'}</b></div>
     <div class="kv"><span>Most defences in a reign</span><b>${mostDef&&defs(mostDef)?`${esc(mostDef.hn)} <span class="sub">${defs(mostDef)}</span>`:'–'}</b></div>
-    <div class="kv"><span>Best title match</span><b>${best?`${stars(best.st)} <span class="sub">${esc(best.hn)} vs ${esc(best.vs)}, ${esc(best.show)}</span>`:'–'}</b></div></div>
-   <h3 style="margin-top:18px">Lineage</h3><table class="stack"><thead><tr><th>#</th><th>Champion</th><th>Won</th><th>Lost</th><th class="n">Days</th><th class="n">Defences</th></tr></thead><tbody>
+    <div class="kv"><span>Best title match</span><b>${best?`${stars(best.st)} <span class="sub">${esc(best.hn)} vs ${esc(best.vs)}, ${esc(best.show)}</span>`:'–'}</b></div>
+    <div class="kv"><span>Worst title match</span><b>${worst?`${stars(worst.st)} <span class="sub">${esc(worst.hn)} vs ${esc(worst.vs)}, ${esc(worst.show)}</span>`:'–'}</b></div></div>
+   <h3 style="margin-top:18px">Reign History</h3><table class="stack"><thead><tr><th>#</th><th>Champion</th><th>Won</th><th>Lost</th><th class="n">Days</th><th class="n">Defences</th></tr></thead><tbody>
    ${rs.map((r,i)=>`<tr${r===cur?' style="background:var(--goldbg)"':''}><td data-l="#">${i+1}</td><td>${hn(r)}${r.pre?' <span class="sub">before the game</span>':''}</td><td data-l="Won">${r.won?fmtDate(r.won):'–'}${r.wonAt?`<div class="sub">${esc(r.wonAt)}</div>`:''}</td><td data-l="Lost">${r.lost?fmtDate(r.lost):r===cur?'<b>Current</b>':'–'}${r.vac?`<div class="sub">vacated: ${esc(r.vac)}</div>`:''}</td><td class="n" data-l="Days">${days(r)??'–'}</td><td class="n" data-l="Defences">${defs(r)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No reigns yet.</td></tr>'}</tbody></table>
    <h3 style="margin-top:18px">Title match log</h3>${all.length?all.slice(0,200).map(x=>`<div class="res"><span class="st">${stars(x.st)}</span><b>${esc(x.res)}</b><p>${fmtDate(x.d)} · ${esc(x.show)} · ${esc(x.hn)} vs ${esc(x.vs)}${x.crowd?` · ${x.crowd.toLocaleString('en-US')} fans`:''}${x.gate?` · gate ${money(x.gate)}`:''}</p></div>`).join(''):'<div class="empty" style="padding:12px">No title matches yet.</div>'}</div>`;
 }
 function histTitles(){
   const T=Object.values(G.titles||{}).filter(t=>htco==='all'||t.co===htco).sort((a,b)=>(G.cos[a.co]?.short||'').localeCompare(G.cos[b.co]?.short||'')||(a.div==='tag')-(b.div==='tag')||(a.tier||1)-(b.tier||1));
   const sel=G.titles?.[htl]||T[0];const cs=[...new Set(Object.values(G.titles||{}).map(t=>t.co))].map(id=>G.cos[id]).filter(Boolean);
-  return `<div class="grid side"><div class="panel"><label>Company<select id="htco"><option value="all">All companies</option>${cs.map(c=>`<option value="${c.id}" ${htco===c.id?'selected':''}>${esc(c.short)}</option>`).join('')}</select></label>
+  return `<div>${sel?titlePage(sel):'<div class="panel empty">No titles yet.</div>'}</div><div style="margin-top:14px"><div class="panel"><label>Company<select id="htco"><option value="all">All companies</option>${cs.map(c=>`<option value="${c.id}" ${htco===c.id?'selected':''}>${esc(c.short)}</option>`).join('')}</select></label>
    <div class="list">${T.map((t,i)=>`${i===0||T[i-1].co!==t.co?`<div class="sub" style="padding:8px 12px;font-weight:800;border-bottom:1px solid var(--line)">${esc(G.cos[t.co]?.short||'')}</div>`:''}<button data-htl="${t.id}" class="${sel&&t.id===sel.id?'sel':''}"><span>${esc(t.name)}<span class="sub" style="display:block">${reignOf(t)?esc(reignOf(t).hn):'Vacant'}</span></span><span class="sub">${Math.round(t.prestige??0)}</span></button>`).join('')||'<div class="empty">No titles. Add them in the Scenario editor.</div>'}</div></div>
-   <div>${sel?titlePage(sel):'<div class="panel empty">No titles yet.</div>'}</div></div>`;
+</div>`;
 }
 function histYear(){
   const S=showsAll(),curY=+G.date.slice(0,4),ys=[...S.map(x=>+x.d.slice(0,4)),...Object.values(G.titles||{}).flatMap(t=>(t.reigns||[]).filter(r=>r.won).map(r=>+r.won.slice(0,4)))].filter(Boolean);
@@ -4322,6 +4498,32 @@ function brandsBox(m){return `<div class="panel" style="margin-top:16px"><h3>Bra
    ${brandsOf(m)?`<div class="kv"><span>Next weekly show</span><b>${esc(brandsOf(m)[(m.bri||0)%brandsOf(m).length])}</b></div>${brandsOf(m).map(b=>`<div class="kv"><span>${esc(b)}</span><b>${roster(G.me).filter(w=>w.brand===b).length} wrestlers</b></div>`).join('')}<div class="kv"><span>All shows</span><b>${roster(G.me).filter(w=>!brandsOf(m).includes(w.brand)).length}</b></div>`:''}
    <div class="btns" style="margin-top:8px"><button class="sm go" data-bsave="1">Save brands</button>${brandsOf(m)?'<button class="sm ab" data-draft="1">Run a draft</button><button class="sm" data-bclear="1">Everyone on All shows</button>':''}</div>
    <p class="hint">The draft splits your roster evenly, best first, taking turns. Change one person with Brand on their profile.</p></div>`}
+/* My Shows (owner, 27 Nov): show names, schedule and brands in one place. */
+let BRUSH='';
+function vShows(){const m=me(),n=m.weeklyLeft,mine=[];for(let i=0;i<=n;i++)mine.push([addDays(G.date,7*i),i===n]);const B=brandsOf(m)||[],R=roster(G.me).filter(w=>!w.mgonly).sort((a,b)=>b.pop-a.pop);
+  if(BRUSH&&!B.includes(BRUSH))BRUSH='';
+  $('#app').innerHTML=`<div class="head"><div><h2>My Shows</h2><p>Name your shows, set how often you hold Major Events, and split your roster into brands.</p></div></div>
+  <div class="grid2"><div class="panel"><h3>Your Shows</h3><div class="form" style="margin-bottom:12px">${brandsOf(m)?'':`<label>Weekly show name<input id="cwn" maxlength="40" value="${esc(wkName(m))}"></label>`}<label>Next Major Event name<input id="cmn" maxlength="40" value="${esc(m.majorName)}"></label></div>
+   <ul class="tl">${mine.map(([d,maj])=>`<li><time>${fmtDate(d)}</time><div><span class="k ${maj?'me':'co'}">${maj?'Major Event':'Weekly Show'}</span><span data-cal="${maj?'m':'w'}">${esc(maj?m.majorName:wkName(m))}</span></div></li>`).join('')}</ul>
+   <label style="margin-top:10px">How often you hold a Major Event<select id="ccyc">${Object.entries(CYC).map(([k,l])=>`<option value="${k}" ${String(m.cyc||1)===k?'selected':''}>${l}</option>`).join('')}</select></label>
+   <p class="hint">Every company runs on the same weekly calendar. Major Events land in the 3rd week of the month, so companies on the same cycle hold theirs the same week. Every other week is a Weekly Show.</p>
+   </div>
+  <div class="panel"><h3>Brands</h3><p class="sub" style="margin-top:0">With 2 or 3 brands, weekly shows take turns and each brand's show books its own wrestlers, plus anyone on All Shows.</p>
+   <div class="form">${[0,1,2].map(i=>{const b=(m.brands||[])[i]||'';return `<label>Brand ${i+1}<input data-brand="${i}" maxlength="30" value="${esc(b)}" placeholder="${i===0?esc(m.weeklyName||'Weekly Show'):i===1?'Leave blank for one brand':'Optional'}"></label>`}).join('')}</div>
+   <div class="btns" style="margin-top:8px"><button class="sm go" data-bsave="1">Save Brands</button></div>
+   ${B.length?`<h3 style="margin-top:14px;font-size:18px">Major Events</h3>${B.map(b=>`<label style="margin:4px 0"><input type="checkbox" data-bmj="${esc(b)}" ${(m.bmaj||{})[b]?'checked':''}>${esc(b)} has its own Major Events</label>`).join('')}${B.some(b=>(m.bmaj||{})[b])?`<label style="margin:4px 0"><input type="checkbox" id="bshared" ${m.bshared===false?'':'checked'}>Keep company-wide Major Events too</label>`:''}
+   <div class="kv"><span>Next Major Event</span><b>${esc(majName(m))}</b></div><p class="hint">Major Events take turns: ${majRot(m).map(b=>b?esc(b):'everyone').join(', then ')}.</p>`:''}</div></div>
+  ${B.length?`<div class="panel" style="margin-top:16px"><h3>Brand Rosters</h3><p class="sub" style="margin-top:0">Pick where to send people, then tap wrestlers to move them. Or let the draft split everyone.</p>
+   <div class="chips" style="margin-bottom:10px"><span class="sub" style="align-self:center">Send to:</span>${['',...B].map(b=>`<button data-brush="${esc(b)}" class="${BRUSH===b?'sel':''}">${b?esc(b):'All Shows'}</button>`).join('')}</div>
+   <div class="bcols">${['',...B].map(b=>{const L=R.filter(w=>b?w.brand===b:!B.includes(w.brand));return `<div class="bcol"><h4>${b?esc(b):'All Shows'} <span class="sub">${L.length}</span></h4>${L.map(w=>`<button data-bas="${w.id}" title="Move to ${BRUSH?esc(BRUSH):'All Shows'}">${esc(w.name)}<small>${pd(w)}</small></button>`).join('')||'<span class="sub">Nobody yet.</span>'}</div>`}).join('')}</div>
+   <div class="btns" style="margin-top:10px"><button class="sm ab" data-draft="1">Run a Draft</button><button class="sm" data-bclear="1">Everyone on All Shows</button></div></div>`:''}`;
+}
+document.addEventListener('click',e=>{if(tab!=='shows'||!G)return;const b=e.target.closest('[data-brush],[data-bas]');if(!b)return;const m=me(),B=brandsOf(m)||[];
+  if(b.dataset.brush!=null){BRUSH=b.dataset.brush;vShows();return}
+  const w=W(b.dataset.bas);if(!w)return;if(BRUSH&&B.includes(BRUSH))w.brand=BRUSH;else delete w.brand;save();vShows()});
+document.addEventListener('change',e=>{if(tab!=='shows'||!G)return;const t=e.target,m=me();
+  if(t.dataset.bmj!=null){m.bmaj=m.bmaj||{};if(t.checked)m.bmaj[t.dataset.bmj]=1;else delete m.bmaj[t.dataset.bmj];m.mri=0;save();vShows()}
+  else if(t.id==='bshared'){m.bshared=t.checked;m.mri=0;save();vShows()}});
 /* Office hub (§4.63). The owner's office: tap things in the room to go places. Our own art, drawn in SVG. */
 function vOffice(){const m=me(),major=m.weeklyLeft===0,need=(G.offers||[]).length+(G.req||[]).filter(r=>r.st==='open').length+(G.merge&&G.cos[G.merge.co]?.active?1:0);
   const champs=titlesOf(G.me).filter(t=>!t.retired).length,R=roster(G.me),outN=R.filter(isOut).length,L=G.war||[],x=L[L.length-1],wr=x&&x.rows.find(r=>r.c===G.me);
@@ -4401,23 +4603,19 @@ function vSet(){const m=me();
    <div class="kv" style="margin-top:12px"><span>Mode</span><b>${G.opts.sandbox?'Sandbox':G.opts.mode==='story'?'Story':'Career'}</b></div><div class="kv"><span>Save slot</span><b>${G.slot||1}</b></div></div>
    <div class="panel"><h3>Features</h3><p class="sub" style="margin-top:0">Turn off anything you don't want. The game stays simple either way.</p>${Object.entries(FEATS).map(([k,l])=>`<label class="chk" style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" data-feat="${k}" ${featOn(k)?'checked':''} style="width:auto;margin:0"> ${l}</label>`).join('')}
     ${featOn('flv')?`<label style="margin-top:8px">Feud levels<select id="sflv">${[2,3,4,5,6].map(n=>`<option ${flvN()===n?'selected':''}>${n}</option>`).join('')}</select></label>`:''}</div>
-   <div class="panel"><h3>Change the game itself</h3><p class="sub" style="margin-top:0">Edit wrestlers and companies in this saved game. Stats lock unless Sandbox is on.</p><div class="btns"><a class="btn sm go" href="#edit">${G.opts.sandbox?'Edit game (Sandbox)':'Edit game'}</a><a class="btn sm" href="#editor">Scenario editor</a></div>
-   <h3 style="margin-top:16px">Where things are</h3><ul class="sub" style="margin:4px 0 0;padding-left:18px;line-height:1.6"><li>Show names, Major Event schedule, brands: Business, Calendar and news</li><li>Staff, promotions, store: Business, Staff and store</li><li>Signing full time: Business, Sign talent</li><li>One-show guests: Roster, Indies</li></ul></div></div>`}
+   <div class="panel"><h3>Change the game itself</h3><p class="sub" style="margin-top:0">Edit wrestlers and companies in this saved game. Stats lock unless Sandbox is on.</p><div class="btns"><a class="btn sm go" href="#edit">${G.opts.sandbox?'Editor (Sandbox)':'Editor'}</a><a class="btn sm" href="#editor">Scenario editor</a></div>
+   <h3 style="margin-top:16px">Where things are</h3><ul class="sub" style="margin:4px 0 0;padding-left:18px;line-height:1.6"><li>Show names, Major Event schedule, brands: Business, My Shows</li><li>Staff, promotions, store: Business, Staff and store</li><li>Signing full time: Business, Sign talent</li><li>One-show guests: Roster, Indies</li></ul></div></div>`}
 function vCal(){
   const m=me(),n=m.weeklyLeft,mine=[];for(let i=0;i<=n;i++)mine.push([addDays(G.date,7*i),i===n]);
-  $('#app').innerHTML=`<div class="head"><div><h2>Calendar and news</h2><p>Show names, how often you hold Major Events, brands, and what has happened so far. Game settings like difficulty are under Menu, Settings. The future plays out as you and the other owners run your companies.</p></div></div>
-  <div class="grid2"><div class="panel"><h3>Your shows</h3><div class="form" style="margin-bottom:12px"><label>Weekly show name<input id="cwn" maxlength="40" value="${esc(wkName(m))}"></label><label>Next Major Event name<input id="cmn" maxlength="40" value="${esc(m.majorName)}"></label></div>
-   <ul class="tl">${mine.map(([d,maj])=>`<li><time>${fmtDate(d)}</time><div><span class="k ${maj?'me':'co'}">${maj?'Major Event':'Weekly Show'}</span><span data-cal="${maj?'m':'w'}">${esc(maj?m.majorName:wkName(m))}</span></div></li>`).join('')}</ul>
-   <label style="margin-top:10px">How often you hold a Major Event<select id="ccyc">${Object.entries(CYC).map(([k,l])=>`<option value="${k}" ${String(m.cyc||1)===k?'selected':''}>${l}</option>`).join('')}</select></label>
-   <p class="hint">Every company runs on the same weekly calendar. Major Events land in the 3rd week of the month, so companies on the same cycle hold theirs the same week. Every other week is a Weekly Show.</p>
-   ${brandsBox(m)}<h3 style="margin-top:16px;font-size:20px">Major Events coming up</h3><table><tbody>${Object.values(G.cos).filter(c=>c.active).sort((a,b)=>wkLeft(a)-wkLeft(b)||a.short.localeCompare(b.short)).map(c=>`<tr><td>${logo(c,22)} <b>${esc(c.short)}</b>${c.id===G.me?' <span class="k me">You</span>':''}</td><td class="sub">${CYC[c.cyc||1].split(' (')[0]}</td><td class="n">${fmtDate(addDays(G.date,7*wkLeft(c)))}</td></tr>`).join('')}</tbody></table></div>
+  $('#app').innerHTML=`<div class="head"><div><h2>Calendar and News</h2><p>Every company's Major Events and your own notices.</p></div></div>
+  <div class="grid2"><div class="panel"><p class="sub" style="margin-top:0">Your show names, schedule and brands are on <a href="#shows">My Shows</a>.</p><h3 style="font-size:20px">Major Events Coming Up</h3><table><tbody>${Object.values(G.cos).filter(c=>c.active).sort((a,b)=>wkLeft(a)-wkLeft(b)||a.short.localeCompare(b.short)).map(c=>`<tr><td>${logo(c,22)} <b>${esc(c.short)}</b>${c.id===G.me?' <span class="k me">You</span>':''}</td><td class="sub">${CYC[c.cyc||1].split(' (')[0]}</td><td class="n">${fmtDate(addDays(G.date,7*wkLeft(c)))}</td></tr>`).join('')}</tbody></table></div>
   <div class="panel"><h3>News</h3><p class="sub" style="margin-top:0">The wider wrestling news is on <a href="#news">${NEWS_SITE}</a>. Your own notices are below.</p><ul class="tl">${G.news.filter(n=>n.kind==='me'||!n.kind).slice(0,60).map(n=>`<li><time style="font-size:14px">${fmtDate(n.date)}</time><div>${n.kind?`<span class="k ${esc(n.kind)}">${{me:'You',co:'Company',db:'Debut',of:'Offer',mt:'Match',sg:'Signing',ms:'Milestone',aw:'Award',rt:'Retired',tt:'Title',fd:'Feud'}[n.kind]||''}</span>`:''}${esc(n.text)}</div></li>`).join('')}</ul></div></div>`;
 }
 document.addEventListener('click',e=>{if(tab!=='calendar'||!G)return;const b=e.target.closest('[data-cst]');if(!b)return;const m=me(),k=b.dataset.cst,L=coSty(m);if(L.includes(k)){if(L.length>1)m.sty=L.filter(x=>x!==k)}else if(L.length<3)m.sty=[...L,k];else{say('A company can have up to 3 styles. Remove one first.');return}save();vCal()});
 document.addEventListener('change',e=>{if(tab==='settings'&&G&&e.target.id==='cinj'){G.opts.inj=e.target.value;news(`Injuries set to ${INJ_SET[G.opts.inj].name}.`,'me');save();render();return}if(tab!=='settings'||!G||e.target.id!=='cdiff')return;G.opts.diff=e.target.value;news(`Money difficulty set to ${dif().name}.`,'me');save();render()});
 document.addEventListener('change',e=>{if(tab!=='settings'||!G||e.target.id!=='chof')return;me().hofAt=clamp(Math.round(+e.target.value||CO_HOF),100,3000);save()});
-document.addEventListener('change',e=>{if(tab!=='calendar'||!G||e.target.id!=='ccyc')return;me().cyc=+e.target.value;syncSched();news(`${me().short} will hold a Major Event ${CYC[me().cyc].split(' (')[0].toLowerCase()}.`,'me');save();render()});
-document.addEventListener('input',e=>{if(tab!=='calendar'||!G)return;const t=e.target,m=me();
+document.addEventListener('change',e=>{if(!['calendar','shows'].includes(tab)||!G||e.target.id!=='ccyc')return;me().cyc=+e.target.value;syncSched();news(`${me().short} will hold a Major Event ${CYC[me().cyc].split(' (')[0].toLowerCase()}.`,'me');save();render()});
+document.addEventListener('input',e=>{if(!['calendar','shows'].includes(tab)||!G)return;const t=e.target,m=me();
   if(t.id==='cwn'){m.weeklyName=t.value.trim()||'Weekly Show';document.querySelectorAll('[data-cal=w]').forEach(x=>x.textContent=m.weeklyName)}
   else if(t.id==='cmn'){m.majorName=t.value.trim()||m.majorName;document.querySelectorAll('[data-cal=m]').forEach(x=>x.textContent=m.majorName);renderHdr()}
   else return;save()});
@@ -4471,8 +4669,9 @@ function vEdit(){
    <label>Hype (0 to 100)<input type="number" min="0" max="100" data-g="hype" value="${Math.round(c.hype)}" ${sb?'':'disabled'}></label>
    <p class="hint wide" style="margin:0">Status: ${c.closed?'Closed':c.active?`Open, owned by ${c.owner==='player'?'you':'the computer'}`:`Opens ${fmtDate(c.open)}`}. Moving a close date to today or earlier closes a rival company at the end of this week.</p>
    ${sb?`<div class="wide" style="border-top:1px solid var(--line);padding-top:12px"><b>Sandbox: money</b></div><label>Bank<input type="number" step="1000" data-g="cash" value="${Math.round(c.cash)}"></label>`:''}</div>`;
-  $('#app').innerHTML=`<div class="head"><div><h2>Edit this game</h2><p>Changes apply to the game you're playing right now and save straight away. The Scenario editor is for setting up new games.</p></div>
+  $('#app').innerHTML=`<div class="head"><div><h2>Editor</h2><p>Change anything in the game you're playing. Changes save straight away.</p></div>
    <div class="btns"><label style="display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:600"><input type="checkbox" id="gsb" ${sb?'checked':''}>Sandbox: allow editing stats, money and contracts</label></div></div>
+   <div class="edhub">${[['w','Wrestlers','🧍','Name, look, gimmick and details'],['c','Companies','🏢','Names, logos and schedules'],['#teams','Tag Teams','🤝','Pairs and trios'],['#factions','Factions','👥','Bigger groups'],['#titles','Championships','🥇','Belts, rules and history'],['#editor','Scenario Editor','🗺️','Build a world for new games']].map(([k,l,i,d])=>k[0]==='#'?`<a class="edt" href="${k}"><span>${i}</span><b>${l}</b><small>${d}</small></a>`:`<button class="edt${gcat===k?' on':''}" data-gc="${k}"><span>${i}</span><b>${l}</b><small>${d}</small></button>`).join('')}</div>
    ${gmsg?`<div class="msg" style="margin:0 0 16px">${esc(gmsg)}</div>`:''}
    <div class="grid side">
    <div class="panel"><div class="seg2"><button data-gc="w" class="${gcat==='w'?'on':''}">Wrestlers (${ws.length})</button><button data-gc="c" class="${gcat==='c'?'on':''}">Companies (${cs.length})</button></div>
@@ -4492,6 +4691,7 @@ function gApply(t){
     else if(['cha','wrk','pop','mom'].includes(f))x[f]=clamp(+v||0,0,100);
     else if(f==='wt')x.wt=clamp(+v||0,0,700);
     else if(f==='al'){x.al=clamp(+v,-100,100);x.align=alLetter(x.al);const l=document.querySelector('[data-alv]');if(l)l.textContent=alName(x.al)}
+    else if(f==='gim'){x.gim=v;delete x.gch;delete x.gpe;delete x.gcn}
     else if(f==='legend'){x.legend=!!v;if(!v)x.lp=0}
     else if(f==='wage')x.wage=Math.max(0,+v||0);
     else if(f==='left')x.left=clamp(+v||1,1,24);
@@ -4548,7 +4748,7 @@ function vStar(){
    ${w&&sEdit?`<div class="panel sedit"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">${headImg(w,40)}<h3 style="margin:0;flex:1">${esc(w.name)}</h3><button class="sm" data-sedit="0">Back to Profile</button></div>${gmsg?`<div class="msg" style="margin:0 0 12px">${esc(gmsg)}</div>`:''}${gwForm(w)}
      <label style="margin-top:12px"><input type="checkbox" id="gsb" ${G.opts.sandbox?'checked':''}>Sandbox: allow editing stats and contracts</label></div>`:`
    <div>${w?`<div class="panel prof"><div class="ph"><div>${w.logo?`<img class="logo" src="${w.logo}" alt="" style="width:84px;height:84px;float:left;margin:0 14px 6px 0">`:bodyImg(w)}<h2 style="font-size:clamp(30px,5vw,48px)">${esc(w.name)}</h2>${w.legend||holds(w).length?'<div style="margin:4px 0">'+lgTxt(w)+chTxt(w)+'</div>':''}${holds(w).length&&BL?`<div class="chips" style="margin:6px 0">${holds(w).map(t=>`<button class="sm" data-belt-view="${t.id}" title="${esc(t.name)}" style="padding:2px 8px"><span class="beltmini">${beltImg(t,72,'plate')}</span> ${esc(t.name)}</button>`).join('')}</div>`:''}
-     <div class="sub" style="font-size:15px;margin-top:4px">${age(w)!=null?`Age ${age(w)} · `:''}${w.wt?`${w.wt} lbs · ${wClass(w)} · `:''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?` · ${esc(w.gim)}${gfit(w)?' (good fit)':' (poor fit)'}`:''} · ${momTxt(w)}</div>
+     <div class="sub" style="font-size:15px;margin-top:4px">${age(w)!=null?`Age ${age(w)} · `:''}${w.wt?`${w.wt} lbs · ${wClass(w)} · `:''}${alTxt(w.align)}${w.gim&&w.gim!=='None'?` · ${esc(gimName(w))} (${['poor','okay','great'][gfitN(w)]} fit)`:''} · ${momTxt(w)}</div>
      <div style="margin-top:6px">${status(w)}</div></div>
      <div class="btns"><button class="sm" data-pa="look">Change Look</button>${G.opts.sandbox||w.fresh||w.co===G.me?`<button class="sm" data-sedit="1">Edit Wrestler</button>`:''}${w.co===G.me?`<button class="sm go" data-sct="${w.id}">Contract</button><button class="sm" data-sgm="${w.id}">Gimmick</button>`:w.status==='active'?(!w.co||w.left<=2&&!w.next?`<button class="sm go" data-sct="${w.id}">Negotiate</button>`:`<button class="sm" disabled title="Talks open with 2 or fewer Major Events left">Negotiate</button><div class="sub" style="width:100%;text-align:right">${w.next?'Already signed elsewhere next':'Opens with 2 events left'}</div>`):w.status==='future'?`<button class="sm" disabled>Negotiate</button><div class="sub" style="width:100%;text-align:right">After debut</div>`:''}</div></div>
      <div class="tiles">${tile('Charisma',w.cha)}${tile('Workrate',w.wrk)}${tile('Popularity',pd(w),0,`<div class="sub">${tierOf(w)[1]}${ascOf(w)?' (ascended)':''}</div>`)}${tile('Momentum',Math.round(w.mom))}${tile('Worth per show',money(worth(w)),0)}${(()=>{const f=fameOf(w),nx=PTIERS.find(x=>x[0]>f);if(!nx)return tile('Status','Hall of Famer',0,'<div class="sub">The highest status there is</div>');const cur=tierOf(w);return tile('Next status',nx[1],0,`<div class="meter" style="margin:6px 0 0"><i style="width:${Math.round((f-cur[0])/(nx[0]-cur[0])*100)}%"></i></div><div class="sub">${Math.round(f).toLocaleString('en-US')} / ${nx[0].toLocaleString('en-US')}${nx[2]?' · ascended tiers need less booking to stay popular':''}${w.legend?'<br>Legend: worth +25%, bigger crowds, never below 1,000':''}</div>`)})()}</div>
@@ -4612,7 +4812,7 @@ function profSheet(w){
    ${kv('Record',`${rec.w}-${rec.l}-${rec.d} <span class="sub">${winPct(rec)} wins</span>`)}
    ${kv('Streak',`${streakTxt(w)} <span class="sub">best ${w.best||0} wins in a row</span>`)}
    ${kv('Average match',ar!=null?`${stars(ar)} <span class="sub">${ar.toFixed(2)} over ${w.rn||(w.hist||[]).length} matches</span>`:'<span class="sub">No matches yet</span>')}
-   ${kv('Gimmick',w.gim&&w.gim!=='None'?`${esc(w.gim)} <span class="sub">${gfit(w)?'good fit':'poor fit'}</span>`:'<span class="sub">None</span>')}
+   ${kv('Gimmick',w.gim&&w.gim!=='None'?`${esc(gimName(w))} <span class="sub">${['poor','okay','great'][gfitN(w)]} fit</span>`:'<span class="sub">None</span>')}
    ${kv('Alignment',`${alTxt(w.align)} <span class="sub">${(w.al??0)<0?`${-(w.al??0)} face points`:(w.al??0)>0?`${w.al} heel points`:'dead centre'}</span>`)}
    ${kv('Brand',esc(w.brand||'All shows'))}
    ${kv('Pronouns',PRON[pronK(w)])}
@@ -4709,7 +4909,7 @@ function dLook(w,after,noNotes){let L=WL.normalize(JSON.parse(JSON.stringify(pxO
       ${ck?`<button class="sw" style="--c:${L[ck]}" data-pal="${ck}" aria-label="${lab} colour"></button>`:'<span></span>'}
       ${gal===k&&k?`<div class="gal">${vals.map(v=>`<button data-k="${k}" data-v="${v}" class="${L[k]===v?'sel':''}"><img src="${WL.toDataURL(Object.assign({},L,{[k]:v}),{scale:1,bg:k==='bg',crop:LK_CROP[k]})}" alt="">${lkLab(v)}</button>`).join('')}</div>`:''}
       ${pal===ck&&ck?`<div class="pal">${[...new Set([...WL.PAL[WL.OPTIONS[ck][1]],...WL.PAL.gear])].map(c=>`<button class="sw${L[ck]===c?' sel':''}" style="--c:${c}" data-k="${ck}" data-v="${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-k="${ck}" value="${L[ck]}" aria-label="Any colour" style="width:60px;min-height:34px;padding:0"></div>`:''}</div>`};
-  const draw=()=>{openD(`<div class="dh b"><h3>Character editor: ${esc(w.name)}</h3><div>Their look shows on the profile, roster and cards. Only looks: it doesn't change any stats.</div></div><div class="db"><div class="lk">
+  const draw=()=>{openDF(`<div class="dh b"><h3>Character Editor: ${esc(w.name)}</h3><div>Their look shows on the profile, roster and cards. Only looks: it doesn't change any stats.</div></div><div class="db"><div class="lk">
      <div class="pv"><canvas id="lkc" aria-label="Portrait preview"></canvas>
       <div class="chips" role="group" aria-label="Outfit">${'ABC'.split('').map((c,i)=>`<button data-slot="${i}" class="${L.outfit===i?'sel':''}">Outfit ${c}</button>`).join('')}</div>
       <div class="btns"><button data-rnd="1">🎲 Random look</button><button data-undo="1" ${hist.length?'':'disabled'}>Undo</button></div></div>
@@ -4812,7 +5012,7 @@ function dHire(k){const m=me(),v=STAFF[k]||{name:CREW[k].one,fx:CREW[k].fx},D=di
     m.staff=m.staff||{};if(d.hp!=null){const p=pool[+d.hp];if(!cfm(`Hire ${p.name} as ${v.name} for ${money(r10(p.pay*D.cost))} per show?`,'Hire'))return;if(CREW[k]){const L=crewOf(m,k);if(L.length>=CREW_MAX||L.some(y=>y.name===p.name))return;L.push({name:p.name,sk:p.sk,pay:p.pay})}else m.staff[k]={name:p.name,sk:p.sk,pay:p.pay};news(`You hired ${p.name} as ${v.name}.`,'me')}
     else if(d.hw){const w=W(d.hw);m.staff[k]={w:w.id};news(`${w.name} is now your ${v.name}.`,'me')}else return;
     save();closeD();vBiz()}}
-document.addEventListener('click',e=>{if(!G||!['business','calendar'].includes(tab))return;const b=e.target.closest('[data-hire],[data-fire],[data-buy],[data-sact],[data-cfire],[data-promo],[data-bsave],[data-draft],[data-bclear]');if(!b)return;const d=b.dataset,m=me();
+document.addEventListener('click',e=>{if(!G||!['business','calendar','shows'].includes(tab))return;const b=e.target.closest('[data-hire],[data-fire],[data-buy],[data-sact],[data-cfire],[data-promo],[data-bsave],[data-draft],[data-bclear]');if(!b)return;const d=b.dataset,m=me();
   if(d.hire)return dHire(d.hire);
   if(d.promo)return dPromo(d.promo);
   if(d.bsave){m.brands=[...document.querySelectorAll('[data-brand]')].map(x=>x.value.trim()).filter((v,i,a)=>v&&a.indexOf(v)===i);if(m.brands.length<2)m.brands=m.brands.slice(0,1);news(m.brands.length>=2?`Your weekly shows now rotate: ${m.brands.join(', ')}.`:'One brand: every weekly show uses the whole roster.','me');save();render();return}
@@ -4906,25 +5106,26 @@ document.addEventListener('click',e=>{if(tab!=='feuds'||!G)return;const t=e.targ
   else if(d.fs){const f=F(d.fs);startFeud(f.p,f.why,f.heat,'you',f.g);rerender()}
   else if(d.fx){const f=F(d.fx);endFeud(f,'Dismissed');G.feuds=FE().filter(x=>x!==f);rerender()}});
 function dFeudAdd(pre){
-  const r=roster(G.me).sort((a,b)=>a.name.localeCompare(b.name)),gs=TM().filter(t=>t.st!=='past'&&t.co===G.me);let sd=[pre?(pre.startsWith('g:')?pre:'w:'+pre):'',''],why='Personal',cust='';
+  const r=roster(G.me).sort((a,b)=>a.name.localeCompare(b.name)),gs=TM().filter(t=>t.st!=='past'&&t.co===G.me);let sd=Array.isArray(pre)?pre.slice():[pre?(pre.startsWith('g:')?pre:'w:'+pre):'',''],why='Personal',cust='',tpl='';
   const res=v=>{if(!v)return null;const[k,id]=v.split(':');if(k==='w')return{p:[id],g:null};const g=grp(id);return g?{p:g.m.slice(),g:g.id}:null};
   const opt=sel=>`<option value="">Pick a side</option>${gs.filter(g=>g.kind==='tag').length?`<optgroup label="Tag teams">${gs.filter(g=>g.kind==='tag').map(g=>`<option value="g:${g.id}" ${sel==='g:'+g.id?'selected':''}>${esc(g.name)} (${g.m.length})</option>`).join('')}</optgroup>`:''}${gs.filter(g=>g.kind==='faction').length?`<optgroup label="Factions">${gs.filter(g=>g.kind==='faction').map(g=>`<option value="g:${g.id}" ${sel==='g:'+g.id?'selected':''}>${esc(g.name)} (${g.m.length})</option>`).join('')}</optgroup>`:''}<optgroup label="Wrestlers">${r.map(w=>`<option value="w:${w.id}" ${sel==='w:'+w.id?'selected':''}>${esc(w.name)} (${pd(w)})</option>`).join('')}</optgroup>`;
   const draw=()=>{const R=sd.map(res).filter(Boolean),ps=R.map(x=>x.p),ok=R.length>=2&&okSides(ps),dup=R.length>=2&&!okSides(ps),h=ok?feudStartHeat(ps):null,ex=ok&&feudOf(ps);
    openD(`<div class="dh"><h3>Start a feud</h3><div>2 to 4 sides. Each side is a wrestler, a tag team or a faction.</div></div><div class="db">
    <div class="form">${sd.map((v,i)=>`<label>Side ${i+1}${i>=2?` <button class="sm" data-rmv="${i}" style="min-height:28px;padding:0 8px;margin-left:6px">Remove</button>`:''}<select data-sd="${i}">${opt(v)}</select></label>`).join('')}</div>
    ${sd.length<4?`<button class="sm" id="fside" style="margin-top:10px">+ Add a side</button>`:''}
-   <label style="margin-top:12px">Reason</label><div class="chips">${REASONS.map(x=>`<button data-fr="${x}" class="${why===x&&!cust?'sel':''}">${x}</button>`).join('')}</div>
-   <label>Or write your own<input id="fcu" maxlength="40" value="${esc(cust)}" placeholder="e.g. Stole the spotlight at the reunion show"></label>
-   ${h!=null?(()=>{const hs=feudHist(ps,cust.trim()||why),hh=clamp(h+histPts(hs),0,90);return `<div class="kv" style="margin-top:10px"><span>Starting heat</span><b style="color:${heatCol(hh)}">🔥 ${hh} (${heatName(hh)})</b></div>${hs.length?`<div class="sub">History: ${hs.map(x=>`${esc(x[0])} +${x[1]}`).join(' · ')}</div>`:''}<p class="hint" style="margin-top:2px">Based on popularity, alignments, number of sides, and their history together. History also makes the heat grow faster.</p>`})():''}
+   <label style="margin-top:12px">Story</label><div class="ftpls">${Object.entries(FTPL).map(([k,t])=>`<button data-ftp="${k}" class="${tpl===k?'sel':''}"><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>
+   ${tpl?`<div class="sub" style="margin:6px 0">Beats: ${FTPL[tpl].b.map((x,i)=>`${i+1}. ${esc(x)}`).join(' · ')}</div>`:''}
+   <label>Or write your own reason<input id="fcu" maxlength="40" value="${esc(cust)}" placeholder="e.g. Stole the spotlight at the reunion show"></label>
+   ${h!=null?(()=>{const hs=feudHist(ps,cust.trim()||why),hh=clamp(h+histPts(hs)+(tpl?FTPL[tpl].h:0),0,90);return `<div class="kv" style="margin-top:10px"><span>Starting heat</span><b style="color:${heatCol(hh)}">🔥 ${hh} (${heatName(hh)})</b></div>${hs.length?`<div class="sub">History: ${hs.map(x=>`${esc(x[0])} +${x[1]}`).join(' · ')}</div>`:''}<p class="hint" style="margin-top:2px">Based on popularity, alignments, number of sides, and their history together. History also makes the heat grow faster.</p>`})():''}
    ${dup?`<div class="msg bad">A wrestler is on more than one side.</div>`:''}${ex?`<div class="msg bad">This feud already exists. Starting it again adds a little heat.</div>`:''}
    <p class="hint">Tag teams and factions count as one side: their segments and matches together build the feud. Make groups under Roster, Tag Teams or Factions.</p>
    <div class="dfoot"><button data-x="1">Cancel</button><button class="go" id="fok" ${ok?'':'disabled'}>Start feud</button></div></div>`)};
   draw();
   dlg.onchange=e=>{const i=e.target.dataset.sd;if(i!=null){sd[+i]=e.target.value;draw()}};
   dlg.oninput=e=>{if(e.target.id==='fcu')cust=e.target.value};
-  dlg.onclick=e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.x)closeD();else if(t.dataset.fr){why=t.dataset.fr;cust='';draw()}
+  dlg.onclick=e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.x)closeD();else if(t.dataset.ftp){tpl=tpl===t.dataset.ftp?'':t.dataset.ftp;why=tpl?FTPL[tpl].n:'Personal';draw()}
     else if(t.id==='fside'){sd.push('');draw()}else if(t.dataset.rmv){sd.splice(+t.dataset.rmv,1);draw()}
-    else if(t.id==='fok'){const R=sd.map(res).filter(Boolean);startFeud(R.map(x=>x.p),cust.trim()||why,0,'you',R.map(x=>x.g));closeD()}};
+    else if(t.id==='fok'){const R=sd.map(res).filter(Boolean);startFeud(R.map(x=>x.p),cust.trim()||why,0,'you',R.map(x=>x.g),tpl);closeD()}};
   dlg.onclose=()=>{dlg.onchange=null;dlg.oninput=null;dlg.onclose=null;rerender()};
 }
 /* Test hook for balance runs: open the game with #...?sim in the URL search to expose window.__ro. Not used in play. */
@@ -5206,7 +5407,7 @@ function vNew(){
   <div class="steph">Game mode</div>
   <div class="ccards">${[['career','Career','Run the company your way. No goals, no hand-holding.'],['story','Story campaign','Ten short chapters that teach the game, with a reward for each. Best with your own new company.'],['sandbox','Sandbox','Edit anything, any time, and you never go bankrupt.']].map(([k,l,d])=>`<label class="ccard"><input type="radio" name="nmode" value="${k}" ${(NG.mode||'career')===k?'checked':''}><div class="badge" style="--c:${k==='story'?'#1f6feb':k==='sandbox'?'#14a37f':'#d7263d'}">${k==='story'?'📖':k==='sandbox'?'🧰':'🏆'}</div><div class="sl"><b>${l}</b><span>${d}</span></div></label>`).join('')}</div>
   <div class="steph">1. Choose a scenario</div>
-  <div class="scards">${scs.map(([k,l],i)=>{const v=scenFrom(k);return `<button class="scard${k===NG.src?' sel':''}" data-nsrc="${esc(k)}" aria-pressed="${k===NG.src}"><div class="ban" style="--c:${BANC[i%BANC.length]}"><b>${esc((v.start||'').slice(0,4))}</b>${topOf(v)}</div><div class="bd"><b>${esc(l)}</b><span>${v.desc?esc(v.desc):`${v.companies.length} companies · ${v.wrestlers.length} wrestlers`}</span></div></button>`}).join('')}</div>
+  <div class="scards">${scs.map(([k,l],i)=>{const v=scenFrom(k);return `<button class="scard${k===NG.src?' sel':''}" data-nsrc="${esc(k)}" aria-pressed="${k===NG.src}"><div class="ban" style="--c:${BANC[i%BANC.length]}"><b>${esc((v.start||'').slice(0,4))}</b>${topOf(v)}</div><div class="bd"><b>${esc(l)}</b><span>${k==='builtin'||k==='tutorial'?'':'<b class="k me" style="margin-right:4px">Custom</b>'}${v.desc?esc(v.desc):`${v.companies.length} companies · ${v.wrestlers.length} wrestlers`}</span></div></button>`}).join('')}<a class="scard" href="#editor" style="text-decoration:none;color:inherit"><div class="ban" style="--c:var(--line)"><b style="font-size:34px">+</b></div><div class="bd"><b>Custom Scenario</b><span>${scs.some(([k])=>k!=='builtin'&&k!=='tutorial')?'Make another one':'Build your own world'} in the Scenario Editor: companies, wrestlers, titles. Save it and it shows up here.</span></div></a></div>
   <div class="panel" style="margin-top:12px">${VS.length>1?`<label>${NG.src==='builtin'?'Start year':'Version'}</label><div class="chips" style="margin:6px 0 12px">${VS.map(x=>`<button data-nver="${x.v}" class="${x.v===curV?'sel':''}" aria-pressed="${x.v===curV}">${esc(x.label||'Version '+x.v)}<small>${fmtDate(x.data.start)}${x.date&&NG.src!=='builtin'?` · published ${fmtDate(x.date)}`:''}</small></button>`).join('')}</div>`:''}<div class="form"><label>Start date<input type="date" id="nstart" value="${NG.start}"></label></div>
    <p class="hint">Starting on the scenario's own date (${fmtDate(sc.start)}) uses its home companies. Any other date starts everyone as a free agent, and rival owners sign talent before week 1.</p>
    ${NG.start===sc.start?`<label style="margin-top:8px">Starting Rosters</label><div class="chips" style="margin:6px 0 4px">${[['','As in History'],['random','Random Shuffle'],['draft','Draft']].map(([k,l])=>`<button data-nshuf="${k}" class="${(NG.shuf||'')===k?'sel':''}" aria-pressed="${(NG.shuf||'')===k}">${l}</button>`).join('')}</div><p class="hint" style="margin:0">${NG.shuf==='draft'?'Everyone starts as a free agent and every title starts vacant. Companies pick in turns, weakest first, and you make your own picks. The game starts once rosters are full.':NG.shuf==='random'?'Everyone is dealt out at random. Each company keeps its roster size. Titles stay with their company.':'Everyone starts where they really were.'}</p>`:''}
@@ -5441,6 +5642,7 @@ function tcAll(root){(root||document).querySelectorAll(TC_SEL).forEach(tcEl);(ro
 let tcQ=false;new MutationObserver(()=>{if(tcQ)return;tcQ=true;requestAnimationFrame(()=>{tcQ=false;tcAll()})}).observe(document.documentElement,{childList:true,subtree:true});
 addEventListener('hashchange',()=>{applySub();render()});
 const sv=store.get('ro_save');if(sv&&sv.v===1&&!sv.over)G=sv;
+if(!G&&store.get('ro_big'))idbGet('slot'+store.get('ro_big')).then(g=>{if(g&&!G&&g.v===1&&!g.over){G=g;G.slot=store.get('ro_big');if(HOME.includes(tab)||!location.hash)history.replaceState(null,'','#office');render()}}).catch(()=>{});
 if(G&&!/^#?(home|new|editor|edit)?$/.test(location.hash.split('/')[0])||G&&!location.hash)history.replaceState(null,'','#office');
 render();
 }
